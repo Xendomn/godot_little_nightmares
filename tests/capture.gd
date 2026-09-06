@@ -4,7 +4,7 @@ func _initialize() -> void:
 	call_deferred("run")
 
 func run() -> void:
-	var game = load("res://scenes/main.tscn").instantiate()
+	var game = load("res://scenes/chapters/workshop.tscn").instantiate()
 	root.add_child(game)
 	await process_frame
 	var args := OS.get_cmdline_user_args()

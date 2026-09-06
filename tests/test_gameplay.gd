@@ -61,7 +61,7 @@ func capture(title: String) -> void:
 
 func run() -> void:
 	visual = "--visual" in OS.get_cmdline_user_args()
-	game = load("res://scenes/main.tscn").instantiate()
+	game = load("res://scenes/chapters/workshop.tscn").instantiate()
 	root.add_child(game)
 	await frames(3)
 	check(game.ui.menu.visible and not game.player.enabled, "menu gates player input")

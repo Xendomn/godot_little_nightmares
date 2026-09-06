@@ -28,7 +28,7 @@ func press_pause() -> void:
 	await frames(2)
 
 func run() -> void:
-	game = load("res://scenes/main.tscn").instantiate()
+	game = load("res://scenes/chapters/workshop.tscn").instantiate()
 	root.add_child(game)
 	await frames(3)
 	game.start_game()

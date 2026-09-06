@@ -1,3 +1,5 @@
+> Historical v1 report. The current hero/keeper assets are documented in character-v2-report.md.
+
 # Original asset generation report
 
 All assets in this set are original procedural constructions. The models use Blender primitives and custom materials; the WAV files are entirely synthesized by `tools/create_assets.py` with Python's standard library. No external or copyrighted asset data is used.

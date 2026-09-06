@@ -11,7 +11,7 @@ func frames(n: int) -> void:
 		await process_frame
 
 func run() -> void:
-	game = load("res://scenes/main.tscn").instantiate()
+	game = load("res://scenes/chapters/workshop.tscn").instantiate()
 	root.add_child(game)
 	await frames(3)
 	game.start_game()

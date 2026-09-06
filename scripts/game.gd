@@ -1,5 +1,9 @@
 extends Node3D
 
+signal checkpoint_reached(id: int)
+signal level_completed
+var managed: bool = false
+
 const Progress = preload("res://scripts/progress.gd")
 var state = Progress.new()
 var playing: bool = false
@@ -27,8 +31,9 @@ func _ready() -> void:
 	for item in get_tree().get_nodes_in_group("interactables"):
 		item.state = state
 		item.used.connect(on_item_used)
-	ui.start_requested.connect(start_game)
-	ui.restart_requested.connect(start_game)
+	if not managed:
+		ui.start_requested.connect(start_game)
+		ui.restart_requested.connect(start_game)
 	ui.resume_requested.connect(toggle_pause)
 	ui.quit_requested.connect(func(): get_tree().quit())
 	refresh_world()
@@ -72,11 +77,13 @@ func _process(delta: float) -> void:
 	var x: float = player.global_position.x
 	if x > 24 and state.has_fuse and state.checkpoint < 1:
 		state.enter_checkpoint(1)
+		checkpoint_reached.emit(1)
 		chapter_index = 1
 		ui.notice("脚步轻一些。他还没有发现你。", 4)
 		refresh_world()
 	if x > 54 and state.power_on and state.checkpoint < 2:
 		state.enter_checkpoint(2)
+		checkpoint_reached.emit(2)
 		chapter_index = 2
 		ui.notice("别回头。  按住 Shift 奔跑", 4)
 		refresh_world()
@@ -114,6 +121,7 @@ func update_prompt() -> void:
 		nearest.interact(player)
 
 func on_item_used(kind: String) -> void:
+	player.visual_driver.play("pickup" if kind == "fuse" else "interact", 0.55)
 	match kind:
 		"fuse":
 			sounds.play_effect("pickup")
@@ -163,6 +171,7 @@ func fail() -> void:
 	respawning = true
 	player.enabled = false
 	keeper.active = false
+	player.visual_driver.play("caught", 1.0)
 	sounds.play_effect("caught")
 	ui.prompt.text = ""
 	ui.notice("线还没有断。再试一次。", 2)
@@ -171,12 +180,15 @@ func fail() -> void:
 	transition.tween_interval(0.65)
 	transition.tween_callback(restore_world)
 	transition.tween_property(ui.fade, "color:a", 0.0, 0.5)
-	transition.tween_callback(func(): respawning = false)
+	transition.tween_callback(func():
+		respawning = false
+		player.enabled = true)
 
 func restore_world() -> void:
 	state.restore_checkpoint()
 	var spawns := [Vector3(2, 0.05, 0), Vector3(25, 0.05, 0), Vector3(55, 0.05, 0)]
 	player.reset_to(spawns[state.checkpoint])
+	player.enabled = not respawning
 	crate.reset_crate()
 	keeper.reset_keeper(state.power_on)
 	camera.chase = state.power_on
@@ -196,4 +208,15 @@ func finish_game() -> void:
 	transition = create_tween()
 	transition.tween_property(player, "position", Vector3(89, -1.5, -1), 1.5)
 	transition.parallel().tween_property(camera, "position:y", 6.5, 1.5)
-	transition.tween_callback(func(): ui.ending.show())
+	transition.tween_callback(func():
+		if managed:
+			level_completed.emit()
+		else:
+			ui.ending.show())
+
+func get_checkpoint_snapshot() -> Dictionary:
+	return {"has_fuse": state.checkpoint == 1, "power_on": state.checkpoint == 2}
+
+func restore_checkpoint(id: int) -> void:
+	state.checkpoint = clampi(id, 0, 2)
+	restore_world()

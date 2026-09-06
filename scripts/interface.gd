@@ -4,6 +4,10 @@ signal start_requested
 signal resume_requested
 signal restart_requested
 signal quit_requested
+signal continue_requested
+signal chapter_selected(index: int)
+signal checkpoint_retry_requested
+signal new_journey_requested
 
 var menu: Control
 var pause_menu: Control
@@ -19,6 +23,10 @@ var subtitles: Label
 var notice_time: float = 0
 var menu_button: Button
 var elapsed_time: float = 0
+var campaign_mode := false
+var has_campaign_save := false
+var chapter_menu: Control
+var confirm_new: ConfirmationDialog
 const PAPER := Color("ded7c3")
 const MUTED := Color("acb9b5")
 
@@ -85,8 +93,13 @@ func _ready() -> void:
 	volume.size = Vector2(280, 30)
 	volume.max_value = 1
 	volume.step = 0.01
-	volume.value = 0.8
-	volume.value_changed.connect(func(value: float): AudioServer.set_bus_volume_db(0, linear_to_db(maxf(0.001, value))))
+	var settings := ConfigFile.new()
+	settings.load("user://settings.cfg")
+	volume.value = float(settings.get_value("audio", "volume", 0.8))
+	volume.value_changed.connect(func(value: float):
+		AudioServer.set_bus_volume_db(0, linear_to_db(maxf(0.001, value)))
+		settings.set_value("audio", "volume", value)
+		settings.save("user://settings.cfg"))
 	pause_menu.add_child(volume)
 	button(pause_menu, "退出游戏", Vector2(740, 653), func(): quit_requested.emit())
 	pause_menu.hide()
@@ -107,7 +120,7 @@ func _ready() -> void:
 	base.add_child(fade)
 	hud.hide()
 	menu_button.grab_focus()
-	AudioServer.set_bus_volume_db(0, linear_to_db(0.8))
+	AudioServer.set_bus_volume_db(0, linear_to_db(volume.value))
 
 func full_control(parent: Control) -> Control:
 	var result := Control.new()
@@ -180,11 +193,69 @@ func begin() -> void:
 	ending.hide()
 	pause_menu.hide()
 	hud.show()
+	subtitles.show()
+	if campaign_mode:
+		has_campaign_save = true
+		chapter_menu.hide()
 
 func set_pause(value: bool) -> void:
 	pause_menu.visible = value
+	subtitles.visible = not value
 	if value:
 		for node in pause_menu.get_children():
 			if node is Button:
 				node.grab_focus()
 				break
+
+func enable_campaign(has_save: bool, unlocked: Array) -> void:
+	campaign_mode = true
+	has_campaign_save = has_save
+	for child in menu.get_children():
+		if child is Button:
+			child.hide()
+			child.queue_free()
+		elif child is Label and child.position.y >= 850:
+			child.hide()
+	menu_button = button(menu, "开始新旅程     →", Vector2(118, 585), request_new_journey)
+	var continue_button = button(menu, "继续旅程", Vector2(118, 660), func(): continue_requested.emit())
+	continue_button.disabled = not has_save
+	button(menu, "关卡选择", Vector2(118, 735), func(): chapter_menu.show())
+	button(menu, "离开工坊", Vector2(118, 810), func(): quit_requested.emit())
+	label(menu, "四章旅程  ·  检查点自动保存", Vector2(118, 928), 18, MUTED)
+	chapter_menu = overlay(menu.get_parent())
+	label(chapter_menu, "线，通向哪里", Vector2(710, 180), 45, PAPER)
+	var names := ["01  午夜工坊", "02  染洗间", "03  悬线库", "04  钟楼"]
+	var ids := ["workshop", "laundry", "thread_vault", "clocktower"]
+	for i in range(4):
+		var chapter_button = button(chapter_menu, names[i] + ("" if ids[i] in unlocked else "  ·  未解锁"), Vector2(735, 310 + i * 82), func(): chapter_selected.emit(i))
+		chapter_button.disabled = ids[i] not in unlocked
+	button(chapter_menu, "返回", Vector2(735, 700), func(): chapter_menu.hide())
+	chapter_menu.hide()
+	# Reuse the existing audio slider; replace the pause actions only.
+	for child in pause_menu.get_children():
+		if child is Button:
+			child.hide()
+			child.queue_free()
+	button(pause_menu, "继续旅程", Vector2(740, 355), func(): resume_requested.emit())
+	button(pause_menu, "重试检查点", Vector2(740, 428), func(): checkpoint_retry_requested.emit())
+	button(pause_menu, "重玩本关", Vector2(740, 501), func(): restart_requested.emit())
+	for child in pause_menu.get_children():
+		if child is HSlider or (child is Label and child.text == "声音"):
+			child.position.y += 50
+	button(pause_menu, "开始新旅程", Vector2(740, 680), request_new_journey)
+	button(pause_menu, "退出游戏", Vector2(740, 753), func(): quit_requested.emit())
+	confirm_new = ConfirmationDialog.new()
+	confirm_new.title = "开始新旅程"
+	confirm_new.dialog_text = "这会清除已有的关卡进度与检查点。\n音量设置会保留。"
+	confirm_new.ok_button_text = "重新开始"
+	confirm_new.cancel_button_text = "取消"
+	confirm_new.theme = menu.get_parent().theme
+	menu.get_parent().add_child(confirm_new)
+	confirm_new.confirmed.connect(func(): new_journey_requested.emit())
+	menu_button.grab_focus()
+
+func request_new_journey() -> void:
+	if has_campaign_save:
+		confirm_new.popup_centered(Vector2i(640, 230))
+	else:
+		new_journey_requested.emit()

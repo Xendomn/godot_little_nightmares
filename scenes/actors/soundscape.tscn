@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/soundscape.gd" id="1_jc7hg"]
+
+[node name="Soundscape" type="Node" unique_id=349449477]
+script = ExtResource("1_jc7hg")

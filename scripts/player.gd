@@ -19,10 +19,14 @@ var gait: float = 0.0
 var step_timer: float = 0.0
 var model: Node3D
 var limbs: Dictionary = {}
+var visual_driver: Node
 @onready var collider: CollisionShape3D = $CollisionShape3D
 
 func _ready() -> void:
 	model = $Visual
+	visual_driver = preload("res://scripts/character_visual.gd").new()
+	add_child(visual_driver)
+	visual_driver.setup(model)
 	for part in ["ArmL", "ArmR", "LegL", "LegR", "Head"]:
 		var found = model.find_child(part, true, false)
 		if found:
@@ -63,7 +67,10 @@ func _physics_process(delta: float) -> void:
 		jump_buffer = 0
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
+	var was_grounded := is_on_floor()
 	move_and_slide()
+	if not was_grounded and is_on_floor():
+		visual_driver.play("land", 0.18)
 	global_position.z = clampf(global_position.z, -1.6, 1.6)
 	if global_position.y < -4:
 		enabled = false
@@ -73,16 +80,11 @@ func _physics_process(delta: float) -> void:
 func animate_doll(delta: float, movement: float) -> void:
 	gait += delta * (14.0 if running else 9.0) * movement
 	var wave := sin(gait) * movement
-	model.rotation.y = lerp_angle(model.rotation.y, facing * 0.45, delta * 12)
-	model.scale.y = lerpf(model.scale.y, 0.55 if crouching else 1.0, delta * 15)
-	model.position.y = absf(wave) * 0.035 if is_on_floor() else 0.03
-	for part in limbs:
-		if part.begins_with("Leg"):
-			limbs[part].rotation.z = (-0.48 * facing if not is_on_floor() else wave * 0.35) * (1 if part.ends_with("L") else -1)
-		elif part.begins_with("Arm"):
-			limbs[part].rotation.z = -0.85 * facing if pushing else ((0.5 * facing if not is_on_floor() else wave * 0.28) * (-1 if part.ends_with("L") else 1))
-		elif part == "Head":
-			limbs[part].rotation.z = sin(Time.get_ticks_msec() * 0.0015) * 0.025
+	model.rotation.y = lerp_angle(model.rotation.y, facing * PI / 2, delta * 12)
+	if visual_driver.animator:
+		model.scale = Vector3.ONE
+		model.position.y = 0
+		visual_driver.update_motion(Vector2(velocity.x, velocity.z).length(), is_on_floor(), crouching, pushing, velocity.y)
 	if is_on_floor() and movement > 0.15:
 		step_timer -= delta
 		if step_timer <= 0:
@@ -97,4 +99,6 @@ func reset_to(spawn: Vector3) -> void:
 	pushing = false
 	crouching = false
 	facing = 1
+	if visual_driver:
+		visual_driver.reset_pose()
 	enabled = true

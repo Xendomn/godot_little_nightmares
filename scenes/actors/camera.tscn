@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cinematic_camera.gd" id="1_k0mjm"]
+
+[node name="Camera" type="Camera3D" unique_id=268817369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4.8, 11.8)
+current = true
+fov = 52.0
+script = ExtResource("1_k0mjm")

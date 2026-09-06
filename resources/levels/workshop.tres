@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LevelDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_211fr"]
+
+[resource]
+script = ExtResource("1_211fr")
+scene_path = "res://scenes/chapters/workshop.tscn"
+next_id = "laundry"
+checkpoint_positions = Array[Vector3]([Vector3(2, 0.05, 0), Vector3(25, 0.05, 0), Vector3(55, 0.05, 0)])

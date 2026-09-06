@@ -5,9 +5,10 @@ var chase: AudioStreamPlayer
 var effects: Dictionary = {}
 var chase_mix: float = 0
 var desired_mix: float = 0
+@export var ambience_name: String = "ambient"
 
 func _ready() -> void:
-	ambient = make_player("ambient", true)
+	ambient = make_player(ambience_name, true)
 	chase = make_player("chase", true)
 	ambient.volume_db = -13
 	chase.volume_db = -60

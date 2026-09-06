@@ -1,75 +1,85 @@
-# 午夜工坊 · Midnight Workshop
+﻿# 午夜工坊 · Midnight Workshop
 
-一个可完整通关的原创 3D 恐怖童话小游戏。操控青蓝色布偶，穿过巨大的玩具工作台、守夜工偶巡逻的装配车间，以及通往外界的输送带。
+原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。Windows 键鼠、单人、无血腥。
 
 ## 开始游戏
 
-- **直接运行：** 双击 `build/MidnightWorkshop.exe`，不需要安装 Godot 或 Blender。
-- **编辑工程：** 使用 Godot 4.7.2 打开 `project.godot`，按 F6 运行主场景或 F5 运行工程。
-- **命令行：** 在项目目录运行 `godot --path .`。
+- 双击 `build/MidnightWorkshop.exe`，或解压 `build/MidnightWorkshop-Windows.zip` 后运行。
+- Godot 4.7.2 打开 `project.godot`，按 F5。主场景为 `scenes/main.tscn`。
+- 命令行：`godot --path .`。默认窗口 1280×720，界面按 1920×1080 缩放，Forward+ / Vulkan。
 
-默认窗口为 1280×720，界面按 1920×1080 排版并随窗口缩放。使用 Forward+ / Vulkan，支持 Windows x64。进度只在本次运行内保留。
-
-## 操作
+## 操作与进度
 
 | 按键 | 动作 |
 |---|---|
-| A / D | 左右移动 |
-| W / S | 在场景纵深方向移动 |
+| A / D，W / S | 左右、有限纵深移动 |
 | Space | 跳跃 |
-| Shift | 奔跑 |
-| Ctrl | 蹲伏；低通道内松开仍会保持蹲伏，直到头顶有空间 |
-| E | 拾取／安装保险丝、拉动电闸 |
-| 按住 E + A / D | 在箱子旁朝箱子方向推动 |
-| Esc | 暂停／继续；暂停菜单可调节音量或从头开始 |
+| Shift | 奔跑；近处会被听见 |
+| Ctrl | 蹲伏；桌底遮挡视线，低通道自动保持蹲伏 |
+| E | 互动；按住 E + A / D 推箱、洗衣车或线轴箱 |
+| Esc | 暂停、音量、重试检查点、重玩本关、新旅程 |
 
-桌底可以遮住守夜工偶的视线；靠近他时奔跑会发出声响。失败后会自动返回当前区域的检查点。
+每章三个检查点，失败自动重生。检查点和已解锁章节保存至 Godot `user://campaign.json`，主菜单可继续旅程或选择已解锁章节。存档写入使用临时文件与备份，主档损坏时尝试恢复备份。音量独立保存在 `user://settings.cfg`。开始新旅程需确认，会清除章节进度，保留音量。
+
+## 四个章节
+
+| 章节 | 主要玩法 |
+|---|---|
+| 午夜工坊 | 推箱登台取保险丝、装配车间潜行供电、输送带追逐 |
+| 染洗间 | 排水、洗衣车压住升降台、桌底潜行、限时蒸汽通道 |
+| 悬线库 | 线轴配重、双绞盘悬桥、反复摇铃诱敌 |
+| 钟楼 | 八秒摆锤制动、上弦升降台、放开钟锤后的最终追逐 |
 
 <details>
-<summary>卡关时查看路线提示（含谜题答案）</summary>
+<summary>路线提示（含谜题答案）</summary>
 
-1. 把积木箱向右推到工作台旁。先跳上箱子，再从箱子跳上桌面，按 E 取得发光保险丝。
-2. 向右移动，在低矮金属通道前按住 Ctrl，通过第一道铁门。
-3. 在装配车间入口右侧的 FUSE 配电箱前按 E 安装保险丝。
-4. 移到靠近镜头的一侧，蹲伏走入第一张装配桌下。等工偶向左经过、背对你后，再向右通过第二张桌子。
-5. 在车间右端 POWER 电闸前按 E，立即向右奔跑。
-6. 在输送带的金色警示条附近起跳，跨过两个断口；蹲伏穿过低通道，再奔跑跳过第三个断口。工偶会在低通道前短暂停顿。
-7. 继续向右抵达 OUTSIDE 投递滑槽。
+- 工坊：把箱子推到工作台边，连续两跳登台拿保险丝。蹲过低通道，装入配电箱。沿靠镜头一侧蹲到桌底，等守卫向左经过再走。拉电闸后奔跑跳过三处断口，中间低通道需蹲伏。
+- 染洗间：E 排水，过水槽；推洗衣车到黄色 LOAD 框。移到升降台靠后的空位，E 灌水，等台面上升后向右走。沿桌底跟在守卫后面通过，蒸汽熄灭再过。
+- 悬线库：推线轴箱压住配重板，等踏板降下。依次操作第一、第二绞盘；在出口区摇铃，蹲进第一张桌子，等守卫走向左侧铃声，再沿桌底向右离开。
+- 钟楼：制动杆前按 E，八秒内跑过两个摆锤。站上升降台靠后侧按 E 上弦；到上层释放钟锤。跑过三个断口，在 CTRL 低通道蹲伏，最后奔向发光出口。
 
 </details>
 
-## 工程与素材
+## 工程与原创素材
 
-- `scenes/main.tscn`：完整、可在 Godot 编辑器中调整的关卡、灯光、碰撞与角色节点。
-- `scripts/`：角色运动、镜头、交互、怪物、进度、界面与声音，按职责分离。
-- `assets/models/`：6 个原创 Blender GLB；`assets/sources/` 保留对应 `.blend` 和预览。
-- `assets/audio/`：8 个原创合成 WAV；`assets/fonts/`：Noto Sans SC 与 OFL 许可证。
-- `tools/build_scene.gd`：离线场景生成器。重新执行会覆盖 `scenes/main.tscn` 的手工修改，运行游戏本身不需要它。
-- `tools/create_assets.py`：Blender 模型与声音的可重现生成脚本。
+- `scenes/main.tscn`：持久化章节管理器，只加载当前一章。
+- `scenes/chapters/`：四个独立可编辑关卡；`scenes/actors/`：共用角色、镜头、界面、声音。
+- `resources/levels/`：章节顺序、场景地址、镜头边界和检查点定义。
+- `scripts/campaign/`：存档与切换；`scripts/chapters/`：机关、平台、危险区。
+- `assets/models/`：原创 GLB。主角 19,296 三角形、12 段动画；怪物 32,044 三角形、7 段动画。
+- `assets/sources/`：Blender 源文件、新版角色预览；`assets/textures/characters/`：原创 2K 布料纹理。
+- `assets/audio/`：14 个原创合成 WAV，含三章氛围、怪物空间呼吸、布料和重脚步。
 
-角色使用独立肢体节点的程序动画，包含待机、步行、奔跑、跳跃、蹲伏与推动。无 C++、外部脚本库、联网服务、付费资源、战斗系统或跨次存档。
+角色使用 Skeleton3D、AnimationPlayer、AnimationTree 和轻量 SpringBone 布料摆动。蹲伏通过骨骼完成，不缩放整个模型。第三方来源见 `docs/asset-sources.md`，新版角色细节见 `docs/character-v2-report.md`。
 
-## 验证与重新构建
+## 验证与重建
 
 ```powershell
-godot --headless --path . --script tests/test_progress.gd
-godot --headless --path . --fixed-fps 60 --script tests/test_gameplay.gd
-godot --headless --path . --fixed-fps 60 --script tests/test_controls.gd
-godot --headless --path . --fixed-fps 60 --script tests/test_stealth.gd
+powershell -ExecutionPolicy Bypass -File tools/verify.ps1
+python tests/test_builder.py
 ```
 
-生成场景或原创模型：
+13 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。窗口路线与性能检查：
+
+```powershell
+godot --path . --resolution 1920x1080 --script tests/test_routes.gd
+godot --path . --resolution 1920x1080 --script tests/test_campaign_ui.gd
+godot --path . --resolution 1920x1080 --script tests/benchmark_expansion.gd
+```
+
+重建素材与场景会覆盖相应手工修改，须依次执行：
 
 ```powershell
 blender --background --python tools/create_assets.py
-godot --headless --path . --editor --import
+blender --background --python tools/create_characters_v2.py
+python tools/create_expansion_audio.py
+godot --headless --path . --editor --import --quit
 godot --headless --path . --script tools/build_scene.gd
+godot --headless --path . --script tools/build_expansion.gd
 ```
 
-导出：`godot --headless --path . --export-release "Windows Desktop" build/MidnightWorkshop.exe`。当前导出预设引用 `build/export_templates/templates/` 内的官方 4.7.2 Windows x64 模板。换机器后可下载同版本官方模板，或在 Godot 导出设置中改用已安装的模板。
+旧素材生成器会覆盖角色，之后必须运行 v2 生成器。运行现有工程无需 Blender 或重新生成。
 
-实际 GPU 窗口的脚本输入验收：`godot --path . --fixed-fps 60 --resolution 1920x1080 --script tests/test_gameplay.gd -- --visual`。该脚本对中段视线进行位置隔离测试；连续潜行路线由独立的 `test_stealth.gd` 验证。
+Windows 导出：`godot --headless --path . --export-release "Windows Desktop" build/MidnightWorkshop.exe`。预设引用 `build/export_templates/templates/` 的 4.7.2 官方 Windows x64 模板；换机器后需安装对应模板或调整预设。
 
-性能测试：`godot --path . --resolution 1920x1080 --script tests/benchmark.gd`。截图及测试日志保存在 `artifacts/`，不随可执行文件导出。
-
-首玩时长以 5–10 分钟为设计目标，尚未做新玩家时长测试；熟悉路线后可更快通关。当前验收为自动输入与渲染截图检查，尚未进行多人主观手感测试。测试机器为 RTX 3070；其他硬件帧率需另测。
+RTX 3070 上四章 1080p 代表场景含移动、动画、AI，平均约 165 FPS，接近刷新率上限。这不是整场最低帧率保证，也不代表其他硬件。当前采用脚本输入通关与渲染截图验收，尚未做新玩家时长和多人主观手感测试。详情见 `docs/verification-expansion.md`。

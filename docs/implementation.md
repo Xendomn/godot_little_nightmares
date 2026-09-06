@@ -1,3 +1,5 @@
+﻿> 首版历史记录。当前四章架构与跨次存档见 README.md 和 expansion-plan.md。
+
 # 午夜工坊 implementation
 
 Approved scope: Windows keyboard, Godot 4.7.2 Forward+, GDScript, original Blender assets. Three connected rooms: push crate to climb workbench and take fuse; patrol stealth to install fuse and operate remote lever; conveyor chase with three jumps and low passage to exit. Menus, Chinese prompts, audio, checkpoints and ending. Target first play 5–10 minutes.

@@ -88,6 +88,7 @@ func text3d(parent: Node, title: String, words: String, pos: Vector3, font_size:
 	return text
 
 func build() -> void:
+	DirAccess.make_dir_recursive_absolute("res://scenes/chapters")
 	seed(9326)
 	scene_root = Node3D.new()
 	scene_root.name = "MidnightWorkshop"
@@ -248,7 +249,7 @@ func build() -> void:
 	var error := scene.pack(scene_root)
 	if error == OK:
 		DirAccess.make_dir_recursive_absolute("res://scenes")
-		error = ResourceSaver.save(scene, "res://scenes/main.tscn")
+		error = ResourceSaver.save(scene, "res://scenes/chapters/workshop.tscn")
 	print("SCENE_BUILD: ", error, " nodes=", scene_root.find_children("*", "", true, false).size())
 	scene_root.free()
 	quit(error)
