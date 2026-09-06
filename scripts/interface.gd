@@ -27,11 +27,19 @@ var campaign_mode := false
 var has_campaign_save := false
 var chapter_menu: Control
 var confirm_new: ConfirmationDialog
+var active_panel: Control
+var return_focus: Control
+var notice_template := ""
+var repeat_action := ""
+var repeat_time := 0.0
+var pending_disconnect := false
 const PAPER := Color("ded7c3")
 const MUTED := Color("acb9b5")
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	InputHints.device_changed.connect(refresh_input_hints)
+	InputHints.controller_lost.connect(controller_disconnected)
 	var base := Control.new()
 	base.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -67,7 +75,7 @@ func _ready() -> void:
 	prompt = label(hud, "", Vector2(0, 860), 26, PAPER)
 	prompt.size.x = 1920
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint = label(hud, "A D 移动    W S 纵深    空格 跳跃    Shift 奔跑    Ctrl 蹲伏", Vector2(66, 986), 18, MUTED)
+	hint = label(hud, "", Vector2(66, 986), 18, MUTED)
 	threat = label(hud, "", Vector2(1440, 80), 20, Color("edac81"))
 	menu = full_control(base)
 	var shade := ColorRect.new()
@@ -81,7 +89,8 @@ func _ready() -> void:
 	label(menu, "所有玩具都睡了。\n除了你，和那个守夜的人。", Vector2(118, 451), 25, MUTED)
 	menu_button = button(menu, "开始旅程     →", Vector2(118, 606), func(): start_requested.emit())
 	button(menu, "离开工坊", Vector2(118, 683), func(): quit_requested.emit())
-	label(menu, "WASD 移动  /  空格 跳跃  /  E 互动", Vector2(118, 860), 18, MUTED)
+	var controls_hint := label(menu, "", Vector2(118, 860), 18, MUTED)
+	controls_hint.set_meta("input_template", "{move} 移动 / {jump} 跳跃 / {interact} 互动")
 	label(menu, "建议佩戴耳机  ·  原创短篇  ·  约 5–10 分钟", Vector2(118, 900), 17, MUTED)
 	pause_menu = overlay(base)
 	label(pause_menu, "让齿轮歇一会儿", Vector2(660, 265), 46, PAPER)
@@ -120,6 +129,7 @@ func _ready() -> void:
 	base.add_child(fade)
 	hud.hide()
 	menu_button.grab_focus()
+	refresh_input_hints()
 	AudioServer.set_bus_volume_db(0, linear_to_db(volume.value))
 
 func full_control(parent: Control) -> Control:
@@ -169,26 +179,141 @@ func button(parent: Control, text: String, pos: Vector2, action: Callable) -> Bu
 	result.add_theme_stylebox_override("hover", hover)
 	result.add_theme_stylebox_override("focus", hover)
 	result.add_theme_stylebox_override("pressed", hover)
-	result.pressed.connect(action)
+	result.pressed.connect(func():
+		InputHints.block_held()
+		action.call_deferred())
 	parent.add_child(result)
 	return result
 
 func notice(text: String, seconds: float = 4) -> void:
-	subtitles.text = text
+	notice_template = text
+	subtitles.text = InputHints.format_text(text)
 	notice_time = seconds
 
 func _process(delta: float) -> void:
+	if pending_disconnect and not get_parent().respawning:
+		pending_disconnect = false
+		controller_disconnected()
+	var panel := current_panel()
+	if panel != active_panel:
+		focus_panel(panel)
+	if not repeat_action.is_empty():
+		if not Input.is_action_pressed(repeat_action) or panel == null:
+			repeat_action = ""
+		else:
+			repeat_time -= delta
+			if repeat_time <= 0:
+				navigate(repeat_action)
+				repeat_time = .12
 	if notice_time > 0 and not get_tree().paused:
 		notice_time -= delta
 		if notice_time <= 0:
+			notice_template = ""
 			subtitles.text = ""
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and get_tree().paused:
+func _input(event: InputEvent) -> void:
+	# GUI handling can consume an event before the root autoload sees it.
+	InputHints.observe_event(event)
+	if confirm_new and confirm_new.visible:
+		return
+	var panel := current_panel()
+	if panel == null:
+		return
+	if panel != active_panel:
+		focus_panel(panel)
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
-		resume_requested.emit()
+		if event.is_echo() or (event.is_action_pressed("pause") and InputHints.blocked.has("pause")):
+			return
+		InputHints.block_held()
+		if chapter_menu and chapter_menu.visible:
+			close_chapters()
+		elif pause_menu.visible:
+			resume_requested.emit()
+		return
+	for action in ["ui_up", "ui_down", "ui_left", "ui_right", "ui_focus_next", "ui_focus_prev"]:
+		if event.is_action(action, true):
+			get_viewport().set_input_as_handled()
+			if event.is_action_pressed(action, false, true) and not event.is_echo() and repeat_action != action:
+				navigate(action)
+				repeat_action = action
+				repeat_time = .35
+			return
+	if event.is_action("ui_accept"):
+		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_accept") and not event.is_echo():
+			var focused := get_viewport().gui_get_focus_owner()
+			if focused is Button and not focused.disabled and panel.is_ancestor_of(focused):
+				focused.pressed.emit()
+
+func current_panel() -> Control:
+	if confirm_new and confirm_new.visible: return null
+	if chapter_menu and chapter_menu.visible: return chapter_menu
+	if ending.visible: return ending
+	if pause_menu.visible: return pause_menu
+	if menu.visible: return menu
+	return null
+
+func panel_controls(panel: Control) -> Array[Control]:
+	var controls: Array[Control] = []
+	if panel:
+		for child in panel.get_children():
+			if child.is_visible_in_tree() and ((child is Button and not child.disabled) or child is HSlider):
+				controls.append(child)
+	controls.sort_custom(func(a, b): return a.position.y < b.position.y)
+	return controls
+
+func focus_panel(panel: Control) -> void:
+	active_panel = panel
+	repeat_action = ""
+	var controls := panel_controls(panel)
+	var focused := get_viewport().gui_get_focus_owner()
+	if not controls.is_empty() and not focused in controls:
+		controls[0].grab_focus()
+
+func navigate(action: String) -> void:
+	var controls := panel_controls(current_panel())
+	if controls.is_empty(): return
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused is HSlider and action in ["ui_left", "ui_right"]:
+		focused.value += -.05 if action == "ui_left" else .05
+		return
+	var index := controls.find(focused)
+	var step := -1 if action in ["ui_up", "ui_left", "ui_focus_prev"] else 1
+	controls[posmod(index + step, controls.size())].grab_focus()
+
+func open_chapters() -> void:
+	return_focus = get_viewport().gui_get_focus_owner()
+	chapter_menu.show()
+	focus_panel(chapter_menu)
+
+func close_chapters() -> void:
+	chapter_menu.hide()
+	focus_panel(menu)
+	if is_instance_valid(return_focus): return_focus.grab_focus()
+
+func refresh_input_hints() -> void:
+	if not hint: return
+	hint.text = InputHints.format_text("{move} 移动   {jump} 跳跃   {run} 奔跑   {crouch} 蹲伏   {interact} 互动   {pause} 暂停")
+	for panel in [menu, pause_menu, chapter_menu, ending]:
+		if not panel: continue
+		for child in panel.get_children():
+			if child.has_meta("input_template"):
+				child.text = InputHints.format_text(child.get_meta("input_template"))
+	if subtitles: subtitles.text = InputHints.format_text(notice_template)
+
+func controller_disconnected() -> void:
+	var game = get_parent()
+	if game.playing and game.respawning:
+		pending_disconnect = true
+		return
+	if game.playing and not game.respawning:
+		if not get_tree().paused: game.toggle_pause()
+		notice("手柄已断开。重新连接或使用键盘，确认后继续。", 6)
+		subtitles.show()
 
 func begin() -> void:
+	InputHints.block_held()
 	menu.hide()
 	ending.hide()
 	pause_menu.hide()
@@ -199,6 +324,7 @@ func begin() -> void:
 		chapter_menu.hide()
 
 func set_pause(value: bool) -> void:
+	InputHints.block_held()
 	pause_menu.visible = value
 	subtitles.visible = not value
 	if value:
@@ -219,8 +345,10 @@ func enable_campaign(has_save: bool, unlocked: Array) -> void:
 	menu_button = button(menu, "开始新旅程     →", Vector2(118, 585), request_new_journey)
 	var continue_button = button(menu, "继续旅程", Vector2(118, 660), func(): continue_requested.emit())
 	continue_button.disabled = not has_save
-	button(menu, "关卡选择", Vector2(118, 735), func(): chapter_menu.show())
+	button(menu, "关卡选择", Vector2(118, 735), open_chapters)
 	button(menu, "离开工坊", Vector2(118, 810), func(): quit_requested.emit())
+	var menu_help := label(menu, "", Vector2(118, 889), 18, MUTED)
+	menu_help.set_meta("input_template", "{accept} 确认")
 	label(menu, "四章旅程  ·  检查点自动保存", Vector2(118, 928), 18, MUTED)
 	chapter_menu = overlay(menu.get_parent())
 	label(chapter_menu, "线，通向哪里", Vector2(710, 180), 45, PAPER)
@@ -229,7 +357,7 @@ func enable_campaign(has_save: bool, unlocked: Array) -> void:
 	for i in range(4):
 		var chapter_button = button(chapter_menu, names[i] + ("" if ids[i] in unlocked else "  ·  未解锁"), Vector2(735, 310 + i * 82), func(): chapter_selected.emit(i))
 		chapter_button.disabled = ids[i] not in unlocked
-	button(chapter_menu, "返回", Vector2(735, 700), func(): chapter_menu.hide())
+	button(chapter_menu, "返回", Vector2(735, 700), close_chapters)
 	chapter_menu.hide()
 	# Reuse the existing audio slider; replace the pause actions only.
 	for child in pause_menu.get_children():
@@ -251,11 +379,29 @@ func enable_campaign(has_save: bool, unlocked: Array) -> void:
 	confirm_new.cancel_button_text = "取消"
 	confirm_new.theme = menu.get_parent().theme
 	menu.get_parent().add_child(confirm_new)
-	confirm_new.confirmed.connect(func(): new_journey_requested.emit())
+	var confirm_button := confirm_new.get_ok_button()
+	var cancel_button := confirm_new.get_cancel_button()
+	for property in ["focus_neighbor_left", "focus_neighbor_right", "focus_neighbor_top", "focus_neighbor_bottom", "focus_next", "focus_previous"]:
+		confirm_button.set(property, confirm_button.get_path_to(cancel_button))
+		cancel_button.set(property, cancel_button.get_path_to(confirm_button))
+	confirm_new.confirmed.connect(func():
+		InputHints.block_held()
+		new_journey_requested.emit())
+	confirm_new.window_input.connect(func(event: InputEvent):
+		InputHints.observe_event(event)
+		if event.is_action_pressed("ui_cancel"):
+			InputHints.block_held()
+			confirm_new.hide()
+			confirm_new.set_input_as_handled())
+	for panel in [chapter_menu, pause_menu, ending]:
+		var help := label(panel, "", Vector2(740, 895), 18, MUTED)
+		help.set_meta("input_template", "{accept} 确认" if panel == ending else "{accept} 确认  /  {cancel} 返回")
+	refresh_input_hints()
 	menu_button.grab_focus()
 
 func request_new_journey() -> void:
 	if has_campaign_save:
 		confirm_new.popup_centered(Vector2i(640, 230))
+		confirm_new.get_cancel_button().grab_focus()
 	else:
 		new_journey_requested.emit()

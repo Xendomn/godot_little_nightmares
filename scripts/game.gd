@@ -61,7 +61,7 @@ func start_game() -> void:
 	refresh_world()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and playing and not respawning:
+	if event.is_action_pressed("pause") and not InputHints.blocked.has("pause") and playing and not respawning:
 		toggle_pause()
 
 func toggle_pause() -> void:
@@ -85,14 +85,14 @@ func _process(delta: float) -> void:
 		state.enter_checkpoint(2)
 		checkpoint_reached.emit(2)
 		chapter_index = 2
-		ui.notice("别回头。  按住 Shift 奔跑", 4)
+		ui.notice("别回头。  按住 {run} 奔跑", 4)
 		refresh_world()
 	keeper.active = x > 28 and player.enabled
 	camera.chase = state.power_on
 	sounds.desired_mix = 1.0 if state.power_on or keeper.mode == keeper.Mode.CHASE else keeper.suspicion * 0.5
 	if x > 19 and not low_hint_shown:
 		low_hint_shown = true
-		ui.notice("低矮的地方，藏得下一个小小的你。  Ctrl 蹲伏", 4)
+		ui.notice("低矮的地方，藏得下一个小小的你。  {crouch} 蹲伏", 4)
 	if x > 86 and state.power_on:
 		finish_game()
 		return
@@ -116,8 +116,8 @@ func update_prompt() -> void:
 			nearest = item
 	if crate.can_interact(player):
 		nearest = crate
-	ui.prompt.text = nearest.get_prompt() if nearest else ""
-	if nearest and Input.is_action_just_pressed("interact"):
+	ui.prompt.text = InputHints.format_text(nearest.get_prompt()) if nearest else ""
+	if nearest and InputHints.just_pressed("interact"):
 		nearest.interact(player)
 
 func on_item_used(kind: String) -> void:

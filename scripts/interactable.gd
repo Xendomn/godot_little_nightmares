@@ -7,9 +7,9 @@ var time: float = 0.0
 
 func get_prompt() -> String:
 	match kind:
-		"fuse": return "E  拾起保险丝"
-		"panel": return "电路已接通" if state.power_on else ("E  装入保险丝" if state.has_fuse else ("电流正在等待开关" if state.fuse_installed else "这里缺少一枚保险丝"))
-		"lever": return "电闸已经拉下" if state.power_on else ("E  拉下电闸" if state.fuse_installed else "配电箱还没有保险丝")
+		"fuse": return "{interact}  拾起保险丝"
+		"panel": return "电路已接通" if state.power_on else ("{interact}  装入保险丝" if state.has_fuse else ("电流正在等待开关" if state.fuse_installed else "这里缺少一枚保险丝"))
+		"lever": return "电闸已经拉下" if state.power_on else ("{interact}  拉下电闸" if state.fuse_installed else "配电箱还没有保险丝")
 	return ""
 
 func can_interact(_player: Node3D) -> bool:

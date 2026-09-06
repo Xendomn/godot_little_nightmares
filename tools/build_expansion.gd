@@ -219,14 +219,14 @@ func hide_table(x: float, y: float) -> void:
 func laundry() -> void:
 	floor_span(-3, 23)
 	floor_span(27, 66, 2.6)
-	mechanism("drain", Vector3(7, .7, -.65), "E  转动排水阀")
+	mechanism("drain", Vector3(7, .7, -.65), "{interact}  转动排水阀")
 	box(world, "Water", Vector3(13, .15, 0), Vector3(6, .28, 5.7), mat("water", "43747c", .5))
 	hazard("WaterHazard", 13, 0, 6, 1000, 1000)
 	world.get_node("WaterHazard/Warning").visible = false
 	world.get_node("WaterHazard/Caption").hide()
 	push_box(21, 25, "洗衣车")
 	platform("Lift", Vector3(25, 0, 0), Vector3(4, .32, 3.6), Vector3(0, 2.6, 0))
-	mechanism("fill", Vector3(24.4, .85, -1.2), "E  打开灌水杆 · 先把洗衣车推上黄框")
+	mechanism("fill", Vector3(24.4, .85, -1.2), "{interact}  打开灌水杆 · 先把洗衣车推上黄框")
 	# Lift control travels with platform, remaining accessible after activation.
 	for x in [3, 11, 18, 34, 44, 57]:
 		var drum := cylinder(world, "WashingDrum", Vector3(x, 2 + (2.6 if x > 27 else 0), -2.5), 1.7, 1, iron)
@@ -250,9 +250,9 @@ func vault() -> void:
 	push_box(6, 10, "线轴箱")
 	for i in range(3):
 		platform("Bridge" + str(i), Vector3([14, 26, 36][i], 3.4, 0), Vector3(4.1, .32, 3.6), Vector3(0, -3.4, 0))
-	mechanism("winch_a", Vector3(21, .75, -.7), "E  转动第一绞盘")
-	mechanism("winch_b", Vector3(31, .75, -.7), "E  转动第二绞盘")
-	mechanism("bell", Vector3(41, .75, .9), "E  摇铃引开守卫 · 可重复使用")
+	mechanism("winch_a", Vector3(21, .75, -.7), "{interact}  转动第一绞盘")
+	mechanism("winch_b", Vector3(31, .75, -.7), "{interact}  转动第二绞盘")
+	mechanism("bell", Vector3(41, .75, .9), "{interact}  摇铃引开守卫 · 可重复使用")
 	for x in range(2, 64, 5):
 		for y in [1.5, 3.5, 5.5]:
 			box(world, "RackShelf", Vector3(x, y - .2, -2.4), Vector3(4, .13, 1), materials["wood"])
@@ -273,7 +273,7 @@ func clocktower() -> void:
 		floor_span(span[0], span[1], 2.6)
 	# Maintenance ledge for the tall pursuer, separated from the player's jump lane.
 	box(world, "KeeperLedge", Vector3(51, 2.3, -2), Vector3(48, .6, 1.8), iron, true)
-	mechanism("brake", Vector3(7, .75, -.6), "E  制动摆锤 · 暂停八秒")
+	mechanism("brake", Vector3(7, .75, -.6), "{interact}  制动摆锤 · 暂停八秒")
 	for x in [11, 14]:
 		hazard("Pendulum" + str(x), x, 0, .8, 3.5, 2.3)
 		var pivot := Node3D.new()
@@ -283,10 +283,10 @@ func clocktower() -> void:
 		box(pivot, "Stem", Vector3(0, -2, 0), Vector3(.12, 4, .15), brass)
 		var disk := cylinder(pivot, "Weight", Vector3(0, -4, 0), .65, .2, brass)
 		disk.rotation.x = PI / 2
-	mechanism("wind", Vector3(24, .8, -1.2), "E  给升降台上弦")
-	mechanism("release", Vector3(31.5, 3.35, -.65), "E  释放钟锤")
+	mechanism("wind", Vector3(24, .8, -1.2), "{interact}  给升降台上弦")
+	mechanism("release", Vector3(31.5, 3.35, -.65), "{interact}  释放钟锤")
 	box(world, "LowTunnel", Vector3(56, 4.15, .5), Vector3(2.7, 1.3, 2.9), iron, true)
-	text3d(world, "DuckMark", "CTRL", Vector3(54.8, 3.2, 1.5), 27)
+	text3d(world, "DuckMark", "CROUCH", Vector3(54.8, 3.2, 1.5), 27)
 	for x in [6, 21, 38, 50, 65]:
 		var gear := cylinder(world, "ClockGear", Vector3(x, 5.8, -2.5), 2, .2, brass)
 		gear.rotation.x = PI / 2

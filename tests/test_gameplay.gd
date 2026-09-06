@@ -1,4 +1,5 @@
 extends SceneTree
+const TestInput = preload("res://tests/input_events.gd")
 
 var game
 var failures: int = 0
@@ -19,9 +20,9 @@ func frames(count: int) -> void:
 
 func action(key: String, pressed: bool) -> void:
 	if pressed:
-		Input.action_press(key)
+		TestInput.press(key)
 	else:
-		Input.action_release(key)
+		TestInput.release(key)
 
 func tap(key: String) -> void:
 	action(key, true)

@@ -4590,7 +4590,7 @@ shape = SubResource("BoxShape3D_b25du")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.75, -0.6)
 script = ExtResource("4_0eiip")
 id = "brake"
-prompt = "E  制动摆锤 · 暂停八秒"
+prompt = "{interact}  制动摆锤 · 暂停八秒"
 
 [node name="Mount" type="Node3D" parent="World/Brake" unique_id=119597916]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.2)
@@ -4713,7 +4713,7 @@ mesh = SubResource("CylinderMesh_2t50x")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.8, -1.2)
 script = ExtResource("4_0eiip")
 id = "wind"
-prompt = "E  给升降台上弦"
+prompt = "{interact}  给升降台上弦"
 
 [node name="Mount" type="Node3D" parent="World/Wind" unique_id=253071704]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.2)
@@ -4752,7 +4752,7 @@ outline_size = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 3.35, -0.65)
 script = ExtResource("4_0eiip")
 id = "release"
-prompt = "E  释放钟锤"
+prompt = "{interact}  释放钟锤"
 
 [node name="Mount" type="Node3D" parent="World/Release" unique_id=85105729]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.2)
@@ -4801,7 +4801,7 @@ shape = SubResource("BoxShape3D_1jl1s")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.8, 3.2, 1.5)
 pixel_size = 0.008
 modulate = Color(0.6745098, 0.62352943, 0.50980395, 1)
-text = "CTRL"
+text = "CROUCH"
 font_size = 27
 outline_size = 0
 

@@ -4019,7 +4019,7 @@ mesh = SubResource("BoxMesh_mk251")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.7, -0.65)
 script = ExtResource("3_812hs")
 id = "drain"
-prompt = "E  转动排水阀"
+prompt = "{interact}  转动排水阀"
 
 [node name="Mount" type="Node3D" parent="World/Drain" unique_id=658116457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.2)
@@ -4147,7 +4147,7 @@ mesh = SubResource("CylinderMesh_stwtk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.4, 0.85, -1.2)
 script = ExtResource("3_812hs")
 id = "fill"
-prompt = "E  打开灌水杆 · 先把洗衣车推上黄框"
+prompt = "{interact}  打开灌水杆 · 先把洗衣车推上黄框"
 
 [node name="Mount" type="Node3D" parent="World/Fill" unique_id=51848498]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.2)

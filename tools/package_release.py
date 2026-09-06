@@ -8,6 +8,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / 'build'
 shutil.copy2(ROOT / 'README.md', BUILD / 'README.md')
+shutil.copy2(ROOT / 'docs' / 'windows-quickstart.txt', BUILD / '开始游戏.txt')
 files = ['MidnightWorkshop.exe', 'README.md', '开始游戏.txt',
          'Godot-LICENSE.txt', 'Godot-COPYRIGHT.txt', 'NotoSansSC-OFL.txt']
 archive = BUILD / 'MidnightWorkshop-Windows.zip'

@@ -2,7 +2,7 @@ extends Node3D
 
 signal used(id: String)
 @export var id: String
-@export var prompt: String = "E  操作机关"
+@export var prompt: String = "{interact}  操作机关"
 var chapter: Node3D
 
 func get_prompt() -> String:

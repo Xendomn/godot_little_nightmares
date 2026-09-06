@@ -13,7 +13,7 @@ func _ready() -> void:
 	original_position = position
 
 func get_prompt() -> String:
-	return "按住 E + A / D  推动" + display_name
+	return "按住 {interact} + {horizontal}  推动" + display_name
 
 func can_interact(actor: Node3D) -> bool:
 	return absf(actor.global_position.x - global_position.x) < 1.2 and absf(actor.global_position.z - global_position.z) < 0.85 and actor.global_position.y < global_position.y + 0.4
@@ -22,7 +22,7 @@ func interact(_actor: Node3D) -> void:
 	pass
 
 func _physics_process(delta: float) -> void:
-	active = is_instance_valid(player) and player.enabled and Input.is_action_pressed("interact") and can_interact(player)
+	active = is_instance_valid(player) and player.enabled and InputHints.pressed("interact") and can_interact(player)
 	if is_instance_valid(player):
 		player.pushing = active
 	velocity.y -= 20 * delta

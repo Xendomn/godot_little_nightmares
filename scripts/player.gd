@@ -36,7 +36,7 @@ func _physics_process(delta: float) -> void:
 	if not enabled:
 		return
 	var axis := Input.get_vector("left", "right", "depth_up", "depth_down")
-	var wants_crouch := Input.is_action_pressed("crouch")
+	var wants_crouch := InputHints.pressed("crouch")
 	if wants_crouch:
 		crouching = true
 	elif crouching:
@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 	if absf(axis.x) > 0.05:
 		facing = signf(axis.x)
 	coyote = 0.12 if is_on_floor() else coyote - delta
-	jump_buffer = 0.14 if Input.is_action_just_pressed("jump") else jump_buffer - delta
+	jump_buffer = 0.14 if InputHints.just_pressed("jump") else jump_buffer - delta
 	if jump_buffer > 0 and coyote > 0 and not crouching and not pushing:
 		velocity.y = JUMP_SPEED
 		coyote = 0

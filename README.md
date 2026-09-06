@@ -1,6 +1,6 @@
 ﻿# 午夜工坊 · Midnight Workshop
 
-原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。Windows 键鼠、单人、无血腥。
+原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。Windows 键鼠／Xbox 手柄、单人、无血腥。
 
 ## 开始游戏
 
@@ -10,14 +10,17 @@
 
 ## 操作与进度
 
-| 按键 | 动作 |
-|---|---|
-| A / D，W / S | 左右、有限纵深移动 |
-| Space | 跳跃 |
-| Shift | 奔跑；近处会被听见 |
-| Ctrl | 蹲伏；桌底遮挡视线，低通道自动保持蹲伏 |
-| E | 互动；按住 E + A / D 推箱、洗衣车或线轴箱 |
-| Esc | 暂停、音量、重试检查点、重玩本关、新旅程 |
+| 动作 | 键盘 | Xbox 手柄 |
+|---|---|---|
+| 左右、有限纵深移动 | WASD 或方向键 | 左摇杆／十字键 |
+| 跳跃 | Space | A |
+| 奔跑；近处会被听见 | 按住 Shift | 按住 RT |
+| 蹲伏；低通道自动保持蹲伏 | 按住 Ctrl | 按住 B |
+| 互动／推箱、洗衣车或线轴箱 | E／按住 E 并左右移动 | X／按住 X 并左右移动 |
+| 暂停／继续 | Esc | Menu |
+| 菜单确认／返回 | Enter／Esc | A／B |
+
+菜单使用方向键、左摇杆或十字键选择；音量滑块左右调整。提示跟随最近使用的设备切换。游玩时正在使用的手柄断开会暂停，重连后需要主动继续，键盘始终可用。支持 Windows 下 Godot 识别的 Xbox 手柄；本版不含震动、自定义改键或多人分配。实体手柄验收状态见 `docs/controller-verification.md`。
 
 每章三个检查点，失败自动重生。检查点和已解锁章节保存至 Godot `user://campaign.json`，主菜单可继续旅程或选择已解锁章节。存档写入使用临时文件与备份，主档损坏时尝试恢复备份。音量独立保存在 `user://settings.cfg`。开始新旅程需确认，会清除章节进度，保留音量。
 
@@ -59,13 +62,15 @@ powershell -ExecutionPolicy Bypass -File tools/verify.ps1
 python tests/test_builder.py
 ```
 
-15 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。窗口路线与性能检查：
+18 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd
 godot --path . --resolution 1920x1080 --script tests/test_campaign_ui.gd
 godot --path . --resolution 1920x1080 --script tests/benchmark_expansion.gd
 godot --path . --fixed-fps 60 --script tests/test_crouch_render.gd
+godot --path . --fixed-fps 60 --script tests/test_controller_ui.gd
+godot --path . --fixed-fps 60 --script tests/test_routes.gd -- --controller
 blender --background --python-exit-code 1 --python tests/check_crouch_mesh.py
 ```
 

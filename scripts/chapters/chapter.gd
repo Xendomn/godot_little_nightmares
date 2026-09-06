@@ -106,7 +106,7 @@ func use_mechanism(id: String) -> void:
 			ui.notice("摆锤停住八秒。现在穿过！", 3)
 		"release":
 			begin_chase()
-			ui.notice("钟响了。奔向晨光！  Shift 奔跑", 4)
+			ui.notice("钟响了。奔向晨光！  {run} 奔跑", 4)
 	refresh()
 
 func begin_chase() -> void:
@@ -195,8 +195,8 @@ func update_prompt() -> void:
 				continue
 			nearest = item
 			distance = d
-	ui.prompt.text = nearest.get_prompt() if nearest else ""
-	if nearest and Input.is_action_just_pressed("interact"):
+	ui.prompt.text = InputHints.format_text(nearest.get_prompt()) if nearest else ""
+	if nearest and InputHints.just_pressed("interact"):
 		nearest.interact(player)
 
 func refresh() -> void:
@@ -289,7 +289,7 @@ func finish_game() -> void:
 			ui.ending.show()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and playing and not respawning:
+	if event.is_action_pressed("pause") and not InputHints.blocked.has("pause") and playing and not respawning:
 		toggle_pause()
 
 func toggle_pause() -> void:

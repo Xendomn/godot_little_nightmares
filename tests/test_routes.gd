@@ -1,9 +1,9 @@
 extends "res://tests/test_expansion.gd"
 
 func jump_to(target: float) -> void:
-	Input.action_press("jump")
+	TestInput.press("jump")
 	await move_x(target)
-	Input.action_release("jump")
+	TestInput.release("jump")
 	await frames(8)
 
 func capture(name: String) -> void:
@@ -17,7 +17,7 @@ func run() -> void:
 	await depth(1.15)
 	await move_x(37, "crouch")
 	await capture("laundry-stealth")
-	Input.action_press("crouch")
+	TestInput.press("crouch")
 	for i in range(850):
 		await physics_frame
 		if game.keeper.position.x < 36.7 and game.keeper.facing < 0:
@@ -41,7 +41,7 @@ func run() -> void:
 	check(game.keeper.distraction > 0, "bell attracts keeper through player input")
 	await move_x(46, "crouch")
 	await capture("vault-stealth")
-	Input.action_press("crouch")
+	TestInput.press("crouch")
 	for i in range(900):
 		await physics_frame
 		if game.keeper.position.x < 42:
