@@ -109,6 +109,7 @@ func build_chapter(index: int) -> void:
 	box(world, "ExitGlow", Vector3(exit_x, 2.2 + (2.6 if index != 2 else 0), -.78), Vector3(2.2, 3.9, .05), glow)
 	light(world, "ExitLight", Vector3(exit_x, 3 + (2.6 if index != 2 else 0), .2), "ffe0ad", 3, 7)
 	apply_patina(scene_root)
+	load("res://tools/keeper_navigation_mesh.gd").attach(scene_root, IDS[index])
 	assign_owner(scene_root)
 	var packed := PackedScene.new()
 	var error := packed.pack(scene_root)

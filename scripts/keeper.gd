@@ -32,6 +32,13 @@ var breath: AudioStreamPlayer3D
 var heavy_step: AudioStreamPlayer3D
 var cloth_rustle: AudioStreamPlayer3D
 var step_time := 0.0
+var navigator: NavigationAgent3D
+var navigation_goal := Vector3.ZERO
+var navigation_goal_valid := false
+var stalled_time := 0.0
+var stalled_anchor := Vector3.ZERO
+var stalled_retries := 0
+var pursuit_depth: float = INF
 
 func _ready() -> void:
 	visual_driver = preload("res://scripts/character_visual.gd").new()
@@ -40,6 +47,14 @@ func _ready() -> void:
 	breath = spatial_sound("keeper_breath", -10, true)
 	heavy_step = spatial_sound("keeper_step", -2, false)
 	cloth_rustle = spatial_sound("keeper_cloth", -8, false)
+	navigator = NavigationAgent3D.new()
+	navigator.name = "GroundNavigationAgent"
+	navigator.path_desired_distance = .18
+	navigator.target_desired_distance = .20
+	navigator.radius = .40
+	navigator.height = 3.4
+	navigator.avoidance_enabled = false
+	add_child(navigator)
 
 func spatial_sound(id: String, volume: float, looping: bool) -> AudioStreamPlayer3D:
 	var audio := AudioStreamPlayer3D.new()
@@ -101,7 +116,8 @@ func _physics_process(delta: float) -> void:
 		visual_driver.play("grab", 0.7)
 	gait += delta * (10 if mode == Mode.CHASE else 4)
 	$Visual.rotation.y = lerp_angle($Visual.rotation.y, facing * PI / 2, delta * 5)
-	visual_driver.play("chase" if mode == Mode.CHASE else ("listen" if mode == Mode.ALERT else "walk"))
+	var moving := finale or Vector2(velocity.x, velocity.z).length() > .1
+	visual_driver.play(("chase" if mode == Mode.CHASE else "walk") if moving else ("listen" if mode in [Mode.ALERT, Mode.CHASE] else "idle"))
 	if has_node("EyeLight"):
 		$EyeLight.light_color = Color(1, 0.25, 0.12) if mode == Mode.CHASE else Color(1, 0.65, 0.3)
 
@@ -122,11 +138,10 @@ func update_patrol(delta: float) -> void:
 	if distraction > 0:
 		distraction -= delta
 		mode = Mode.ALERT
-		facing = signf(distraction_position.x - global_position.x)
-		velocity = Vector3(facing * 1.2, velocity.y - 20 * delta, 0)
-		if absf(distraction_position.x - global_position.x) < 0.4:
-			velocity.x = 0
-		move_and_slide()
+		follow_ground_path(distraction_position, 1.2, delta)
+		if distraction <= 0:
+			mode = Mode.RETURN
+			navigation_goal_valid = false
 		return
 	var sees := can_see_player()
 	var hears: bool = player.running and player.global_position.distance_to(global_position) < 3.6
@@ -146,19 +161,40 @@ func update_patrol(delta: float) -> void:
 	var speed := 1.05
 	if mode == Mode.CHASE:
 		target = last_seen
+		if is_finite(pursuit_depth):
+			target.z = pursuit_depth
 		speed = chase_speed
 	elif mode == Mode.ALERT:
 		target = global_position
-		facing = signf(player.global_position.x - global_position.x)
+		if absf(player.global_position.x - global_position.x) > .1:
+			facing = signf(player.global_position.x - global_position.x)
 	elif mode == Mode.RETURN:
 		target = start_position
 		if global_position.distance_to(target) < 0.4:
 			mode = Mode.PATROL
 	elif absf(global_position.x - patrol_target) < 0.3:
 		patrol_target = patrol_max if patrol_target < (patrol_min + patrol_max) * 0.5 else patrol_min
-	var direction := target - global_position
+	follow_ground_path(target, speed, delta)
+
+func follow_ground_path(target: Vector3, speed: float, delta: float) -> void:
+	if not navigator or NavigationServer3D.map_get_iteration_id(navigator.get_navigation_map()) == 0:
+		velocity = Vector3(0, velocity.y - 20 * delta, 0)
+		move_and_slide()
+		return
+	if not navigation_goal_valid or navigation_goal.distance_to(target) > .35:
+		if not navigation_goal_valid:
+			stalled_anchor = global_position
+			stalled_time = 0
+			stalled_retries = 0
+		navigation_goal = target
+		navigation_goal_valid = true
+		navigator.target_position = target
+	var next := navigator.get_next_path_position()
+	var direction := next - global_position
 	direction.y = 0
-	if direction.length() > 0.1:
+	if navigator.is_navigation_finished():
+		direction = Vector3.ZERO
+	elif direction.length() > 0.01:
 		direction = direction.normalized()
 		if absf(direction.x) > 0.05:
 			facing = signf(direction.x)
@@ -166,13 +202,28 @@ func update_patrol(delta: float) -> void:
 	velocity.z = direction.z * speed
 	velocity.y -= 20 * delta
 	move_and_slide()
-	# Follow the clear back aisle when a worktable blocks pursuit.
-	if get_slide_collision_count() > 1 and mode == Mode.CHASE:
-		global_position.z = move_toward(global_position.z, patrol_depth, delta)
-	global_position.x = clampf(global_position.x, zone_min, zone_max)
-	global_position.z = clampf(global_position.z, -1.5, 1.5)
+	if direction.length_squared() < .01 or global_position.distance_to(stalled_anchor) > .1:
+		stalled_time = 0
+		stalled_anchor = global_position
+		stalled_retries = 0
+	else:
+		stalled_time += delta
+		if stalled_time > 1.0:
+			stalled_time = 0
+			stalled_retries += 1
+			navigator.target_position = target
+			if stalled_retries >= 2:
+				mode = Mode.RETURN
+				suspicion = 0
+				distraction = 0
+				navigation_goal_valid = false
 
 func reset_keeper(chase_mode: bool = false) -> void:
+	navigation_goal_valid = false
+	stalled_time = 0
+	stalled_retries = 0
+	if navigator:
+		navigator.target_position = global_position
 	finale = chase_mode
 	attack_time = 0
 	attack_cooldown = 0

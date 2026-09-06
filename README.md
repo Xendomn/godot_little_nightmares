@@ -59,12 +59,14 @@ powershell -ExecutionPolicy Bypass -File tools/verify.ps1
 python tests/test_builder.py
 ```
 
-13 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。窗口路线与性能检查：
+15 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd
 godot --path . --resolution 1920x1080 --script tests/test_campaign_ui.gd
 godot --path . --resolution 1920x1080 --script tests/benchmark_expansion.gd
+godot --path . --fixed-fps 60 --script tests/test_crouch_render.gd
+blender --background --python-exit-code 1 --python tests/check_crouch_mesh.py
 ```
 
 重建素材与场景会覆盖相应手工修改，须依次执行：

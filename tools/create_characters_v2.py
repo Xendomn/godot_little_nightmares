@@ -17,7 +17,7 @@ import zlib
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Vector, Matrix
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -363,11 +363,64 @@ def hero_rig():
         ("Thigh.R", (.105, 0, .42), (.105, -.005, .22), "Hips", False),
         ("Shin.R", (.105, -.005, .22), (.105, -.02, .075), "Thigh.R", True),
         ("Foot.R", (.105, -.02, .075), (.105, -.15, .045), "Shin.R", True),
-        ("ClothRoot", (0, .10, .72), (.015, .15, .49), "Hips", False),
+        ("ClothRoot", (0, .10, .72), (.015, .15, .49), "Root", False),
         ("ClothMid", (.015, .15, .49), (.04, .21, .27), "ClothRoot", True),
         ("ClothTip", (.04, .21, .27), (.13, .34, .12), "ClothMid", True),
     ]
     return create_armature("DollArmature", specs)
+
+
+def hero_cloak_weights(p):
+    # Anchor the hem, then smoothly transfer through pelvis into folded torso.
+    z = p[2]
+    anchors = [("Root", .30), ("Hips", .55), ("Spine", .82), ("Chest", 1.02)]
+    if z <= anchors[0][1]:
+        return {"Root": 1.0}
+    for (a, za), (b, zb) in zip(anchors, anchors[1:]):
+        if z <= zb:
+            t = (z-za)/(zb-za)
+            return {a: 1-t, b: t}
+    return {"Chest": 1.0}
+
+
+def hero_crouch_pose(stride=0.0, amount=1.0):
+    arm = bpy.data.objects["DollArmature"]
+    for pb in arm.pose.bones:
+        pb.matrix_basis = Matrix.Identity(4)
+    arm.pose.bones["Hips"].location.y = -.26 * amount
+    arm.pose.bones["Spine"].rotation_mode = "XYZ"
+    arm.pose.bones["Spine"].rotation_euler.x = math.radians(95 * amount)
+    arm.pose.bones["Head"].rotation_mode = "XYZ"
+    arm.pose.bones["Head"].rotation_euler.x = math.radians(-85 * amount)
+    bpy.context.view_layer.update()
+    # Analytic two-link IK: fixed ankle height and orientation, forward bent knees.
+    for side, step in (("L",stride),("R",-stride)):
+        thigh, shin, foot = [arm.pose.bones[f"{b}.{side}"] for b in ("Thigh","Shin","Foot")]
+        hip = thigh.head.copy()
+        ankle = foot.bone.head_local.copy() + Vector((0, step, 0))
+        delta = ankle - hip
+        d = delta.length
+        l1, l2 = thigh.bone.length, shin.bone.length
+        along = (l1*l1 - l2*l2 + d*d)/(2*d)
+        forward = Vector((0,-1,0))
+        perpendicular = (forward - delta.normalized()*forward.dot(delta.normalized())).normalized()
+        knee = hip + delta.normalized()*along + perpendicular*math.sqrt(max(0,l1*l1-along*along))
+        for pb, head, tail in ((thigh,hip,knee),(shin,knee,ankle)):
+            rest_direction = pb.bone.tail_local - pb.bone.head_local
+            rotation = rest_direction.rotation_difference(tail-head).to_matrix().to_4x4()
+            matrix = rotation @ pb.bone.matrix_local
+            matrix.translation = head
+            pb.matrix = matrix
+            bpy.context.view_layer.update()
+        matrix = foot.bone.matrix_local.copy()
+        matrix.translation = ankle
+        foot.matrix = matrix
+        bpy.context.view_layer.update()
+    result = {pb.name: (tuple(pb.matrix_basis.to_euler()), tuple(pb.matrix_basis.translation)) for pb in arm.pose.bones}
+    for pb in arm.pose.bones:
+        pb.matrix_basis = Matrix.Identity(4)
+    bpy.context.view_layer.update()
+    return result
 
 
 def hero_clips():
@@ -380,13 +433,7 @@ def hero_clips():
             "UpperArm.L": P((-a * swing * .8, 0, 0)), "UpperArm.R": P((a * swing * .8, 0, 0)),
             "ClothMid": P((a * 7, 0, a * 4)), "ClothTip": P((-a * 11, 0, -a * 5)),
         }
-    # Bone-local Y follows these vertical bones. Drop the torso deeply while
-    # counter-translating the leg chains so the feet remain planted.
-    crouch = {"Hips": P((0, 0, 0), (0, -.70, 0)),
-              "Thigh.L": P((-42, 0, 0), (0, -.70, 0)), "Thigh.R": P((-42, 0, 0), (0, -.70, 0)),
-              "Shin.L": P((70, 0, 0)), "Shin.R": P((70, 0, 0)), "Spine": P((32, 0, 0)),
-              "UpperArm.L": P((-24, 0, -8), (0, -.40, 0)), "UpperArm.R": P((-24, 0, 8), (0, -.40, 0)),
-              "ClothRoot": P((0, 0, 0), (0, -.63, 0))}
+    crouch = hero_crouch_pose()
     clips = [
         ("idle", 40, True, [(1, {"Spine": P((1, 0, -1)), "Head": P((0, -3, 1)), "ClothTip": P((3, 0, -4))}),
                              (20, {"Spine": P((-1, 0, 1)), "Head": P((0, 2, -1)), "ClothTip": P((-4, 0, 5))}),
@@ -396,12 +443,10 @@ def hero_clips():
         ("jump", 18, False, [(1, gait(0)), (7, {"Thigh.L": P((-38, 0, 0)), "Thigh.R": P((-38, 0, 0)), "Shin.L": P((65, 0, 0)), "Shin.R": P((65, 0, 0)), "UpperArm.L": P((110, 0, -12)), "UpperArm.R": P((110, 0, 12))}), (18, {"Thigh.L": P((18, 0, 0)), "Thigh.R": P((18, 0, 0)), "ClothTip": P((-28, 0, 0))})]),
         ("fall", 20, False, [(1, {"UpperArm.L": P((45, 0, -18)), "UpperArm.R": P((55, 0, 22)), "ClothTip": P((-24, 0, 9))}), (20, {"UpperArm.L": P((70, 0, -25)), "UpperArm.R": P((60, 0, 28)), "ClothTip": P((-35, 0, 13))})]),
         ("land", 14, False, [(1, {"Hips": P((0, 0, 0), (0, 0, -.18)), "Thigh.L": P((-38, 0, 0)), "Thigh.R": P((-38, 0, 0)), "Shin.L": P((62, 0, 0)), "Shin.R": P((62, 0, 0))}), (8, {"Hips": P((0, 0, 0), (0, 0, -.27)), "Spine": P((22, 0, 0))}), (14, {})]),
-        ("crouch", 12, False, [(1, {}), (12, crouch)]),
-        ("crouch_walk", 24, True, [(1, {**crouch, "Thigh.L":P((-31,0,0),(0,-.70,0)), "Thigh.R":P((-49,0,0),(0,-.70,0)), "ClothTip":P((-5,0,-3))}),
-                                     (12, {**crouch, "Thigh.L":P((-49,0,0),(0,-.70,0)), "Thigh.R":P((-31,0,0),(0,-.70,0)), "ClothTip":P((5,0,3))}),
-                                     (24, {**crouch, "Thigh.L":P((-31,0,0),(0,-.70,0)), "Thigh.R":P((-49,0,0),(0,-.70,0)), "ClothTip":P((-5,0,-3))})]),
+        ("crouch", 24, True, [(1, crouch), (24, crouch)]),
+        ("crouch_walk", 24, True, [(f, hero_crouch_pose(math.sin((f-1)/23*TAU)*.010)) for f in range(1,25)]),
         ("push", 28, False, [(1, {}), (10, {"Spine": P((24, 0, 0)), "UpperArm.L": P((-84, 0, -5)), "UpperArm.R": P((-84, 0, 5)), "Forearm.L": P((-18, 0, 0)), "Forearm.R": P((-18, 0, 0))}), (28, {"Spine": P((19, 0, 0)), "UpperArm.L": P((-74, 0, -4)), "UpperArm.R": P((-74, 0, 4))})]),
-        ("pickup", 26, False, [(1, {}), (12, {**crouch, "UpperArm.L": P((-58, 0, -12)), "UpperArm.R": P((-58, 0, 12))}), (26, {"UpperArm.L": P((-82, 0, -8)), "UpperArm.R": P((-82, 0, 8)), "Forearm.L": P((-45, 0, 0)), "Forearm.R": P((-45, 0, 0))})]),
+        ("pickup", 26, False, [(f, hero_crouch_pose(amount=math.sin((f-1)/25*math.pi)**2)) for f in range(1,27)]),
         ("interact", 22, False, [(1, {}), (10, {"UpperArm.R": P((-105, 0, 8)), "Forearm.R": P((-35, 0, 0)), "Head": P((0, 8, -4))}), (22, {})]),
         ("caught", 32, False, [(1, {}), (10, {"UpperArm.L": P((85, 0, -38)), "UpperArm.R": P((78, 0, 42)), "Head": P((18, 0, -12))}), (22, {"Spine": P((-22, 0, 18)), "ClothTip": P((42, 0, -20))}), (32, {"Spine": P((35, 0, 8)), "Head": P((28, 0, -20))})]),
     ]
@@ -416,16 +461,7 @@ def build_hero(materials):
         z = .22 + t * .78
         cloak_rings.append((z, -.018 * math.sin(t * math.pi), .015 * (1-t), .34 - .13*t + .025*math.sin(t*math.pi), .22 - .035*t, i*.19, -.045))
 
-    def cloak_weights(p, t, a):
-        if t < .28 and p[1] > .02:
-            return {"ClothTip": (1-t/.28)*.65, "ClothMid": .35 + t/.28*.3}
-        if t < .18:
-            return {"Root": 1.0}
-        if t < .42:
-            return {"Root": 1-(t-.18)/.24, "Hips": (t-.18)/.24}
-        if t < .55:
-            return {"Hips": 1-(t-.42)/.13, "Spine": (t-.42)/.13}
-        return {"Spine": 1-(t-.55)/.45, "Chest": (t-.55)/.45}
+    cloak_weights = lambda p, t, a: hero_cloak_weights(p)
 
     cloak = lathe_shell("Cloak_Main_Folded", cloak_rings, 48, materials["teal"], arm, cloak_weights, .018, 1)
     inner_rings = [(z+.015, cx, cy+.012, rx*.88, ry*.9, ph+.5, scallop*.6) for z,cx,cy,rx,ry,ph,scallop in cloak_rings[:11]]
@@ -473,6 +509,15 @@ def build_hero(materials):
         for s in range(4):
             x = cx-w*.75+s*w*.5
             tube(f"Patch_{index}_Stitch_{s}", [(x,-.235,cz-h*.95),(x+.014*math.sin(s),-.236,cz-h*.72)], [.006,.006], materials["thread"], arm, ["Spine"], 6)
+
+    # Repairs and stitches use exactly the same continuous skin field as cloth.
+    for obj in bpy.context.scene.objects:
+        if obj.type == "MESH" and (obj.name.startswith("Sewn_Patch") or obj.name.startswith("Patch_")):
+            obj.vertex_groups.clear()
+            for v in obj.data.vertices:
+                for bone, weight in hero_cloak_weights(v.co).items():
+                    group = obj.vertex_groups.get(bone) or obj.vertex_groups.new(name=bone)
+                    group.add([v.index], weight, "REPLACE")
 
     actions = create_actions(arm, hero_clips())
     return arm, actions
@@ -657,15 +702,27 @@ def export_character(name, builder, materials):
     bpy.ops.export_scene.gltf(filepath=str(glb_path),export_format="GLB",export_yup=True,
                               export_apply=False,export_animations=True,export_animation_mode="ACTIONS",
                               export_force_sampling=True,export_materials="EXPORT")
-    render_previews(name)
+    if "--skip-previews" not in sys.argv:
+        render_previews(name)
+        if name == "doll":
+            render_previews(name, "crouch")
     return inspect_glb(name)
 
 
-def render_previews(name):
+def render_previews(name, action_name=None):
+    for obj in list(bpy.context.scene.objects):
+        if obj.name.startswith("PreviewOnly_"):
+            bpy.data.objects.remove(obj, do_unlink=True)
     bpy.context.scene.frame_set(1)
     for obj in bpy.context.scene.objects:
         if obj.type=="ARMATURE" and obj.animation_data:
             obj.animation_data.action=None
+            for pb in obj.pose.bones:
+                pb.matrix_basis = Matrix.Identity(4)
+            if action_name:
+                obj.animation_data.action=bpy.data.actions[action_name]
+    bpy.context.scene.frame_set(1)
+    bpy.context.view_layer.update()
     meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
     points=[o.matrix_world@Vector(c) for o in meshes for c in o.bound_box]
     minimum=Vector((min(p.x for p in points),min(p.y for p in points),min(p.z for p in points)))
@@ -687,7 +744,7 @@ def render_previews(name):
         bpy.ops.object.camera_add(location=location)
         cam=bpy.context.object;cam.name=f"PreviewOnly_{label}_Camera";cam.data.lens=68
         cam.rotation_euler=(center-cam.location).to_track_quat("-Z","Y").to_euler();scene.camera=cam
-        scene.render.filepath=str(PREVIEW_DIR/f"{name}_v2_{label}.png")
+        scene.render.filepath=str(PREVIEW_DIR/f"{name}_v2_{action_name + "_" if action_name else ""}{label}.png")
         bpy.ops.render.render(write_still=True)
         bpy.data.objects.remove(cam,do_unlink=True)
 
@@ -708,17 +765,18 @@ def inspect_glb(name):
     actions=sorted({a.name.split(".")[0] for a in bpy.data.actions})
     deformers=sum(1 for o in meshes if any(m.type=="ARMATURE" for m in o.modifiers))
     crouch_max=None
-    if name=="doll" and armatures and bpy.data.actions.get("crouch"):
-        arm=armatures[0];arm.animation_data_create();arm.animation_data.action=bpy.data.actions.get("crouch")
-        bpy.context.scene.frame_set(12);depsgraph=bpy.context.evaluated_depsgraph_get()
-        posed=[o.evaluated_get(depsgraph).matrix_world@v.co for o in meshes for v in o.evaluated_get(depsgraph).data.vertices]
-        crouch_max=round(max(p.z for p in posed),4)
-        arm.animation_data.action=None;bpy.context.scene.frame_set(1)
+    posed_bounds=None
+    if name=="doll":
+        import runpy
+        checker=runpy.run_path(str(ROOT/"tests/check_crouch_mesh.py"))
+        posed_bounds=checker["measure"]()
+        checker["verify"](posed_bounds)
+        crouch_max=max(b["max"] for b in posed_bounds["crouch"])
     result={"name":name,"triangles":triangles,"meshes":len(meshes),"armatures":len(armatures),"skinned_meshes":deformers,
             "bones":sorted(b.name for arm in armatures for b in arm.data.bones),"actions":actions,
             "min":[round(v,4) for v in minimum],"max":[round(v,4) for v in maximum],
             "dimensions":[round(v,4) for v in maximum-minimum],"crouch_max":crouch_max,
-            "glb_bytes":(MODEL_DIR/f"{name}.glb").stat().st_size}
+            "glb_bytes":(MODEL_DIR/f"{name}.glb").stat().st_size, "posed_bounds":posed_bounds}
     return result
 
 
@@ -736,7 +794,7 @@ def verify(info):
         for view in ("front","side","threequarter"):
             assert (PREVIEW_DIR/f"{name}_v2_{view}.png").stat().st_size>10000
     assert 1.20<=info["doll"]["max"][2]<=1.42
-    assert .50<=info["doll"]["crouch_max"]<=.90, info["doll"]["crouch_max"]
+    assert .50<=info["doll"]["crouch_max"]<=.66, info["doll"]["crouch_max"]
     assert 3.35<=info["keeper"]["max"][2]<=3.75
     for path in TEXTURE_DIR.glob("*_2k.png"):
         assert path.read_bytes()[:8]==b"\x89PNG\r\n\x1a\n"
@@ -753,12 +811,12 @@ def write_report(info):
            "Hero design: a 1.4 m pointed-hood cloth spirit with a deep, unlit face cavity, two deliberately uneven dim eye glimmers, layered faded-teal cloak shells, geometric folds, thick weathered hems, off-white sewn repairs, tiny hands and boots, and two independently skinned fluttering back panels.","",
            "Keeper design: a roughly 3.6 m hunched seamstress with a lopsided continuous cloth torso, protruding wrapped head, blank shadowed face, low unequal shoulders, thick stained apron, bent legs, and two extremely long arms ending in six articulated, near-floor fingers. The muted underlying skin is bruised brown without gore.","",
            "## Rig and clips","",
-           "Both GLBs contain one `Skeleton3D` source armature. All visible mesh objects have armature deformation and explicit vertex weights. Skeleton transforms are applied at scale 1. The root bone remains at the feet and never receives locomotion translation. Both rigs include `Head` and the optional spring-ready `ClothRoot` → `ClothMid` → `ClothTip` chain.","",
+           "Both GLBs contain one `Skeleton3D` source armature. All visible mesh objects have armature deformation and explicit vertex weights. Skeleton transforms are applied at scale 1. The root bone remains at the feet and never receives locomotion translation. Both rigs include `Head` and the optional spring-ready `ClothRoot` 鈫?`ClothMid` 鈫?`ClothTip` chain.","",
            f"- Hero clips: {', '.join(f'`{x}`' for x in d['actions'])}.",
            f"- Keeper clips: {', '.join(f'`{x}`' for x in k['actions'])}.","",
            f"Idle, walk, run, crouch-walk, listen, and chase clips have matching endpoint poses for clean cycles. Other clips are single actions. The crouch keys lower the `Hips` while bending both leg chains; no mesh or armature scale is animated. Its independently evaluated imported mesh maximum at the crouch pose is {d['crouch_max']:.3f} m. Walk/run/chase are in-place and authored for locomotion along Godot +X. The export uses glTF Y-up; the modeled face is Blender -Y, which imports facing Godot +Z.","",
            "## Textures and sources","",
-           "Four deterministic 2048×2048 albedo/roughness sets are stored in `assets/textures/characters/`: hero teal cloth, hero patches, keeper cloth, and keeper apron. The maps contain original woven cross-thread, scratch, smudge, and edge-grime patterns and are embedded into the GLBs by Blender.","",
+           "Four deterministic 2048脳2048 albedo/roughness sets are stored in `assets/textures/characters/`: hero teal cloth, hero patches, keeper cloth, and keeper apron. The maps contain original woven cross-thread, scratch, smudge, and edge-grime patterns and are embedded into the GLBs by Blender.","",
            "- Re-runnable generator: `tools/create_characters_v2.py`","- Blender sources: `assets/sources/doll.blend`, `assets/sources/keeper.blend`","- GLBs: `assets/models/doll.glb`, `assets/models/keeper.glb`","- Inspection renders: `assets/sources/previews/doll_v2_{front,side,threequarter}.png` and `keeper_v2_{front,side,threequarter}.png`","",
            "## Verification","",
            "The generator independently clears Blender, imports each exported GLB, triangulates all imported meshes for counts, reads armatures and bone names, checks that every required action survived export, verifies every imported mesh is skinned, checks floor and height bounds, and confirms all six preview images. The report above is written only after those assertions pass.","",
@@ -776,6 +834,9 @@ def main():
     materials=setup_materials()
     info={}
     info["doll"]=export_character("doll",build_hero,materials)
+    if "--hero-only" in sys.argv:
+        print(json.dumps(info,indent=2))
+        return
     # Export clears materials; rebuild them for the second file.
     clear_scene()
     materials=setup_materials()

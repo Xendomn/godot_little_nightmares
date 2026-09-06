@@ -3,7 +3,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Push-Location -LiteralPath $projectRoot
 try {
     New-Item -ItemType Directory -Path 'artifacts' -Force | Out-Null
-    $suites = @('progress', 'gameplay', 'controls', 'stealth', 'save_store', 'chapter_rules', 'platform', 'character_rig', 'expansion', 'routes', 'campaign', 'campaign_ui', 'respawn')
+    $suites = @('progress', 'gameplay', 'controls', 'stealth', 'save_store', 'chapter_rules', 'platform', 'character_rig', 'expansion', 'routes', 'campaign', 'campaign_ui', 'respawn', 'crouch_states', 'keeper_navigation')
     $results = @()
     foreach ($suite in $suites) {
         $logPath = Join-Path $projectRoot "artifacts/verify-$suite.log"

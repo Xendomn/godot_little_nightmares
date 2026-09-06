@@ -35,6 +35,8 @@ func _ready() -> void:
 	keeper.player = player
 	keeper.caught.connect(fail)
 	keeper.use_original_passage = false
+	if level_id == "clocktower":
+		keeper.pursuit_depth = -1.5
 	var patrol := {"laundry": Vector3(36, 47, 2.6), "thread_vault": Vector3(44, 55, 0), "clocktower": Vector3(35, 69, 2.6)}
 	var bounds: Vector3 = patrol[level_id]
 	keeper.patrol_min = bounds.x

@@ -243,6 +243,7 @@ func build() -> void:
 		paper.rotation.y = randf_range(-PI, PI)
 	create_actors()
 	create_environment()
+	load("res://tools/keeper_navigation_mesh.gd").attach(scene_root, "workshop")
 	apply_patina(scene_root)
 	assign_owner(scene_root)
 	var scene := PackedScene.new()

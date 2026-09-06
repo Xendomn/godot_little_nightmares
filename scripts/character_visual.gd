@@ -12,6 +12,7 @@ var clips: Dictionary = {}
 var current: String = ""
 var locked_time := 0.0
 var head_bone := -1
+var crouch_moving := false
 
 func setup(model: Node3D) -> void:
 	visual = model
@@ -92,11 +93,17 @@ func update_motion(speed: float, grounded: bool, crouching: bool, pushing: bool,
 	elif pushing:
 		play("push")
 	elif crouching:
-		play("crouch_walk" if speed > 0.2 else "crouch")
+		if speed > 0.25:
+			crouch_moving = true
+		elif speed < 0.10:
+			crouch_moving = false
+		play("crouch_walk" if crouch_moving else "crouch")
 	else:
+		crouch_moving = false
 		play("run" if speed > 3.2 else ("walk" if speed > 0.15 else "idle"))
 
 func reset_pose() -> void:
+	crouch_moving = false
 	locked_time = 0
 	current = ""
 	play("idle")

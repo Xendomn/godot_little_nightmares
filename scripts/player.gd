@@ -69,7 +69,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y -= GRAVITY * delta
 	var was_grounded := is_on_floor()
 	move_and_slide()
-	if not was_grounded and is_on_floor():
+	if not was_grounded and is_on_floor() and not crouching:
 		visual_driver.play("land", 0.18)
 	global_position.z = clampf(global_position.z, -1.6, 1.6)
 	if global_position.y < -4:
