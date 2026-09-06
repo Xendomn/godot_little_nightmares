@@ -82,7 +82,11 @@ func use_mechanism(id: String) -> void:
 	if not rules.activate(id):
 		return
 	player.visual_driver.play("interact", 0.5)
-	sounds.play_effect("switch")
+	var mechanism = world.get_node_or_null(id.to_pascal_case())
+	if id in ["cart_ready", "counterweight"]:
+		mechanism = world.get_node_or_null("PressurePlate")
+	if mechanism and mechanism.has_method("play_feedback"):
+		mechanism.play_feedback()
 	match id:
 		"drain":
 			ui.notice("水退了。前面的洗衣车能压住升降台。")
@@ -98,7 +102,6 @@ func use_mechanism(id: String) -> void:
 			world.get_node("Bridge2").activate()
 		"bell":
 			keeper.distract(Vector3(41, 0, -1.3), 16)
-			sounds.play_effect("pickup")
 			ui.notice("铃声会把他引到左边。蹲下，从桌底过去。", 4)
 		"brake":
 			for hazard in hazards():
@@ -106,6 +109,8 @@ func use_mechanism(id: String) -> void:
 			ui.notice("摆锤停住八秒。现在穿过！", 3)
 		"release":
 			begin_chase()
+			if world.has_node("LastBell") and world.get_node("LastBell").has_method("play_feedback"):
+				world.get_node("LastBell").play_feedback()
 			ui.notice("钟响了。奔向晨光！  {run} 奔跑", 4)
 	refresh()
 
@@ -165,6 +170,10 @@ func _process(delta: float) -> void:
 				keeper.patrol_depth = -1.3
 				keeper.chase_speed = 3.25
 	update_prompt()
+	if level_id == "clocktower" and world.has_node("Brake/Visual"):
+		world.get_node("Brake/Visual").set_active(world.get_node("Pendulum11").suppressed > 0)
+	if level_id == "laundry" and world.has_node("PressurePlate"):
+		world.get_node("PressurePlate").position.y = world.get_node("Lift").position.y
 	sounds.desired_mix = 1.0 if keeper.active and keeper.mode == keeper.Mode.CHASE else 0.15
 	ui.threat.text = "快跑！" if keeper.active and keeper.mode == keeper.Mode.CHASE else ("他在听……" if keeper.active and keeper.mode == keeper.Mode.ALERT else "")
 	if x > (68 if level_id == "clocktower" else 61) and rules.checkpoint == 2:
@@ -199,7 +208,7 @@ func update_prompt() -> void:
 	if nearest and InputHints.just_pressed("interact"):
 		nearest.interact(player)
 
-func refresh() -> void:
+func refresh(immediate: bool = false) -> void:
 	ui.chapter.text = {"laundry": "02 / 染洗间", "thread_vault": "03 / 悬线库", "clocktower": "04 / 钟楼"}[level_id] + "  ·  " + str(rules.checkpoint + 1) + "/3"
 	var objectives := {
 		"laundry": ["转动排水阀，穿过积水槽", "将洗衣车推上黄框，再站上升降台拉灌水杆", "躲过缝纫师，等待蒸汽熄灭后通过"],
@@ -208,8 +217,22 @@ func refresh() -> void:
 	}
 	ui.objective.text = objectives[level_id][rules.checkpoint]
 	if level_id == "laundry":
-		world.get_node("Water").visible = not flags.get("drain", false)
+		if world.get_node("Water").has_method("set_drained"):
+			world.get_node("Water").set_drained(flags.get("drain", false), immediate)
+		else:
+			world.get_node("Water").visible = not flags.get("drain", false)
 		world.get_node("WaterHazard").enabled = not flags.get("drain", false)
+	for item in world.get_children():
+		if item.has_method("sync_visual"):
+			item.sync_visual(immediate)
+	if world.has_node("PressurePlate") and world.get_node("PressurePlate").has_method("set_active"):
+		if level_id == "laundry":
+			world.get_node("PressurePlate").position.y = world.get_node("Lift").position.y
+		world.get_node("PressurePlate").set_active(flags.get("cart_ready", false) if level_id == "laundry" else flags.get("counterweight", false), immediate)
+	if world.has_node("LastBell") and world.get_node("LastBell").has_method("set_active"):
+		world.get_node("LastBell").set_active(flags.get("release", false), immediate)
+	if world.has_node("ExitVisual"):
+		world.get_node("ExitVisual").set_active(rules.checkpoint == 2, immediate)
 
 func restore_checkpoint(id: int) -> void:
 	rules.restore(id)
@@ -241,7 +264,7 @@ func restore_checkpoint(id: int) -> void:
 	if respawning:
 		keeper.active = false
 	set_hazard_processing(playing and not respawning)
-	refresh()
+	refresh(true)
 
 func get_checkpoint_snapshot() -> Dictionary:
 	var canonical = preload("res://scripts/chapters/chapter_rules.gd").new(level_id)

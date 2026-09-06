@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_wh76v"]
+[ext_resource type="PackedScene" path="res://assets/models/props/release.glb" id="2_ugfxd"]
+
+[node name="Release" type="Node3D" unique_id=477069429]
+script = ExtResource("1_wh76v")
+kind = "release"
+
+[node name="Model" type="Node3D" parent="." unique_id=959864552 instance=ExtResource("2_ugfxd")]

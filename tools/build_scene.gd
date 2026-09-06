@@ -75,6 +75,23 @@ func model(parent: Node, filename: String, title: String, pos: Vector3, scale_va
 	parent.add_child(result)
 	return result
 
+func prop(parent: Node, asset: String, title: String, pos: Vector3) -> Node3D:
+	var path := "res://scenes/props/" + asset + ".tscn"
+	assert(ResourceLoader.exists(path), "Run tools/build_prop_scenes.gd before building chapters: " + path)
+	var result: Node3D = load(path).instantiate()
+	result.name = title
+	result.position = pos
+	parent.add_child(result)
+	return result
+
+func mechanical_props_ready() -> bool:
+	var manifest = load("res://tools/build_prop_scenes.gd")
+	for id in manifest.ASSETS:
+		if not ResourceLoader.exists("res://scenes/props/" + id + ".tscn"):
+			push_error("Missing mechanical prop scenes: run tools/build_prop_scenes.gd first.")
+			return false
+	return true
+
 func text3d(parent: Node, title: String, words: String, pos: Vector3, font_size: int = 80, color: String = "ac9f82") -> Label3D:
 	var text := Label3D.new()
 	text.name = title
@@ -88,6 +105,9 @@ func text3d(parent: Node, title: String, words: String, pos: Vector3, font_size:
 	return text
 
 func build() -> void:
+	if not mechanical_props_ready():
+		quit(1)
+		return
 	DirAccess.make_dir_recursive_absolute("res://scenes/chapters")
 	seed(9326)
 	scene_root = Node3D.new()
@@ -192,17 +212,15 @@ func build() -> void:
 		for y in [0.4, 1.1, 1.8, 2.5]:
 			box(world, "CabinetDrawer", Vector3(x, y, -1.71), Vector3(1.85, 0.57, 0.08), wood)
 			box(world, "CabinetHandle", Vector3(x, y, -1.6), Vector3(0.34, 0.06, 0.13), brass)
-	box(world, "PanelHousing", Vector3(30.7, 0.8, -0.9), Vector3(0.85, 1.6, 0.5), iron, true)
+	box(world, "PanelHousing", Vector3(30.7, 0.8, -0.9), Vector3(0.85, 1.6, 0.5), iron, true).get_child(0).hide()
+	prop(world, "fuse_box", "PanelVisual", Vector3(30.7, 0, -.9))
 	interactable("panel", Vector3(30.7, 0.9, -0.52))
 	light(world, "PanelLamp", Vector3(30.7, 1.4, -0.4), "db6943", 0.8, 2)
-	text3d(world, "PanelSign", "FUSE", Vector3(30.7, 1.2, -0.59), 28)
 	# Painted conduit visually connects fuse box to the far switch.
 	box(world, "PowerConduit", Vector3(41, 2.9, -2.7), Vector3(20.5, 0.06, 0.06), brass)
-	box(world, "LeverHousing", Vector3(51, 0.8, -0.9), Vector3(0.65, 1.6, 0.5), iron, true)
-	var handle = box(world, "SwitchHandle", Vector3(51, 1.25, -0.53), Vector3(0.12, 0.65, 0.14), red)
-	handle.rotation.z = -0.4
+	box(world, "LeverHousing", Vector3(51, 0.8, -0.9), Vector3(0.65, 1.6, 0.5), iron, true).get_child(0).hide()
+	prop(world, "power_switch", "SwitchVisual", Vector3(51, 0, -.9))
 	interactable("lever", Vector3(51, 1.0, -0.4))
-	text3d(world, "SwitchSign", "POWER", Vector3(51, 1.65, -0.55), 25)
 	gate("PowerGate", 53.65, iron)
 	# Conveyor: edge lips, rollers, striped warnings, exit chute.
 	text3d(world, "DispatchSign", "03   /   DISPATCH", Vector3(62, 4.0, -2.65), 80)
@@ -214,12 +232,8 @@ func build() -> void:
 			roller.rotation.x = PI / 2
 	for x in [61.3, 69.3, 77.3]:
 		box(world, "JumpWarning", Vector3(x, 0.04, 0), Vector3(0.3, 0.03, 4.3), brass)
-		text3d(world, "JumpMark", "!", Vector3(x, 0.65, -2.5), 70, "d9ad6f")
 	box(world, "ConveyorLowPassage", Vector3(74.0, 1.6, 0), Vector3(2.0, 1.4, 4.3), iron, true)
-	text3d(world, "DuckSign", "↓", Vector3(73.1, 1.8, 2.18), 95, "d9ad6f")
-	box(world, "ExitFrame", Vector3(88.5, 2, -1.6), Vector3(4.4, 4, 1.2), iron)
-	box(world, "ExitOpening", Vector3(87.9, 1.3, -0.95), Vector3(2.7, 2.5, 0.05), mat("exit_black", "081719"))
-	text3d(world, "ExitSign", "OUTSIDE  →", Vector3(85.5, 3.5, -2.65), 76, "a8d9c5")
+	prop(world, "exit_workshop", "ExitVisual", Vector3(87.5, 0, -.95))
 	light(world, "ExitLamp", Vector3(86, 2.6, -0.3), "9de8cf", 0.2, 7)
 	# Foreground silhouettes frame the tiny character without covering the lane.
 	for x in [0, 18, 29, 46, 58, 82]:

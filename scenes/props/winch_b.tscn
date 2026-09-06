@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_cj24w"]
+[ext_resource type="PackedScene" path="res://assets/models/props/winch_b.glb" id="2_xq36i"]
+
+[node name="WinchB" type="Node3D" unique_id=1120019609]
+script = ExtResource("1_cj24w")
+kind = "winch_b"
+
+[node name="Model" type="Node3D" parent="." unique_id=785369953 instance=ExtResource("2_xq36i")]

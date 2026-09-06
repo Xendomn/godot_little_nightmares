@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_bcxoe"]
+[ext_resource type="PackedScene" path="res://assets/models/props/pressure_plate.glb" id="2_4nl7c"]
+
+[node name="PressurePlate" type="Node3D" unique_id=1681253936]
+script = ExtResource("1_bcxoe")
+kind = "pressure_plate"
+
+[node name="Model" type="Node3D" parent="." unique_id=828781980 instance=ExtResource("2_4nl7c")]

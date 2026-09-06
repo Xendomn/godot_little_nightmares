@@ -17,6 +17,9 @@ func build() -> void:
 		push_error("Missing workshop.tscn: run tools/build_scene.gd before build_expansion.gd.")
 		quit(1)
 		return
+	if not mechanical_props_ready():
+		quit(1)
+		return
 	# Reusable actor scenes retain GLB instance ownership and imported rigs.
 	scene_root = Node3D.new()
 	create_actors()
@@ -101,12 +104,13 @@ func build_chapter(index: int) -> void:
 		2: vault()
 		3: clocktower()
 	var exit_x := 70 if index == 3 else 63
-	box(world, "ExitFrame", Vector3(exit_x, 2.2 + (2.6 if index != 2 else 0), -1), Vector3(2.7, 4.4, .3), brass)
+	prop(world, "exit_" + ("vault" if index == 2 else IDS[index]), "ExitVisual", Vector3(exit_x, 2.6 if index != 2 else 0, -1))
 	var glow := mat("dawn" + str(index), "e6dbc1")
 	glow.emission_enabled = true
 	glow.emission = Color("ffe7b9")
 	glow.emission_energy_multiplier = 1.2
-	box(world, "ExitGlow", Vector3(exit_x, 2.2 + (2.6 if index != 2 else 0), -.78), Vector3(2.2, 3.9, .05), glow)
+	# Recessed light beyond the modeled opening, never a flat front door.
+	box(world, "ExitGlow", Vector3(exit_x, 2.2 + (2.6 if index != 2 else 0), -2.6), Vector3(2.2, 3.9, .05), glow)
 	light(world, "ExitLight", Vector3(exit_x, 3 + (2.6 if index != 2 else 0), .2), "ffe0ad", 3, 7)
 	apply_patina(scene_root)
 	load("res://tools/keeper_navigation_mesh.gd").attach(scene_root, IDS[index])
@@ -134,12 +138,9 @@ func mechanism(id: String, pos: Vector3, words: String) -> void:
 	item.set("id", id)
 	item.set("prompt", words)
 	world.add_child(item)
-	box(item, "Mount", Vector3(0, -.3, -.2), Vector3(.4, .8, .35), iron)
-	var wheel := cylinder(item, "Wheel", Vector3.ZERO, .23, .08, brass)
-	wheel.rotation.x = PI / 2
-	box(item, "Handle", Vector3(0, .05, .08), Vector3(.06, .36, .08), mat("handle", "76b7aa"))
-	light(item, "Signal", Vector3(0, .25, .2), "74e6bd", .65, 2.2)
-	text3d(item, "Sign", id.to_upper().replace("_", " "), Vector3(0, .8, -.1), 24)
+	var floor_y := 2.6 if id == "release" else 0.0
+	prop(item, id, "Visual", Vector3(0, floor_y - pos.y, 0))
+	light(item, "Signal", Vector3(0, .15, .25), "e4c390", .4, 1.8)
 
 func platform(title: String, pos: Vector3, size: Vector3, travel: Vector3) -> void:
 	var body := AnimatableBody3D.new()
@@ -167,15 +168,14 @@ func push_box(x: float, destination: float, label: String) -> void:
 	crate.set("max_x", destination)
 	crate.set("display_name", label)
 	world.add_child(crate)
-	model(crate, "crate", "Model", Vector3.ZERO)
+	prop(crate, "laundry_cart" if label == "洗衣车" else "spool_carrier", "Model", Vector3.ZERO)
 	var collider := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
 	shape.size = Vector3(.95, 1.05, .95)
 	collider.shape = shape
 	collider.position.y = .525
 	crate.add_child(collider)
-	box(world, "PressurePlate", Vector3(destination, .025, 0), Vector3(1.3, .04, 1.3), brass)
-	text3d(world, "PlateGuide", "LOAD", Vector3(destination, .15, 1), 24)
+	prop(world, "pressure_plate", "PressurePlate", Vector3(destination, 0, 0))
 
 func hazard(title: String, x: float, y: float, width: float = 1, period: float = 5, duration: float = 2) -> void:
 	var area := Area3D.new()
@@ -205,9 +205,16 @@ func hazard(title: String, x: float, y: float, width: float = 1, period: float =
 		shader.shader = load("res://assets/shaders/steam.gdshader")
 		mist.material_override = shader
 		area.add_child(mist)
+		var leak := mist.duplicate() as MeshInstance3D
+		leak.name = "PreLeak"
+		leak.position = Vector3(0, .75, -1.65)
+		leak.scale = Vector3(.25, .35, 1)
+		leak.visible = false
+		area.add_child(leak)
 	else:
 		box(area, "Warning", Vector3(0, .035, 0), Vector3(width, .04, 3.5), mat("warning", "bd603d"))
-	text3d(area, "Caption", "", Vector3(0, 2.7, 0), 24)
+	if title.begins_with("Steam"):
+		prop(area, "steam_pipe", "Visual", Vector3(0, 0, -1.8))
 
 func hide_table(x: float, y: float) -> void:
 	box(world, "HidingTable", Vector3(x, y + 1.1, .7), Vector3(3.4, .28, 2), materials["wood"], true)
@@ -220,10 +227,15 @@ func laundry() -> void:
 	floor_span(-3, 23)
 	floor_span(27, 66, 2.6)
 	mechanism("drain", Vector3(7, .7, -.65), "{interact}  转动排水阀")
-	box(world, "Water", Vector3(13, .15, 0), Vector3(6, .28, 5.7), mat("water", "43747c", .5))
+	box(world, "Water", Vector3(13, .15, 0), Vector3(6, .28, 5.7), mat("water", "43747c", .5)).set_script(load("res://scripts/props/draining_water.gd"))
+	# A continuous pipe ties the valve to the basin instead of naming its function.
+	for x in [7.5, 8.5, 9.5]:
+		var pipe := cylinder(world, "DrainConduit", Vector3(x, .22, -1.8), .09, 1.05, brass)
+		pipe.rotation.z = PI / 2
+		var sleeve := cylinder(world, "PipeUnion", Vector3(x + .47, .22, -1.8), .13, .13, iron)
+		sleeve.rotation.z = PI / 2
 	hazard("WaterHazard", 13, 0, 6, 1000, 1000)
 	world.get_node("WaterHazard/Warning").visible = false
-	world.get_node("WaterHazard/Caption").hide()
 	push_box(21, 25, "洗衣车")
 	platform("Lift", Vector3(25, 0, 0), Vector3(4, .32, 3.6), Vector3(0, 2.6, 0))
 	mechanism("fill", Vector3(24.4, .85, -1.2), "{interact}  打开灌水杆 · 先把洗衣车推上黄框")
@@ -242,7 +254,6 @@ func laundry() -> void:
 	for x in [52, 55]:
 		hazard("Steam" + str(x), x, 2.6, .85, 5.5, 1.8)
 		world.get_node("Steam" + str(x)).set("phase_offset", 1.5 if x == 55 else 0)
-		cylinder(world, "SteamPipe", Vector3(x, 2.7, -1.8), .15, .3, brass)
 
 func vault() -> void:
 	for span in [[-3, 12], [16, 24], [28, 34], [38, 66]]:
@@ -262,9 +273,13 @@ func vault() -> void:
 			box(world, "RackUpright", Vector3(x + dx, 3.2, -2.4), Vector3(.14, 6.4, .14), iron)
 	for x in [46, 52.5]:
 		hide_table(x, 0)
-	for x in [14, 26, 36]:
+	for i in range(3):
+		var x: float = [14, 26, 36][i]
 		for z in [-1.65, 1.65]:
-			cylinder(world, "SuspensionThread", Vector3(x, 5, z), .025, 7, cloth)
+			var rope := cylinder(world, "SuspensionThread", Vector3(x, 5, z), .025, 1, cloth)
+			rope.set_script(load("res://scripts/props/suspension_cable.gd"))
+			rope.set("target_path", NodePath("../Bridge" + str(i)))
+			rope.set("attachment", Vector3(0, .05, z))
 
 func clocktower() -> void:
 	floor_span(-3, 23)
@@ -286,7 +301,8 @@ func clocktower() -> void:
 	mechanism("wind", Vector3(24, .8, -1.2), "{interact}  给升降台上弦")
 	mechanism("release", Vector3(31.5, 3.35, -.65), "{interact}  释放钟锤")
 	box(world, "LowTunnel", Vector3(56, 4.15, .5), Vector3(2.7, 1.3, 2.9), iron, true)
-	text3d(world, "DuckMark", "CROUCH", Vector3(54.8, 3.2, 1.5), 27)
+	for x in [54.7, 57.3]:
+		box(world, "ClearanceBand", Vector3(x, 3.48, .5), Vector3(.12, .08, 2.9), brass)
 	for x in [6, 21, 38, 50, 65]:
 		var gear := cylinder(world, "ClockGear", Vector3(x, 5.8, -2.5), 2, .2, brass)
 		gear.rotation.x = PI / 2
@@ -296,6 +312,4 @@ func clocktower() -> void:
 			tooth.rotation.z = angle
 		var hand = box(world, "ClockHand", Vector3(x, 5.8, -2.25), Vector3(.12, 3.5, .12), iron)
 		hand.rotation.z = .7
-	var bell := cylinder(world, "LastBell", Vector3(31.5, 7, -1), 1.6, 2, brass)
-	(bell.mesh as CylinderMesh).top_radius = .65
-	box(world, "BellHammer", Vector3(33, 6.5, -.7), Vector3(.35, 2, .35), iron)
+	prop(world, "last_bell", "LastBell", Vector3(31.5, 8.3, -1))

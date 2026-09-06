@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_s0vnw"]
+[ext_resource type="PackedScene" path="res://assets/models/props/exit_workshop.glb" id="2_ac3na"]
+
+[node name="ExitWorkshop" type="Node3D" unique_id=593914669]
+script = ExtResource("1_s0vnw")
+kind = "exit_workshop"
+
+[node name="Model" type="Node3D" parent="." unique_id=491815960 instance=ExtResource("2_ac3na")]

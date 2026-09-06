@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_o77f1"]
+[ext_resource type="PackedScene" path="res://assets/models/props/last_bell.glb" id="2_b2j1n"]
+
+[node name="LastBell" type="Node3D" unique_id=947189721]
+script = ExtResource("1_o77f1")
+kind = "last_bell"
+
+[node name="Model" type="Node3D" parent="." unique_id=1766276984 instance=ExtResource("2_b2j1n")]

@@ -36,7 +36,7 @@ func _ready() -> void:
 		ui.restart_requested.connect(start_game)
 	ui.resume_requested.connect(toggle_pause)
 	ui.quit_requested.connect(func(): get_tree().quit())
-	refresh_world()
+	refresh_world(true)
 
 func start_game() -> void:
 	if transition and transition.is_valid():
@@ -58,7 +58,7 @@ func start_game() -> void:
 	ui.begin()
 	ui.fade.color.a = 0
 	ui.notice("有一盏灯，还在等你。", 4)
-	refresh_world()
+	refresh_world(true)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and not InputHints.blocked.has("pause") and playing and not respawning:
@@ -122,15 +122,16 @@ func update_prompt() -> void:
 
 func on_item_used(kind: String) -> void:
 	player.visual_driver.play("pickup" if kind == "fuse" else "interact", 0.55)
+	var visual_name := "PanelVisual" if kind == "panel" else "SwitchVisual"
+	if kind != "fuse" and $World.has_node(visual_name):
+		$World.get_node(visual_name).play_feedback()
 	match kind:
 		"fuse":
 			sounds.play_effect("pickup")
 			ui.notice("一枚温热的保险丝。前面的铁门松开了。")
 		"panel":
-			sounds.play_effect("switch")
 			ui.notice("电路接通了。电闸在车间另一头。")
 		"lever":
-			sounds.play_effect("switch")
 			keeper.reset_keeper(true)
 			keeper.position = Vector3(player.position.x - 7.5, 0.05, -1.0)
 			keeper.grace = 2
@@ -138,14 +139,16 @@ func on_item_used(kind: String) -> void:
 			ui.notice("他醒了。跑向出货口！", 3)
 	refresh_world()
 
-func refresh_world() -> void:
+func refresh_world(immediate: bool = false) -> void:
 	for item in get_tree().get_nodes_in_group("interactables"):
 		item.refresh()
 	set_gate($World/FuseGate, state.has_fuse or state.fuse_installed)
 	set_gate($World/PowerGate, state.power_on)
 	$World/PanelLamp.light_color = Color("66dfb7") if state.fuse_installed else Color("db6943")
 	$World/ExitLamp.light_energy = 2.0 if state.power_on else 0.2
-	$World/SwitchHandle.rotation.z = 0.6 if state.power_on else -0.4
+	for entry in [["PanelVisual", state.fuse_installed], ["SwitchVisual", state.power_on], ["ExitVisual", state.power_on]]:
+		if $World.has_node(entry[0]):
+			$World.get_node(entry[0]).set_active(entry[1], immediate)
 	for surface in get_tree().get_nodes_in_group("conveyor_surfaces"):
 		surface.material_override.set_shader_parameter("powered", 1.0 if state.power_on else 0.0)
 	var titles := ["01 / 工作台下", "02 / 装配车间", "03 / 出货通道"]
@@ -194,7 +197,7 @@ func restore_world() -> void:
 	camera.chase = state.power_on
 	camera.instant = true
 	chapter_index = state.checkpoint
-	refresh_world()
+	refresh_world(true)
 
 func finish_game() -> void:
 	playing = false

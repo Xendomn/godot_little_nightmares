@@ -13,3 +13,5 @@
 - [SpringBoneSimulator3D 官方文档](https://docs.godotengine.org/en/stable/classes/class_springbonesimulator3d.html)：布料链 API 依据。
 
 原创音频由 tools/create_assets.py 和 tools/create_expansion_audio.py 合成，不含外部录音或音乐采样。当前角色报告为 character-v2-report.md；assets-report.md 是首版历史记录。
+
+本次新增的 19 件机械道具、金属／木材／织物 PBR 贴图均由 `tools/create_mechanical_props.py` 原创生成，Blender 源文件位于 `assets/sources/props/`。新增铃声、阀门摩擦和棘轮声由 `tools/create_prop_audio.py` 合成，没有引入第三方素材。完整道具与面数清单见 `mechanical-assets.md`。

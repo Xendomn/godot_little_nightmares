@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_hsbc1"]
+[ext_resource type="PackedScene" path="res://assets/models/props/laundry_cart.glb" id="2_ex1r5"]
+
+[node name="LaundryCart" type="Node3D" unique_id=161849396]
+script = ExtResource("1_hsbc1")
+kind = "laundry_cart"
+
+[node name="Model" type="Node3D" parent="." unique_id=162761772 instance=ExtResource("2_ex1r5")]

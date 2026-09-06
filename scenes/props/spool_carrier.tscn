@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_yoyot"]
+[ext_resource type="PackedScene" path="res://assets/models/props/spool_carrier.glb" id="2_kosxd"]
+
+[node name="SpoolCarrier" type="Node3D" unique_id=1725226235]
+script = ExtResource("1_yoyot")
+kind = "spool_carrier"
+
+[node name="Model" type="Node3D" parent="." unique_id=589119735 instance=ExtResource("2_kosxd")]

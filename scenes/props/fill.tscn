@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_hhql2"]
+[ext_resource type="PackedScene" path="res://assets/models/props/fill.glb" id="2_sqbng"]
+
+[node name="Fill" type="Node3D" unique_id=584247767]
+script = ExtResource("1_hhql2")
+kind = "fill"
+
+[node name="Model" type="Node3D" parent="." unique_id=361978931 instance=ExtResource("2_sqbng")]

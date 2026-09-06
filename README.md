@@ -62,7 +62,7 @@ powershell -ExecutionPolicy Bypass -File tools/verify.ps1
 python tests/test_builder.py
 ```
 
-18 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。窗口路线与性能检查：
+20 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd
@@ -79,13 +79,18 @@ blender --background --python-exit-code 1 --python tests/check_crouch_mesh.py
 ```powershell
 blender --background --python tools/create_assets.py
 blender --background --python tools/create_characters_v2.py
+blender --background --python tools/create_mechanical_props.py
 python tools/create_expansion_audio.py
+python tools/create_prop_audio.py
 godot --headless --path . --editor --import --quit
+godot --headless --path . --script tools/build_prop_scenes.gd
 godot --headless --path . --script tools/build_scene.gd
 godot --headless --path . --script tools/build_expansion.gd
 ```
 
 旧素材生成器会覆盖角色，之后必须运行 v2 生成器。运行现有工程无需 Blender 或重新生成。
+
+四章的功能文字占位已替换为 19 件原创机械道具，包括阀门、铃铛、绞盘、配电箱、压板、推车和各章出口。道具提供活动部件、共享 PBR 材质、机械音效及检查点状态恢复；模型与 Blender 源文件见 `assets/models/props/`、`assets/sources/props/`，详细清单见 `docs/mechanical-assets.md`。
 
 Windows 导出：`godot --headless --path . --export-release "Windows Desktop" build/MidnightWorkshop.exe`。预设引用 `build/export_templates/templates/` 的 4.7.2 官方 Windows x64 模板；换机器后需安装对应模板或调整预设。
 

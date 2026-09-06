@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_3kaj1"]
+[ext_resource type="PackedScene" path="res://assets/models/props/drain.glb" id="2_ev482"]
+
+[node name="Drain" type="Node3D" unique_id=291873883]
+script = ExtResource("1_3kaj1")
+
+[node name="Model" type="Node3D" parent="." unique_id=904787133 instance=ExtResource("2_ev482")]

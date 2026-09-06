@@ -9,6 +9,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/crate.glb" id="7_jscy8"]
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="8_pm3ni"]
 [ext_resource type="PackedScene" path="res://assets/models/fuse.glb" id="9_y6deb"]
+[ext_resource type="PackedScene" path="res://scenes/props/fuse_box.tscn" id="new_10_6635o"]
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="new_11_q0fja"]
+[ext_resource type="PackedScene" path="res://scenes/props/power_switch.tscn" id="new_12_40as2"]
+[ext_resource type="PackedScene" path="res://scenes/props/exit_workshop.tscn" id="new_13_w7rqi"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="10_og1vs"]
 [ext_resource type="PackedScene" path="res://assets/models/doll.glb" id="11_2wyq8"]
 [ext_resource type="Script" path="res://scripts/keeper.gd" id="12_vxglm"]
@@ -4137,16 +4141,6 @@ size = Vector3(0.65, 1.6, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_see2m"]
 size = Vector3(0.65, 1.6, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xknci"]
-render_priority = 0
-shader = ExtResource("2_muem4")
-shader_parameter/base_color = Color(0.5058824, 0.29803923, 0.2509804, 1)
-shader_parameter/grain = 0.0
-shader_parameter/metal = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_t7wtw"]
-size = Vector3(0.12, 0.65, 0.14)
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b8xdy"]
 render_priority = 0
 shader = ExtResource("2_muem4")
@@ -5121,26 +5115,6 @@ size = Vector3(2, 1.4, 4.3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_4eerv"]
 size = Vector3(2, 1.4, 4.3)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dqjjx"]
-render_priority = 0
-shader = ExtResource("2_muem4")
-shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
-shader_parameter/grain = 0.0
-shader_parameter/metal = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_ha07p"]
-size = Vector3(4.4, 4, 1.2)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ms1u"]
-render_priority = 0
-shader = ExtResource("2_muem4")
-shader_parameter/base_color = Color(0.03137255, 0.09019608, 0.09803922, 1)
-shader_parameter/grain = 0.0
-shader_parameter/metal = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_yetfk"]
-size = Vector3(2.7, 2.5, 0.05)
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_muril"]
 render_priority = 0
 shader = ExtResource("2_muem4")
@@ -5227,7 +5201,7 @@ bottom_radius = 0.57
 height = 0.02
 radial_segments = 16
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tr1ox"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dqjjx"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5237,7 +5211,7 @@ shader_parameter/metal = 0.6
 [sub_resource type="BoxMesh" id="BoxMesh_bk36h"]
 size = Vector3(0.04, 0.43, 0.02)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c86a7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tr1ox"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5273,7 +5247,7 @@ bottom_radius = 0.57
 height = 0.02
 radial_segments = 16
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r0r1n"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c86a7"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5283,7 +5257,7 @@ shader_parameter/metal = 0.6
 [sub_resource type="BoxMesh" id="BoxMesh_xu7j6"]
 size = Vector3(0.04, 0.43, 0.02)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_300fl"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r0r1n"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5319,7 +5293,7 @@ bottom_radius = 0.57
 height = 0.02
 radial_segments = 16
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_b3evu"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_300fl"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5329,7 +5303,7 @@ shader_parameter/metal = 0.6
 [sub_resource type="BoxMesh" id="BoxMesh_e2bpd"]
 size = Vector3(0.04, 0.43, 0.02)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6qgdb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b3evu"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5365,7 +5339,7 @@ bottom_radius = 0.57
 height = 0.02
 radial_segments = 16
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gy0gq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6qgdb"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -5375,7 +5349,7 @@ shader_parameter/metal = 0.6
 [sub_resource type="BoxMesh" id="BoxMesh_2wjxp"]
 size = Vector3(0.04, 0.43, 0.02)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c5jmy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gy0gq"]
 render_priority = 0
 shader = ExtResource("2_muem4")
 shader_parameter/base_color = Color(0.15686275, 0.21960784, 0.24313726, 1)
@@ -9180,11 +9154,17 @@ mesh = SubResource("BoxMesh_cqlnm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 0.8, -0.9)
 
 [node name="@MeshInstance3D@908" type="MeshInstance3D" parent="World/PanelHousing" unique_id=1694283650]
+visible = false
 material_override = SubResource("ShaderMaterial_qatdc")
 mesh = SubResource("BoxMesh_ka5xg")
 
 [node name="@CollisionShape3D@909" type="CollisionShape3D" parent="World/PanelHousing" unique_id=1875229308]
 shape = SubResource("BoxShape3D_8t1fi")
+
+[node name="PanelVisual" type="Node3D" parent="World" unique_id=296696113 instance=ExtResource("new_10_6635o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 0, -0.9)
+script = ExtResource("new_11_q0fja")
+kind = "fuse_box"
 
 [node name="Panel" type="Node3D" parent="World" unique_id=1591130380 groups=["interactables"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 0.9, -0.52)
@@ -9197,14 +9177,6 @@ light_color = Color(0.85882354, 0.4117647, 0.2627451, 1)
 light_energy = 0.8
 omni_range = 2.0
 
-[node name="PanelSign" type="Label3D" parent="World" unique_id=1107475943]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 1.2, -0.59)
-pixel_size = 0.008
-modulate = Color(0.6745098, 0.62352943, 0.50980395, 1)
-text = "FUSE"
-font_size = 28
-outline_size = 0
-
 [node name="PowerConduit" type="Node3D" parent="World" unique_id=1476650916]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 2.9, -2.7)
 
@@ -9216,31 +9188,22 @@ mesh = SubResource("BoxMesh_7is0w")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 0.8, -0.9)
 
 [node name="@MeshInstance3D@911" type="MeshInstance3D" parent="World/LeverHousing" unique_id=1831275018]
+visible = false
 material_override = SubResource("ShaderMaterial_t21e7")
 mesh = SubResource("BoxMesh_6twe4")
 
 [node name="@CollisionShape3D@912" type="CollisionShape3D" parent="World/LeverHousing" unique_id=1413598795]
 shape = SubResource("BoxShape3D_see2m")
 
-[node name="SwitchHandle" type="Node3D" parent="World" unique_id=1531797121]
-transform = Transform3D(0.921061, 0.38941833, 0, -0.38941833, 0.921061, 0, 0, 0, 1, 51, 1.25, -0.53)
-
-[node name="@MeshInstance3D@913" type="MeshInstance3D" parent="World/SwitchHandle" unique_id=1321679573]
-material_override = SubResource("ShaderMaterial_xknci")
-mesh = SubResource("BoxMesh_t7wtw")
+[node name="SwitchVisual" type="Node3D" parent="World" unique_id=567613666 instance=ExtResource("new_12_40as2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 0, -0.9)
+script = ExtResource("new_11_q0fja")
+kind = "power_switch"
 
 [node name="Lever" type="Node3D" parent="World" unique_id=1956306712 groups=["interactables"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 1, -0.4)
 script = ExtResource("8_pm3ni")
 kind = "lever"
-
-[node name="SwitchSign" type="Label3D" parent="World" unique_id=1677196525]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 1.65, -0.55)
-pixel_size = 0.008
-modulate = Color(0.6745098, 0.62352943, 0.50980395, 1)
-text = "POWER"
-font_size = 25
-outline_size = 0
 
 [node name="PowerGate" type="StaticBody3D" parent="World" unique_id=566999493]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 53.65, 0, 0)
@@ -9248,60 +9211,60 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 53.65, 0, 0)
 [node name="Bar" type="Node3D" parent="World/PowerGate" unique_id=1743613317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -2)
 
-[node name="@MeshInstance3D@914" type="MeshInstance3D" parent="World/PowerGate/Bar" unique_id=1896400838]
+[node name="@MeshInstance3D@913" type="MeshInstance3D" parent="World/PowerGate/Bar" unique_id=10485500]
 material_override = SubResource("ShaderMaterial_b8xdy")
 mesh = SubResource("BoxMesh_m0h1q")
 
-[node name="@Node3D@915" type="Node3D" parent="World/PowerGate" unique_id=1991448365]
+[node name="@Node3D@914" type="Node3D" parent="World/PowerGate" unique_id=498532228]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.4)
 
-[node name="@MeshInstance3D@916" type="MeshInstance3D" parent="World/PowerGate/@Node3D@915" unique_id=1796984449]
+[node name="@MeshInstance3D@915" type="MeshInstance3D" parent="World/PowerGate/@Node3D@914" unique_id=2015032143]
 material_override = SubResource("ShaderMaterial_yjiyo")
 mesh = SubResource("BoxMesh_ouky2")
 
-[node name="@Node3D@917" type="Node3D" parent="World/PowerGate" unique_id=923394499]
+[node name="@Node3D@916" type="Node3D" parent="World/PowerGate" unique_id=38260278]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.8)
 
-[node name="@MeshInstance3D@918" type="MeshInstance3D" parent="World/PowerGate/@Node3D@917" unique_id=1942179147]
+[node name="@MeshInstance3D@917" type="MeshInstance3D" parent="World/PowerGate/@Node3D@916" unique_id=2006941560]
 material_override = SubResource("ShaderMaterial_ssf18")
 mesh = SubResource("BoxMesh_2a0r8")
 
-[node name="@Node3D@919" type="Node3D" parent="World/PowerGate" unique_id=1063088705]
+[node name="@Node3D@918" type="Node3D" parent="World/PowerGate" unique_id=795755804]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
 
-[node name="@MeshInstance3D@920" type="MeshInstance3D" parent="World/PowerGate/@Node3D@919" unique_id=814363274]
+[node name="@MeshInstance3D@919" type="MeshInstance3D" parent="World/PowerGate/@Node3D@918" unique_id=895629488]
 material_override = SubResource("ShaderMaterial_sb8k4")
 mesh = SubResource("BoxMesh_j17bs")
 
-[node name="@Node3D@921" type="Node3D" parent="World/PowerGate" unique_id=1287787140]
+[node name="@Node3D@920" type="Node3D" parent="World/PowerGate" unique_id=4628820]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.4)
 
-[node name="@MeshInstance3D@922" type="MeshInstance3D" parent="World/PowerGate/@Node3D@921" unique_id=1512698606]
+[node name="@MeshInstance3D@921" type="MeshInstance3D" parent="World/PowerGate/@Node3D@920" unique_id=1085688607]
 material_override = SubResource("ShaderMaterial_v1hlx")
 mesh = SubResource("BoxMesh_2wb3k")
 
-[node name="@Node3D@923" type="Node3D" parent="World/PowerGate" unique_id=1382070384]
+[node name="@Node3D@922" type="Node3D" parent="World/PowerGate" unique_id=159655032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 1)
 
-[node name="@MeshInstance3D@924" type="MeshInstance3D" parent="World/PowerGate/@Node3D@923" unique_id=668553303]
+[node name="@MeshInstance3D@923" type="MeshInstance3D" parent="World/PowerGate/@Node3D@922" unique_id=131806818]
 material_override = SubResource("ShaderMaterial_hthob")
 mesh = SubResource("BoxMesh_hca4u")
 
-[node name="@Node3D@925" type="Node3D" parent="World/PowerGate" unique_id=1576086838]
+[node name="@Node3D@924" type="Node3D" parent="World/PowerGate" unique_id=989143561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 1.6)
 
-[node name="@MeshInstance3D@926" type="MeshInstance3D" parent="World/PowerGate/@Node3D@925" unique_id=1588242845]
+[node name="@MeshInstance3D@925" type="MeshInstance3D" parent="World/PowerGate/@Node3D@924" unique_id=872444557]
 material_override = SubResource("ShaderMaterial_oe2iw")
 mesh = SubResource("BoxMesh_ow3r3")
 
-[node name="@Node3D@927" type="Node3D" parent="World/PowerGate" unique_id=697641207]
+[node name="@Node3D@926" type="Node3D" parent="World/PowerGate" unique_id=104982218]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 2.2)
 
-[node name="@MeshInstance3D@928" type="MeshInstance3D" parent="World/PowerGate/@Node3D@927" unique_id=1782873241]
+[node name="@MeshInstance3D@927" type="MeshInstance3D" parent="World/PowerGate/@Node3D@926" unique_id=558479744]
 material_override = SubResource("ShaderMaterial_r8ygl")
 mesh = SubResource("BoxMesh_i7i18")
 
-[node name="@CollisionShape3D@929" type="CollisionShape3D" parent="World/PowerGate" unique_id=1003985291]
+[node name="@CollisionShape3D@928" type="CollisionShape3D" parent="World/PowerGate" unique_id=1800958399]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 shape = SubResource("BoxShape3D_33kte")
 
@@ -9316,28 +9279,28 @@ outline_size = 0
 [node name="BeltRail" type="Node3D" parent="World" unique_id=881389498]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55, 0.22, -2.25)
 
-[node name="@MeshInstance3D@930" type="MeshInstance3D" parent="World/BeltRail" unique_id=1140108385]
+[node name="@MeshInstance3D@929" type="MeshInstance3D" parent="World/BeltRail" unique_id=976526133]
 material_override = SubResource("ShaderMaterial_23ved")
 mesh = SubResource("BoxMesh_qng8r")
 
-[node name="@Node3D@931" type="Node3D" parent="World" unique_id=1688140046]
+[node name="@Node3D@930" type="Node3D" parent="World" unique_id=542577018]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55, 0.22, 2.25)
 
-[node name="@MeshInstance3D@932" type="MeshInstance3D" parent="World/@Node3D@931" unique_id=1632918577]
+[node name="@MeshInstance3D@931" type="MeshInstance3D" parent="World/@Node3D@930" unique_id=1451399006]
 material_override = SubResource("ShaderMaterial_tkmhu")
 mesh = SubResource("BoxMesh_5ys3e")
 
-[node name="@Node3D@933" type="Node3D" parent="World" unique_id=532986963]
+[node name="@Node3D@932" type="Node3D" parent="World" unique_id=671042309]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0.22, -2.25)
 
-[node name="@MeshInstance3D@934" type="MeshInstance3D" parent="World/@Node3D@933" unique_id=2073892]
+[node name="@MeshInstance3D@933" type="MeshInstance3D" parent="World/@Node3D@932" unique_id=535751691]
 material_override = SubResource("ShaderMaterial_1rga0")
 mesh = SubResource("BoxMesh_vumhr")
 
-[node name="@Node3D@935" type="Node3D" parent="World" unique_id=836046975]
+[node name="@Node3D@934" type="Node3D" parent="World" unique_id=1890246020]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0.22, 2.25)
 
-[node name="@MeshInstance3D@936" type="MeshInstance3D" parent="World/@Node3D@935" unique_id=404247463]
+[node name="@MeshInstance3D@935" type="MeshInstance3D" parent="World/@Node3D@934" unique_id=2020781935]
 material_override = SubResource("ShaderMaterial_0uo7x")
 mesh = SubResource("BoxMesh_u47ly")
 
@@ -9346,497 +9309,497 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 56, 
 material_override = SubResource("ShaderMaterial_0gxl6")
 mesh = SubResource("CylinderMesh_bqt3b")
 
-[node name="@Node3D@937" type="Node3D" parent="World" unique_id=504406597]
+[node name="@Node3D@936" type="Node3D" parent="World" unique_id=620767521]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 57, 0.22, -2.25)
 
-[node name="@MeshInstance3D@938" type="MeshInstance3D" parent="World/@Node3D@937" unique_id=1780661988]
+[node name="@MeshInstance3D@937" type="MeshInstance3D" parent="World/@Node3D@936" unique_id=589256235]
 material_override = SubResource("ShaderMaterial_nipfv")
 mesh = SubResource("BoxMesh_upl6u")
 
-[node name="@Node3D@939" type="Node3D" parent="World" unique_id=1647001018]
+[node name="@Node3D@938" type="Node3D" parent="World" unique_id=1223835892]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 57, 0.22, 2.25)
 
-[node name="@MeshInstance3D@940" type="MeshInstance3D" parent="World/@Node3D@939" unique_id=481750500]
+[node name="@MeshInstance3D@939" type="MeshInstance3D" parent="World/@Node3D@938" unique_id=1170289936]
 material_override = SubResource("ShaderMaterial_7mcgk")
 mesh = SubResource("BoxMesh_o2b6a")
 
-[node name="@Node3D@941" type="Node3D" parent="World" unique_id=1782471467]
+[node name="@Node3D@940" type="Node3D" parent="World" unique_id=2105184816]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58, 0.22, -2.25)
 
-[node name="@MeshInstance3D@942" type="MeshInstance3D" parent="World/@Node3D@941" unique_id=1678533767]
+[node name="@MeshInstance3D@941" type="MeshInstance3D" parent="World/@Node3D@940" unique_id=1235843912]
 material_override = SubResource("ShaderMaterial_bvt6a")
 mesh = SubResource("BoxMesh_ggcl4")
 
-[node name="@Node3D@943" type="Node3D" parent="World" unique_id=1175175579]
+[node name="@Node3D@942" type="Node3D" parent="World" unique_id=1975812390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58, 0.22, 2.25)
 
-[node name="@MeshInstance3D@944" type="MeshInstance3D" parent="World/@Node3D@943" unique_id=345519234]
+[node name="@MeshInstance3D@943" type="MeshInstance3D" parent="World/@Node3D@942" unique_id=2092698989]
 material_override = SubResource("ShaderMaterial_in3g3")
 mesh = SubResource("BoxMesh_32y78")
 
-[node name="@MeshInstance3D@945" type="MeshInstance3D" parent="World" unique_id=384367506]
+[node name="@MeshInstance3D@944" type="MeshInstance3D" parent="World" unique_id=1007187338]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 58, -0.2, 0)
 material_override = SubResource("ShaderMaterial_r708e")
 mesh = SubResource("CylinderMesh_xnii4")
 
-[node name="@Node3D@946" type="Node3D" parent="World" unique_id=1993709860]
+[node name="@Node3D@945" type="Node3D" parent="World" unique_id=770692656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59, 0.22, -2.25)
 
-[node name="@MeshInstance3D@947" type="MeshInstance3D" parent="World/@Node3D@946" unique_id=1320543435]
+[node name="@MeshInstance3D@946" type="MeshInstance3D" parent="World/@Node3D@945" unique_id=2017044050]
 material_override = SubResource("ShaderMaterial_acx4q")
 mesh = SubResource("BoxMesh_wyxwf")
 
-[node name="@Node3D@948" type="Node3D" parent="World" unique_id=2118146693]
+[node name="@Node3D@947" type="Node3D" parent="World" unique_id=565147080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59, 0.22, 2.25)
 
-[node name="@MeshInstance3D@949" type="MeshInstance3D" parent="World/@Node3D@948" unique_id=1755027183]
+[node name="@MeshInstance3D@948" type="MeshInstance3D" parent="World/@Node3D@947" unique_id=403673816]
 material_override = SubResource("ShaderMaterial_4laf8")
 mesh = SubResource("BoxMesh_8yxas")
 
-[node name="@Node3D@950" type="Node3D" parent="World" unique_id=1618371221]
+[node name="@Node3D@949" type="Node3D" parent="World" unique_id=1438127078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0.22, -2.25)
 
-[node name="@MeshInstance3D@951" type="MeshInstance3D" parent="World/@Node3D@950" unique_id=1964039979]
+[node name="@MeshInstance3D@950" type="MeshInstance3D" parent="World/@Node3D@949" unique_id=1010646033]
 material_override = SubResource("ShaderMaterial_ddpas")
 mesh = SubResource("BoxMesh_g26ah")
 
-[node name="@Node3D@952" type="Node3D" parent="World" unique_id=1089056340]
+[node name="@Node3D@951" type="Node3D" parent="World" unique_id=1138833099]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0.22, 2.25)
 
-[node name="@MeshInstance3D@953" type="MeshInstance3D" parent="World/@Node3D@952" unique_id=1302651667]
+[node name="@MeshInstance3D@952" type="MeshInstance3D" parent="World/@Node3D@951" unique_id=1267741336]
 material_override = SubResource("ShaderMaterial_ptlvt")
 mesh = SubResource("BoxMesh_v8dud")
 
-[node name="@MeshInstance3D@954" type="MeshInstance3D" parent="World" unique_id=1888973103]
+[node name="@MeshInstance3D@953" type="MeshInstance3D" parent="World" unique_id=1487436088]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 60, -0.2, 0)
 material_override = SubResource("ShaderMaterial_tv817")
 mesh = SubResource("CylinderMesh_e0kc3")
 
-[node name="@Node3D@955" type="Node3D" parent="World" unique_id=1088035625]
+[node name="@Node3D@954" type="Node3D" parent="World" unique_id=1957782822]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61, 0.22, -2.25)
 
-[node name="@MeshInstance3D@956" type="MeshInstance3D" parent="World/@Node3D@955" unique_id=1987512867]
+[node name="@MeshInstance3D@955" type="MeshInstance3D" parent="World/@Node3D@954" unique_id=86634300]
 material_override = SubResource("ShaderMaterial_xecgh")
 mesh = SubResource("BoxMesh_a8lpe")
 
-[node name="@Node3D@957" type="Node3D" parent="World" unique_id=1096750273]
+[node name="@Node3D@956" type="Node3D" parent="World" unique_id=1714377097]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61, 0.22, 2.25)
 
-[node name="@MeshInstance3D@958" type="MeshInstance3D" parent="World/@Node3D@957" unique_id=320996025]
+[node name="@MeshInstance3D@957" type="MeshInstance3D" parent="World/@Node3D@956" unique_id=499033406]
 material_override = SubResource("ShaderMaterial_nyu0h")
 mesh = SubResource("BoxMesh_7ms3j")
 
-[node name="@Node3D@959" type="Node3D" parent="World" unique_id=321122160]
+[node name="@Node3D@958" type="Node3D" parent="World" unique_id=1505145415]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, 0.22, -2.25)
 
-[node name="@MeshInstance3D@960" type="MeshInstance3D" parent="World/@Node3D@959" unique_id=1457581890]
+[node name="@MeshInstance3D@959" type="MeshInstance3D" parent="World/@Node3D@958" unique_id=1705897384]
 material_override = SubResource("ShaderMaterial_givr6")
 mesh = SubResource("BoxMesh_je3hc")
 
-[node name="@Node3D@961" type="Node3D" parent="World" unique_id=1807724261]
+[node name="@Node3D@960" type="Node3D" parent="World" unique_id=321597225]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, 0.22, 2.25)
 
-[node name="@MeshInstance3D@962" type="MeshInstance3D" parent="World/@Node3D@961" unique_id=856806062]
+[node name="@MeshInstance3D@961" type="MeshInstance3D" parent="World/@Node3D@960" unique_id=1828256824]
 material_override = SubResource("ShaderMaterial_t0pne")
 mesh = SubResource("BoxMesh_1yhbl")
 
-[node name="@MeshInstance3D@963" type="MeshInstance3D" parent="World" unique_id=1860170906]
+[node name="@MeshInstance3D@962" type="MeshInstance3D" parent="World" unique_id=502329753]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 62, -0.2, 0)
 material_override = SubResource("ShaderMaterial_6eipg")
 mesh = SubResource("CylinderMesh_2f2y5")
 
-[node name="@Node3D@964" type="Node3D" parent="World" unique_id=403020364]
+[node name="@Node3D@963" type="Node3D" parent="World" unique_id=1804332947]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63, 0.22, -2.25)
 
-[node name="@MeshInstance3D@965" type="MeshInstance3D" parent="World/@Node3D@964" unique_id=852228496]
+[node name="@MeshInstance3D@964" type="MeshInstance3D" parent="World/@Node3D@963" unique_id=1326949836]
 material_override = SubResource("ShaderMaterial_r1h5k")
 mesh = SubResource("BoxMesh_cfydk")
 
-[node name="@Node3D@966" type="Node3D" parent="World" unique_id=2134303442]
+[node name="@Node3D@965" type="Node3D" parent="World" unique_id=744307509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63, 0.22, 2.25)
 
-[node name="@MeshInstance3D@967" type="MeshInstance3D" parent="World/@Node3D@966" unique_id=429305781]
+[node name="@MeshInstance3D@966" type="MeshInstance3D" parent="World/@Node3D@965" unique_id=450812503]
 material_override = SubResource("ShaderMaterial_f4kgl")
 mesh = SubResource("BoxMesh_hrgul")
 
-[node name="@Node3D@968" type="Node3D" parent="World" unique_id=1636214979]
+[node name="@Node3D@967" type="Node3D" parent="World" unique_id=1719756395]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 0.22, -2.25)
 
-[node name="@MeshInstance3D@969" type="MeshInstance3D" parent="World/@Node3D@968" unique_id=1290803461]
+[node name="@MeshInstance3D@968" type="MeshInstance3D" parent="World/@Node3D@967" unique_id=1409858834]
 material_override = SubResource("ShaderMaterial_bp7p7")
 mesh = SubResource("BoxMesh_r6ri1")
 
-[node name="@Node3D@970" type="Node3D" parent="World" unique_id=653281178]
+[node name="@Node3D@969" type="Node3D" parent="World" unique_id=920893414]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 0.22, 2.25)
 
-[node name="@MeshInstance3D@971" type="MeshInstance3D" parent="World/@Node3D@970" unique_id=1564249622]
+[node name="@MeshInstance3D@970" type="MeshInstance3D" parent="World/@Node3D@969" unique_id=1569917432]
 material_override = SubResource("ShaderMaterial_thyqp")
 mesh = SubResource("BoxMesh_764it")
 
-[node name="@MeshInstance3D@972" type="MeshInstance3D" parent="World" unique_id=552059050]
+[node name="@MeshInstance3D@971" type="MeshInstance3D" parent="World" unique_id=33063015]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 64, -0.2, 0)
 material_override = SubResource("ShaderMaterial_eaw5q")
 mesh = SubResource("CylinderMesh_qouqw")
 
-[node name="@Node3D@973" type="Node3D" parent="World" unique_id=1454945466]
+[node name="@Node3D@972" type="Node3D" parent="World" unique_id=703078957]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65, 0.22, -2.25)
 
-[node name="@MeshInstance3D@974" type="MeshInstance3D" parent="World/@Node3D@973" unique_id=1606571242]
+[node name="@MeshInstance3D@973" type="MeshInstance3D" parent="World/@Node3D@972" unique_id=1701880388]
 material_override = SubResource("ShaderMaterial_psc8i")
 mesh = SubResource("BoxMesh_6cx6p")
 
-[node name="@Node3D@975" type="Node3D" parent="World" unique_id=322239292]
+[node name="@Node3D@974" type="Node3D" parent="World" unique_id=1220263760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65, 0.22, 2.25)
 
-[node name="@MeshInstance3D@976" type="MeshInstance3D" parent="World/@Node3D@975" unique_id=1727438498]
+[node name="@MeshInstance3D@975" type="MeshInstance3D" parent="World/@Node3D@974" unique_id=995736764]
 material_override = SubResource("ShaderMaterial_dmujj")
 mesh = SubResource("BoxMesh_tgtrl")
 
-[node name="@Node3D@977" type="Node3D" parent="World" unique_id=25232981]
+[node name="@Node3D@976" type="Node3D" parent="World" unique_id=1019078623]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66, 0.22, -2.25)
 
-[node name="@MeshInstance3D@978" type="MeshInstance3D" parent="World/@Node3D@977" unique_id=1216111333]
+[node name="@MeshInstance3D@977" type="MeshInstance3D" parent="World/@Node3D@976" unique_id=210089125]
 material_override = SubResource("ShaderMaterial_54mi1")
 mesh = SubResource("BoxMesh_gsbq3")
 
-[node name="@Node3D@979" type="Node3D" parent="World" unique_id=1404056154]
+[node name="@Node3D@978" type="Node3D" parent="World" unique_id=1464328591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66, 0.22, 2.25)
 
-[node name="@MeshInstance3D@980" type="MeshInstance3D" parent="World/@Node3D@979" unique_id=1738774850]
+[node name="@MeshInstance3D@979" type="MeshInstance3D" parent="World/@Node3D@978" unique_id=526163875]
 material_override = SubResource("ShaderMaterial_22a63")
 mesh = SubResource("BoxMesh_jdn6x")
 
-[node name="@MeshInstance3D@981" type="MeshInstance3D" parent="World" unique_id=1376532052]
+[node name="@MeshInstance3D@980" type="MeshInstance3D" parent="World" unique_id=431756761]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 66, -0.2, 0)
 material_override = SubResource("ShaderMaterial_851ui")
 mesh = SubResource("CylinderMesh_33cxa")
 
-[node name="@Node3D@982" type="Node3D" parent="World" unique_id=941146198]
+[node name="@Node3D@981" type="Node3D" parent="World" unique_id=1792734306]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 0.22, -2.25)
 
-[node name="@MeshInstance3D@983" type="MeshInstance3D" parent="World/@Node3D@982" unique_id=1606017692]
+[node name="@MeshInstance3D@982" type="MeshInstance3D" parent="World/@Node3D@981" unique_id=35079718]
 material_override = SubResource("ShaderMaterial_dpayl")
 mesh = SubResource("BoxMesh_ofl46")
 
-[node name="@Node3D@984" type="Node3D" parent="World" unique_id=132206286]
+[node name="@Node3D@983" type="Node3D" parent="World" unique_id=387681822]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 0.22, 2.25)
 
-[node name="@MeshInstance3D@985" type="MeshInstance3D" parent="World/@Node3D@984" unique_id=98644345]
+[node name="@MeshInstance3D@984" type="MeshInstance3D" parent="World/@Node3D@983" unique_id=126848693]
 material_override = SubResource("ShaderMaterial_acmbd")
 mesh = SubResource("BoxMesh_30r5k")
 
-[node name="@Node3D@986" type="Node3D" parent="World" unique_id=118359101]
+[node name="@Node3D@985" type="Node3D" parent="World" unique_id=375837840]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68, 0.22, -2.25)
 
-[node name="@MeshInstance3D@987" type="MeshInstance3D" parent="World/@Node3D@986" unique_id=1749961586]
+[node name="@MeshInstance3D@986" type="MeshInstance3D" parent="World/@Node3D@985" unique_id=1877219956]
 material_override = SubResource("ShaderMaterial_c5jip")
 mesh = SubResource("BoxMesh_opiuo")
 
-[node name="@Node3D@988" type="Node3D" parent="World" unique_id=1045490743]
+[node name="@Node3D@987" type="Node3D" parent="World" unique_id=914683568]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68, 0.22, 2.25)
 
-[node name="@MeshInstance3D@989" type="MeshInstance3D" parent="World/@Node3D@988" unique_id=1490297011]
+[node name="@MeshInstance3D@988" type="MeshInstance3D" parent="World/@Node3D@987" unique_id=1188890394]
 material_override = SubResource("ShaderMaterial_deqp6")
 mesh = SubResource("BoxMesh_ibwb3")
 
-[node name="@MeshInstance3D@990" type="MeshInstance3D" parent="World" unique_id=1355627494]
+[node name="@MeshInstance3D@989" type="MeshInstance3D" parent="World" unique_id=340674138]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 68, -0.2, 0)
 material_override = SubResource("ShaderMaterial_052lq")
 mesh = SubResource("CylinderMesh_ke1hf")
 
-[node name="@Node3D@991" type="Node3D" parent="World" unique_id=1446512646]
+[node name="@Node3D@990" type="Node3D" parent="World" unique_id=90101088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69, 0.22, -2.25)
 
-[node name="@MeshInstance3D@992" type="MeshInstance3D" parent="World/@Node3D@991" unique_id=1152499477]
+[node name="@MeshInstance3D@991" type="MeshInstance3D" parent="World/@Node3D@990" unique_id=925992517]
 material_override = SubResource("ShaderMaterial_eakhk")
 mesh = SubResource("BoxMesh_rnvxv")
 
-[node name="@Node3D@993" type="Node3D" parent="World" unique_id=450305405]
+[node name="@Node3D@992" type="Node3D" parent="World" unique_id=1278711988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69, 0.22, 2.25)
 
-[node name="@MeshInstance3D@994" type="MeshInstance3D" parent="World/@Node3D@993" unique_id=1994044246]
+[node name="@MeshInstance3D@993" type="MeshInstance3D" parent="World/@Node3D@992" unique_id=1139673492]
 material_override = SubResource("ShaderMaterial_meeji")
 mesh = SubResource("BoxMesh_wdl5h")
 
-[node name="@Node3D@995" type="Node3D" parent="World" unique_id=196009819]
+[node name="@Node3D@994" type="Node3D" parent="World" unique_id=447639260]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0.22, -2.25)
 
-[node name="@MeshInstance3D@996" type="MeshInstance3D" parent="World/@Node3D@995" unique_id=1150006724]
+[node name="@MeshInstance3D@995" type="MeshInstance3D" parent="World/@Node3D@994" unique_id=149058142]
 material_override = SubResource("ShaderMaterial_dpmyw")
 mesh = SubResource("BoxMesh_n1wbp")
 
-[node name="@Node3D@997" type="Node3D" parent="World" unique_id=1274552479]
+[node name="@Node3D@996" type="Node3D" parent="World" unique_id=1804281570]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0.22, 2.25)
 
-[node name="@MeshInstance3D@998" type="MeshInstance3D" parent="World/@Node3D@997" unique_id=1451311399]
+[node name="@MeshInstance3D@997" type="MeshInstance3D" parent="World/@Node3D@996" unique_id=767846887]
 material_override = SubResource("ShaderMaterial_wgnsu")
 mesh = SubResource("BoxMesh_arsfj")
 
-[node name="@MeshInstance3D@999" type="MeshInstance3D" parent="World" unique_id=1913005187]
+[node name="@MeshInstance3D@998" type="MeshInstance3D" parent="World" unique_id=2030658442]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 70, -0.2, 0)
 material_override = SubResource("ShaderMaterial_8vvm6")
 mesh = SubResource("CylinderMesh_nditx")
 
-[node name="@Node3D@1000" type="Node3D" parent="World" unique_id=1237970199]
+[node name="@Node3D@999" type="Node3D" parent="World" unique_id=804174531]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1001" type="MeshInstance3D" parent="World/@Node3D@1000" unique_id=1507099876]
+[node name="@MeshInstance3D@1000" type="MeshInstance3D" parent="World/@Node3D@999" unique_id=498505072]
 material_override = SubResource("ShaderMaterial_lowue")
 mesh = SubResource("BoxMesh_4c3ky")
 
-[node name="@Node3D@1002" type="Node3D" parent="World" unique_id=2064041257]
+[node name="@Node3D@1001" type="Node3D" parent="World" unique_id=668111231]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1003" type="MeshInstance3D" parent="World/@Node3D@1002" unique_id=1537289080]
+[node name="@MeshInstance3D@1002" type="MeshInstance3D" parent="World/@Node3D@1001" unique_id=169514071]
 material_override = SubResource("ShaderMaterial_363lv")
 mesh = SubResource("BoxMesh_0pyoj")
 
-[node name="@Node3D@1004" type="Node3D" parent="World" unique_id=1298815350]
+[node name="@Node3D@1003" type="Node3D" parent="World" unique_id=399141838]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1005" type="MeshInstance3D" parent="World/@Node3D@1004" unique_id=891711152]
+[node name="@MeshInstance3D@1004" type="MeshInstance3D" parent="World/@Node3D@1003" unique_id=1589232708]
 material_override = SubResource("ShaderMaterial_pyjv1")
 mesh = SubResource("BoxMesh_03fvx")
 
-[node name="@Node3D@1006" type="Node3D" parent="World" unique_id=1543515005]
+[node name="@Node3D@1005" type="Node3D" parent="World" unique_id=1819759703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1007" type="MeshInstance3D" parent="World/@Node3D@1006" unique_id=2019220608]
+[node name="@MeshInstance3D@1006" type="MeshInstance3D" parent="World/@Node3D@1005" unique_id=1216000400]
 material_override = SubResource("ShaderMaterial_cafvi")
 mesh = SubResource("BoxMesh_yoinl")
 
-[node name="@MeshInstance3D@1008" type="MeshInstance3D" parent="World" unique_id=138982746]
+[node name="@MeshInstance3D@1007" type="MeshInstance3D" parent="World" unique_id=1094531225]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 72, -0.2, 0)
 material_override = SubResource("ShaderMaterial_agf37")
 mesh = SubResource("CylinderMesh_kwhfq")
 
-[node name="@Node3D@1009" type="Node3D" parent="World" unique_id=264457074]
+[node name="@Node3D@1008" type="Node3D" parent="World" unique_id=277966238]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1010" type="MeshInstance3D" parent="World/@Node3D@1009" unique_id=912444586]
+[node name="@MeshInstance3D@1009" type="MeshInstance3D" parent="World/@Node3D@1008" unique_id=1771030281]
 material_override = SubResource("ShaderMaterial_b4ij2")
 mesh = SubResource("BoxMesh_rocrg")
 
-[node name="@Node3D@1011" type="Node3D" parent="World" unique_id=1264382444]
+[node name="@Node3D@1010" type="Node3D" parent="World" unique_id=1674489297]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1012" type="MeshInstance3D" parent="World/@Node3D@1011" unique_id=559511926]
+[node name="@MeshInstance3D@1011" type="MeshInstance3D" parent="World/@Node3D@1010" unique_id=588129710]
 material_override = SubResource("ShaderMaterial_oe76e")
 mesh = SubResource("BoxMesh_5sagu")
 
-[node name="@Node3D@1013" type="Node3D" parent="World" unique_id=419921311]
+[node name="@Node3D@1012" type="Node3D" parent="World" unique_id=1432503854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1014" type="MeshInstance3D" parent="World/@Node3D@1013" unique_id=116433046]
+[node name="@MeshInstance3D@1013" type="MeshInstance3D" parent="World/@Node3D@1012" unique_id=1128202540]
 material_override = SubResource("ShaderMaterial_tqacs")
 mesh = SubResource("BoxMesh_2t8at")
 
-[node name="@Node3D@1015" type="Node3D" parent="World" unique_id=36990694]
+[node name="@Node3D@1014" type="Node3D" parent="World" unique_id=1493496426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1016" type="MeshInstance3D" parent="World/@Node3D@1015" unique_id=1953123097]
+[node name="@MeshInstance3D@1015" type="MeshInstance3D" parent="World/@Node3D@1014" unique_id=248884914]
 material_override = SubResource("ShaderMaterial_ymvdj")
 mesh = SubResource("BoxMesh_ao1c0")
 
-[node name="@MeshInstance3D@1017" type="MeshInstance3D" parent="World" unique_id=1203461848]
+[node name="@MeshInstance3D@1016" type="MeshInstance3D" parent="World" unique_id=567873402]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 74, -0.2, 0)
 material_override = SubResource("ShaderMaterial_2hrss")
 mesh = SubResource("CylinderMesh_tux2b")
 
-[node name="@Node3D@1018" type="Node3D" parent="World" unique_id=2073047503]
+[node name="@Node3D@1017" type="Node3D" parent="World" unique_id=1087370253]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1019" type="MeshInstance3D" parent="World/@Node3D@1018" unique_id=19016216]
+[node name="@MeshInstance3D@1018" type="MeshInstance3D" parent="World/@Node3D@1017" unique_id=796568254]
 material_override = SubResource("ShaderMaterial_sxs0o")
 mesh = SubResource("BoxMesh_sk6ov")
 
-[node name="@Node3D@1020" type="Node3D" parent="World" unique_id=528223785]
+[node name="@Node3D@1019" type="Node3D" parent="World" unique_id=1082450010]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1021" type="MeshInstance3D" parent="World/@Node3D@1020" unique_id=811314526]
+[node name="@MeshInstance3D@1020" type="MeshInstance3D" parent="World/@Node3D@1019" unique_id=434249055]
 material_override = SubResource("ShaderMaterial_alrs6")
 mesh = SubResource("BoxMesh_yey3h")
 
-[node name="@Node3D@1022" type="Node3D" parent="World" unique_id=349561938]
+[node name="@Node3D@1021" type="Node3D" parent="World" unique_id=32316016]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1023" type="MeshInstance3D" parent="World/@Node3D@1022" unique_id=2010872339]
+[node name="@MeshInstance3D@1022" type="MeshInstance3D" parent="World/@Node3D@1021" unique_id=1788305558]
 material_override = SubResource("ShaderMaterial_6fjsw")
 mesh = SubResource("BoxMesh_o7akk")
 
-[node name="@Node3D@1024" type="Node3D" parent="World" unique_id=2066731759]
+[node name="@Node3D@1023" type="Node3D" parent="World" unique_id=1196605015]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1025" type="MeshInstance3D" parent="World/@Node3D@1024" unique_id=514606096]
+[node name="@MeshInstance3D@1024" type="MeshInstance3D" parent="World/@Node3D@1023" unique_id=1885898921]
 material_override = SubResource("ShaderMaterial_aog3e")
 mesh = SubResource("BoxMesh_ilubp")
 
-[node name="@MeshInstance3D@1026" type="MeshInstance3D" parent="World" unique_id=1099513789]
+[node name="@MeshInstance3D@1025" type="MeshInstance3D" parent="World" unique_id=1886257375]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 76, -0.2, 0)
 material_override = SubResource("ShaderMaterial_xgag1")
 mesh = SubResource("CylinderMesh_jnqqy")
 
-[node name="@Node3D@1027" type="Node3D" parent="World" unique_id=299809819]
+[node name="@Node3D@1026" type="Node3D" parent="World" unique_id=1404199323]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1028" type="MeshInstance3D" parent="World/@Node3D@1027" unique_id=1403173448]
+[node name="@MeshInstance3D@1027" type="MeshInstance3D" parent="World/@Node3D@1026" unique_id=1113204234]
 material_override = SubResource("ShaderMaterial_dr2xk")
 mesh = SubResource("BoxMesh_kbkt0")
 
-[node name="@Node3D@1029" type="Node3D" parent="World" unique_id=194898662]
+[node name="@Node3D@1028" type="Node3D" parent="World" unique_id=2075336752]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1030" type="MeshInstance3D" parent="World/@Node3D@1029" unique_id=1463980150]
+[node name="@MeshInstance3D@1029" type="MeshInstance3D" parent="World/@Node3D@1028" unique_id=691904396]
 material_override = SubResource("ShaderMaterial_r6tmn")
 mesh = SubResource("BoxMesh_2hpgl")
 
-[node name="@Node3D@1031" type="Node3D" parent="World" unique_id=1102045329]
+[node name="@Node3D@1030" type="Node3D" parent="World" unique_id=1986897742]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1032" type="MeshInstance3D" parent="World/@Node3D@1031" unique_id=1247620307]
+[node name="@MeshInstance3D@1031" type="MeshInstance3D" parent="World/@Node3D@1030" unique_id=1983912441]
 material_override = SubResource("ShaderMaterial_y4c30")
 mesh = SubResource("BoxMesh_whx18")
 
-[node name="@Node3D@1033" type="Node3D" parent="World" unique_id=391225969]
+[node name="@Node3D@1032" type="Node3D" parent="World" unique_id=884632305]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1034" type="MeshInstance3D" parent="World/@Node3D@1033" unique_id=1982663967]
+[node name="@MeshInstance3D@1033" type="MeshInstance3D" parent="World/@Node3D@1032" unique_id=286674804]
 material_override = SubResource("ShaderMaterial_pxse2")
 mesh = SubResource("BoxMesh_7qeqb")
 
-[node name="@MeshInstance3D@1035" type="MeshInstance3D" parent="World" unique_id=412228062]
+[node name="@MeshInstance3D@1034" type="MeshInstance3D" parent="World" unique_id=570162648]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 78, -0.2, 0)
 material_override = SubResource("ShaderMaterial_fmdoi")
 mesh = SubResource("CylinderMesh_kv4ga")
 
-[node name="@Node3D@1036" type="Node3D" parent="World" unique_id=1766896046]
+[node name="@Node3D@1035" type="Node3D" parent="World" unique_id=439184954]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 79, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1037" type="MeshInstance3D" parent="World/@Node3D@1036" unique_id=1832248017]
+[node name="@MeshInstance3D@1036" type="MeshInstance3D" parent="World/@Node3D@1035" unique_id=2115726964]
 material_override = SubResource("ShaderMaterial_yaol1")
 mesh = SubResource("BoxMesh_1oqn1")
 
-[node name="@Node3D@1038" type="Node3D" parent="World" unique_id=1715454412]
+[node name="@Node3D@1037" type="Node3D" parent="World" unique_id=159552956]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 79, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1039" type="MeshInstance3D" parent="World/@Node3D@1038" unique_id=1693528686]
+[node name="@MeshInstance3D@1038" type="MeshInstance3D" parent="World/@Node3D@1037" unique_id=2086373165]
 material_override = SubResource("ShaderMaterial_e7ewc")
 mesh = SubResource("BoxMesh_tv13n")
 
-[node name="@Node3D@1040" type="Node3D" parent="World" unique_id=1795527337]
+[node name="@Node3D@1039" type="Node3D" parent="World" unique_id=421242159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1041" type="MeshInstance3D" parent="World/@Node3D@1040" unique_id=1906772567]
+[node name="@MeshInstance3D@1040" type="MeshInstance3D" parent="World/@Node3D@1039" unique_id=604077404]
 material_override = SubResource("ShaderMaterial_5amxy")
 mesh = SubResource("BoxMesh_u8emh")
 
-[node name="@Node3D@1042" type="Node3D" parent="World" unique_id=1798488016]
+[node name="@Node3D@1041" type="Node3D" parent="World" unique_id=1158697730]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1043" type="MeshInstance3D" parent="World/@Node3D@1042" unique_id=1844101186]
+[node name="@MeshInstance3D@1042" type="MeshInstance3D" parent="World/@Node3D@1041" unique_id=184196737]
 material_override = SubResource("ShaderMaterial_u3h2o")
 mesh = SubResource("BoxMesh_2y3nf")
 
-[node name="@MeshInstance3D@1044" type="MeshInstance3D" parent="World" unique_id=577326987]
+[node name="@MeshInstance3D@1043" type="MeshInstance3D" parent="World" unique_id=869862197]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 80, -0.2, 0)
 material_override = SubResource("ShaderMaterial_fcmg2")
 mesh = SubResource("CylinderMesh_gwte3")
 
-[node name="@Node3D@1045" type="Node3D" parent="World" unique_id=877545641]
+[node name="@Node3D@1044" type="Node3D" parent="World" unique_id=1775365208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1046" type="MeshInstance3D" parent="World/@Node3D@1045" unique_id=2037900879]
+[node name="@MeshInstance3D@1045" type="MeshInstance3D" parent="World/@Node3D@1044" unique_id=1951421508]
 material_override = SubResource("ShaderMaterial_7hl8l")
 mesh = SubResource("BoxMesh_dukmd")
 
-[node name="@Node3D@1047" type="Node3D" parent="World" unique_id=1173702206]
+[node name="@Node3D@1046" type="Node3D" parent="World" unique_id=1862662913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1048" type="MeshInstance3D" parent="World/@Node3D@1047" unique_id=58789269]
+[node name="@MeshInstance3D@1047" type="MeshInstance3D" parent="World/@Node3D@1046" unique_id=1261578059]
 material_override = SubResource("ShaderMaterial_pccgf")
 mesh = SubResource("BoxMesh_lls6g")
 
-[node name="@Node3D@1049" type="Node3D" parent="World" unique_id=367452948]
+[node name="@Node3D@1048" type="Node3D" parent="World" unique_id=1390220538]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1050" type="MeshInstance3D" parent="World/@Node3D@1049" unique_id=313876614]
+[node name="@MeshInstance3D@1049" type="MeshInstance3D" parent="World/@Node3D@1048" unique_id=1082747627]
 material_override = SubResource("ShaderMaterial_ra23s")
 mesh = SubResource("BoxMesh_4yobm")
 
-[node name="@Node3D@1051" type="Node3D" parent="World" unique_id=1613201303]
+[node name="@Node3D@1050" type="Node3D" parent="World" unique_id=266300826]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1052" type="MeshInstance3D" parent="World/@Node3D@1051" unique_id=680393660]
+[node name="@MeshInstance3D@1051" type="MeshInstance3D" parent="World/@Node3D@1050" unique_id=793954590]
 material_override = SubResource("ShaderMaterial_5xs32")
 mesh = SubResource("BoxMesh_qxur5")
 
-[node name="@MeshInstance3D@1053" type="MeshInstance3D" parent="World" unique_id=1330338751]
+[node name="@MeshInstance3D@1052" type="MeshInstance3D" parent="World" unique_id=1948401258]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 82, -0.2, 0)
 material_override = SubResource("ShaderMaterial_yimff")
 mesh = SubResource("CylinderMesh_s5ypr")
 
-[node name="@Node3D@1054" type="Node3D" parent="World" unique_id=2120231110]
+[node name="@Node3D@1053" type="Node3D" parent="World" unique_id=1316096163]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1055" type="MeshInstance3D" parent="World/@Node3D@1054" unique_id=1031679664]
+[node name="@MeshInstance3D@1054" type="MeshInstance3D" parent="World/@Node3D@1053" unique_id=666564097]
 material_override = SubResource("ShaderMaterial_fs2a5")
 mesh = SubResource("BoxMesh_w7b3c")
 
-[node name="@Node3D@1056" type="Node3D" parent="World" unique_id=205820017]
+[node name="@Node3D@1055" type="Node3D" parent="World" unique_id=1598310558]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1057" type="MeshInstance3D" parent="World/@Node3D@1056" unique_id=657767023]
+[node name="@MeshInstance3D@1056" type="MeshInstance3D" parent="World/@Node3D@1055" unique_id=1473495400]
 material_override = SubResource("ShaderMaterial_y81tm")
 mesh = SubResource("BoxMesh_fpnhw")
 
-[node name="@Node3D@1058" type="Node3D" parent="World" unique_id=1716687290]
+[node name="@Node3D@1057" type="Node3D" parent="World" unique_id=884018792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1059" type="MeshInstance3D" parent="World/@Node3D@1058" unique_id=109611288]
+[node name="@MeshInstance3D@1058" type="MeshInstance3D" parent="World/@Node3D@1057" unique_id=581474042]
 material_override = SubResource("ShaderMaterial_5giqa")
 mesh = SubResource("BoxMesh_71rfl")
 
-[node name="@Node3D@1060" type="Node3D" parent="World" unique_id=828811866]
+[node name="@Node3D@1059" type="Node3D" parent="World" unique_id=53758592]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1061" type="MeshInstance3D" parent="World/@Node3D@1060" unique_id=344941153]
+[node name="@MeshInstance3D@1060" type="MeshInstance3D" parent="World/@Node3D@1059" unique_id=1215036922]
 material_override = SubResource("ShaderMaterial_vxxec")
 mesh = SubResource("BoxMesh_f4cb6")
 
-[node name="@MeshInstance3D@1062" type="MeshInstance3D" parent="World" unique_id=1429317875]
+[node name="@MeshInstance3D@1061" type="MeshInstance3D" parent="World" unique_id=175976560]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 84, -0.2, 0)
 material_override = SubResource("ShaderMaterial_yayrk")
 mesh = SubResource("CylinderMesh_0vk5p")
 
-[node name="@Node3D@1063" type="Node3D" parent="World" unique_id=1678060096]
+[node name="@Node3D@1062" type="Node3D" parent="World" unique_id=555341946]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1064" type="MeshInstance3D" parent="World/@Node3D@1063" unique_id=667699419]
+[node name="@MeshInstance3D@1063" type="MeshInstance3D" parent="World/@Node3D@1062" unique_id=1440555229]
 material_override = SubResource("ShaderMaterial_esqyk")
 mesh = SubResource("BoxMesh_w2m0p")
 
-[node name="@Node3D@1065" type="Node3D" parent="World" unique_id=458876925]
+[node name="@Node3D@1064" type="Node3D" parent="World" unique_id=862761423]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1066" type="MeshInstance3D" parent="World/@Node3D@1065" unique_id=498715084]
+[node name="@MeshInstance3D@1065" type="MeshInstance3D" parent="World/@Node3D@1064" unique_id=214210898]
 material_override = SubResource("ShaderMaterial_bjodi")
 mesh = SubResource("BoxMesh_cet32")
 
-[node name="@Node3D@1067" type="Node3D" parent="World" unique_id=54500289]
+[node name="@Node3D@1066" type="Node3D" parent="World" unique_id=1907754347]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86, 0.22, -2.25)
 
-[node name="@MeshInstance3D@1068" type="MeshInstance3D" parent="World/@Node3D@1067" unique_id=75039789]
+[node name="@MeshInstance3D@1067" type="MeshInstance3D" parent="World/@Node3D@1066" unique_id=2110429544]
 material_override = SubResource("ShaderMaterial_egjcl")
 mesh = SubResource("BoxMesh_reorp")
 
-[node name="@Node3D@1069" type="Node3D" parent="World" unique_id=1824408801]
+[node name="@Node3D@1068" type="Node3D" parent="World" unique_id=154401674]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86, 0.22, 2.25)
 
-[node name="@MeshInstance3D@1070" type="MeshInstance3D" parent="World/@Node3D@1069" unique_id=1721026690]
+[node name="@MeshInstance3D@1069" type="MeshInstance3D" parent="World/@Node3D@1068" unique_id=1560945038]
 material_override = SubResource("ShaderMaterial_6lajm")
 mesh = SubResource("BoxMesh_00ylp")
 
-[node name="@MeshInstance3D@1071" type="MeshInstance3D" parent="World" unique_id=1801918457]
+[node name="@MeshInstance3D@1070" type="MeshInstance3D" parent="World" unique_id=147602617]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 86, -0.2, 0)
 material_override = SubResource("ShaderMaterial_2k5ij")
 mesh = SubResource("CylinderMesh_gbhmj")
@@ -9844,87 +9807,38 @@ mesh = SubResource("CylinderMesh_gbhmj")
 [node name="JumpWarning" type="Node3D" parent="World" unique_id=63480608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.3, 0.04, 0)
 
-[node name="@MeshInstance3D@1072" type="MeshInstance3D" parent="World/JumpWarning" unique_id=608368215]
+[node name="@MeshInstance3D@1071" type="MeshInstance3D" parent="World/JumpWarning" unique_id=314636168]
 material_override = SubResource("ShaderMaterial_0auet")
 mesh = SubResource("BoxMesh_s128r")
 
-[node name="JumpMark" type="Label3D" parent="World" unique_id=1073518271]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.3, 0.65, -2.5)
-pixel_size = 0.008
-modulate = Color(0.8509804, 0.6784314, 0.43529412, 1)
-text = "!"
-font_size = 70
-outline_size = 0
-
-[node name="@Node3D@1073" type="Node3D" parent="World" unique_id=13586309]
+[node name="@Node3D@1072" type="Node3D" parent="World" unique_id=1173620522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.3, 0.04, 0)
 
-[node name="@MeshInstance3D@1074" type="MeshInstance3D" parent="World/@Node3D@1073" unique_id=1141059573]
+[node name="@MeshInstance3D@1073" type="MeshInstance3D" parent="World/@Node3D@1072" unique_id=1521240546]
 material_override = SubResource("ShaderMaterial_6l6sr")
 mesh = SubResource("BoxMesh_7b3s2")
 
-[node name="@Label3D@1075" type="Label3D" parent="World" unique_id=557579463]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.3, 0.65, -2.5)
-pixel_size = 0.008
-modulate = Color(0.8509804, 0.6784314, 0.43529412, 1)
-text = "!"
-font_size = 70
-outline_size = 0
-
-[node name="@Node3D@1076" type="Node3D" parent="World" unique_id=1867159553]
+[node name="@Node3D@1074" type="Node3D" parent="World" unique_id=542080190]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77.3, 0.04, 0)
 
-[node name="@MeshInstance3D@1077" type="MeshInstance3D" parent="World/@Node3D@1076" unique_id=450798389]
+[node name="@MeshInstance3D@1075" type="MeshInstance3D" parent="World/@Node3D@1074" unique_id=1201107410]
 material_override = SubResource("ShaderMaterial_c1rtc")
 mesh = SubResource("BoxMesh_iwjf2")
-
-[node name="@Label3D@1078" type="Label3D" parent="World" unique_id=1251768590]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77.3, 0.65, -2.5)
-pixel_size = 0.008
-modulate = Color(0.8509804, 0.6784314, 0.43529412, 1)
-text = "!"
-font_size = 70
-outline_size = 0
 
 [node name="ConveyorLowPassage" type="StaticBody3D" parent="World" unique_id=1072026015]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74, 1.6, 0)
 
-[node name="@MeshInstance3D@1079" type="MeshInstance3D" parent="World/ConveyorLowPassage" unique_id=2008328887]
+[node name="@MeshInstance3D@1076" type="MeshInstance3D" parent="World/ConveyorLowPassage" unique_id=1002125655]
 material_override = SubResource("ShaderMaterial_g8f5f")
 mesh = SubResource("BoxMesh_3vbna")
 
-[node name="@CollisionShape3D@1080" type="CollisionShape3D" parent="World/ConveyorLowPassage" unique_id=1371159298]
+[node name="@CollisionShape3D@1077" type="CollisionShape3D" parent="World/ConveyorLowPassage" unique_id=889318787]
 shape = SubResource("BoxShape3D_4eerv")
 
-[node name="DuckSign" type="Label3D" parent="World" unique_id=870887315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.1, 1.8, 2.18)
-pixel_size = 0.008
-modulate = Color(0.8509804, 0.6784314, 0.43529412, 1)
-text = "↓"
-font_size = 95
-outline_size = 0
-
-[node name="ExitFrame" type="Node3D" parent="World" unique_id=1006614199]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88.5, 2, -1.6)
-
-[node name="@MeshInstance3D@1081" type="MeshInstance3D" parent="World/ExitFrame" unique_id=1910713899]
-material_override = SubResource("ShaderMaterial_dqjjx")
-mesh = SubResource("BoxMesh_ha07p")
-
-[node name="ExitOpening" type="Node3D" parent="World" unique_id=1251137624]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 87.9, 1.3, -0.95)
-
-[node name="@MeshInstance3D@1082" type="MeshInstance3D" parent="World/ExitOpening" unique_id=1928351356]
-material_override = SubResource("ShaderMaterial_8ms1u")
-mesh = SubResource("BoxMesh_yetfk")
-
-[node name="ExitSign" type="Label3D" parent="World" unique_id=1706427692]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.5, 3.5, -2.65)
-pixel_size = 0.008
-modulate = Color(0.65882355, 0.8509804, 0.77254903, 1)
-text = "OUTSIDE  →"
-font_size = 76
-outline_size = 0
+[node name="ExitVisual" type="Node3D" parent="World" unique_id=593914669 instance=ExtResource("new_13_w7rqi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 87.5, 0, -0.95)
+script = ExtResource("new_11_q0fja")
+kind = "exit_workshop"
 
 [node name="ExitLamp" type="OmniLight3D" parent="World" unique_id=723885678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86, 2.6, -0.3)
@@ -9938,57 +9852,57 @@ transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, -0.02, 3.1)
 [node name="ForegroundCrate" type="Node3D" parent="World" unique_id=584599947]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1083" type="MeshInstance3D" parent="World/ForegroundCrate" unique_id=23533558]
+[node name="@MeshInstance3D@1078" type="MeshInstance3D" parent="World/ForegroundCrate" unique_id=918433127]
 material_override = SubResource("ShaderMaterial_muril")
 mesh = SubResource("BoxMesh_a28lq")
 
-[node name="@Node3D@1084" type="Node3D" parent="World" unique_id=2002323904 instance=ExtResource("4_0ld40")]
+[node name="@Node3D@1079" type="Node3D" parent="World" unique_id=235071081 instance=ExtResource("4_0ld40")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 18, -0.02, 3.1)
 
-[node name="@Node3D@1085" type="Node3D" parent="World" unique_id=1691907416]
+[node name="@Node3D@1080" type="Node3D" parent="World" unique_id=264926141]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1086" type="MeshInstance3D" parent="World/@Node3D@1085" unique_id=385057885]
+[node name="@MeshInstance3D@1081" type="MeshInstance3D" parent="World/@Node3D@1080" unique_id=68019628]
 material_override = SubResource("ShaderMaterial_xmj2e")
 mesh = SubResource("BoxMesh_5d6ra")
 
-[node name="@Node3D@1087" type="Node3D" parent="World" unique_id=146946686 instance=ExtResource("4_0ld40")]
+[node name="@Node3D@1082" type="Node3D" parent="World" unique_id=474280843 instance=ExtResource("4_0ld40")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 29, -0.02, 3.1)
 
-[node name="@Node3D@1088" type="Node3D" parent="World" unique_id=102571716]
+[node name="@Node3D@1083" type="Node3D" parent="World" unique_id=1393009387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1089" type="MeshInstance3D" parent="World/@Node3D@1088" unique_id=1045435920]
+[node name="@MeshInstance3D@1084" type="MeshInstance3D" parent="World/@Node3D@1083" unique_id=788529978]
 material_override = SubResource("ShaderMaterial_evv5v")
 mesh = SubResource("BoxMesh_c61mm")
 
-[node name="@Node3D@1090" type="Node3D" parent="World" unique_id=2071425005 instance=ExtResource("4_0ld40")]
+[node name="@Node3D@1085" type="Node3D" parent="World" unique_id=1691907416 instance=ExtResource("4_0ld40")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 46, -0.02, 3.1)
 
-[node name="@Node3D@1091" type="Node3D" parent="World" unique_id=562923525]
+[node name="@Node3D@1086" type="Node3D" parent="World" unique_id=1945782516]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1092" type="MeshInstance3D" parent="World/@Node3D@1091" unique_id=1002976456]
+[node name="@MeshInstance3D@1087" type="MeshInstance3D" parent="World/@Node3D@1086" unique_id=385933781]
 material_override = SubResource("ShaderMaterial_3nwrf")
 mesh = SubResource("BoxMesh_aagl1")
 
-[node name="@Node3D@1093" type="Node3D" parent="World" unique_id=658191595 instance=ExtResource("4_0ld40")]
+[node name="@Node3D@1088" type="Node3D" parent="World" unique_id=102571716 instance=ExtResource("4_0ld40")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 58, -0.02, 3.1)
 
-[node name="@Node3D@1094" type="Node3D" parent="World" unique_id=845226585]
+[node name="@Node3D@1089" type="Node3D" parent="World" unique_id=342101526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1095" type="MeshInstance3D" parent="World/@Node3D@1094" unique_id=1072817878]
+[node name="@MeshInstance3D@1090" type="MeshInstance3D" parent="World/@Node3D@1089" unique_id=1378719688]
 material_override = SubResource("ShaderMaterial_hbpdf")
 mesh = SubResource("BoxMesh_hokn7")
 
-[node name="@Node3D@1096" type="Node3D" parent="World" unique_id=203833202 instance=ExtResource("4_0ld40")]
+[node name="@Node3D@1091" type="Node3D" parent="World" unique_id=562923525 instance=ExtResource("4_0ld40")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 82, -0.02, 3.1)
 
-[node name="@Node3D@1097" type="Node3D" parent="World" unique_id=1029077895]
+[node name="@Node3D@1092" type="Node3D" parent="World" unique_id=1248241547]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.1, 0.3, 3.2)
 
-[node name="@MeshInstance3D@1098" type="MeshInstance3D" parent="World/@Node3D@1097" unique_id=67342954]
+[node name="@MeshInstance3D@1093" type="MeshInstance3D" parent="World/@Node3D@1092" unique_id=1898243250]
 material_override = SubResource("ShaderMaterial_bdam6")
 mesh = SubResource("BoxMesh_7a077")
 
@@ -10005,93 +9919,93 @@ mesh = SubResource("CylinderMesh_byu0s")
 [node name="ClockHand" type="Node3D" parent="World" unique_id=1872411804]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 3.81, -2.66)
 
-[node name="@MeshInstance3D@1099" type="MeshInstance3D" parent="World/ClockHand" unique_id=1174602959]
-material_override = SubResource("ShaderMaterial_tr1ox")
+[node name="@MeshInstance3D@1094" type="MeshInstance3D" parent="World/ClockHand" unique_id=1103544110]
+material_override = SubResource("ShaderMaterial_dqjjx")
 mesh = SubResource("BoxMesh_bk36h")
 
 [node name="ClockHandSmall" type="Node3D" parent="World" unique_id=339778957]
 transform = Transform3D(0.921061, -0.38941833, 0, 0.38941833, 0.921061, 0, 0, 0, 1, 6.62, 3.65, -2.64)
 
-[node name="@MeshInstance3D@1100" type="MeshInstance3D" parent="World/ClockHandSmall" unique_id=967926247]
-material_override = SubResource("ShaderMaterial_c86a7")
+[node name="@MeshInstance3D@1095" type="MeshInstance3D" parent="World/ClockHandSmall" unique_id=1793256046]
+material_override = SubResource("ShaderMaterial_tr1ox")
 mesh = SubResource("BoxMesh_i3n7s")
 
-[node name="@MeshInstance3D@1101" type="MeshInstance3D" parent="World" unique_id=2067105077]
+[node name="@MeshInstance3D@1096" type="MeshInstance3D" parent="World" unique_id=119922677]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 33.5, 3.6, -2.78)
 material_override = SubResource("ShaderMaterial_8efwr")
 mesh = SubResource("CylinderMesh_10x1u")
 
-[node name="@MeshInstance3D@1102" type="MeshInstance3D" parent="World" unique_id=1611253244]
+[node name="@MeshInstance3D@1097" type="MeshInstance3D" parent="World" unique_id=1761157411]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 33.5, 3.6, -2.69)
 material_override = SubResource("ShaderMaterial_tyacq")
 mesh = SubResource("CylinderMesh_p1jou")
 
-[node name="@Node3D@1103" type="Node3D" parent="World" unique_id=1437125733]
+[node name="@Node3D@1098" type="Node3D" parent="World" unique_id=646616333]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.5, 3.81, -2.66)
 
-[node name="@MeshInstance3D@1104" type="MeshInstance3D" parent="World/@Node3D@1103" unique_id=1209837841]
-material_override = SubResource("ShaderMaterial_r0r1n")
+[node name="@MeshInstance3D@1099" type="MeshInstance3D" parent="World/@Node3D@1098" unique_id=366895079]
+material_override = SubResource("ShaderMaterial_c86a7")
 mesh = SubResource("BoxMesh_xu7j6")
 
-[node name="@Node3D@1105" type="Node3D" parent="World" unique_id=1331094056]
+[node name="@Node3D@1100" type="Node3D" parent="World" unique_id=2070972750]
 transform = Transform3D(0.921061, -0.38941833, 0, 0.38941833, 0.921061, 0, 0, 0, 1, 33.62, 3.65, -2.64)
 
-[node name="@MeshInstance3D@1106" type="MeshInstance3D" parent="World/@Node3D@1105" unique_id=1679936009]
-material_override = SubResource("ShaderMaterial_300fl")
+[node name="@MeshInstance3D@1101" type="MeshInstance3D" parent="World/@Node3D@1100" unique_id=889769475]
+material_override = SubResource("ShaderMaterial_r0r1n")
 mesh = SubResource("BoxMesh_6spes")
 
-[node name="@MeshInstance3D@1107" type="MeshInstance3D" parent="World" unique_id=1253103574]
+[node name="@MeshInstance3D@1102" type="MeshInstance3D" parent="World" unique_id=1611253244]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 47.5, 3.6, -2.78)
 material_override = SubResource("ShaderMaterial_1yoat")
 mesh = SubResource("CylinderMesh_x52cw")
 
-[node name="@MeshInstance3D@1108" type="MeshInstance3D" parent="World" unique_id=2095372952]
+[node name="@MeshInstance3D@1103" type="MeshInstance3D" parent="World" unique_id=305424809]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 47.5, 3.6, -2.69)
 material_override = SubResource("ShaderMaterial_nxtm2")
 mesh = SubResource("CylinderMesh_gmgkj")
 
-[node name="@Node3D@1109" type="Node3D" parent="World" unique_id=1503619883]
+[node name="@Node3D@1104" type="Node3D" parent="World" unique_id=1155404848]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.5, 3.81, -2.66)
 
-[node name="@MeshInstance3D@1110" type="MeshInstance3D" parent="World/@Node3D@1109" unique_id=2042491263]
-material_override = SubResource("ShaderMaterial_b3evu")
+[node name="@MeshInstance3D@1105" type="MeshInstance3D" parent="World/@Node3D@1104" unique_id=981410029]
+material_override = SubResource("ShaderMaterial_300fl")
 mesh = SubResource("BoxMesh_e2bpd")
 
-[node name="@Node3D@1111" type="Node3D" parent="World" unique_id=410881326]
+[node name="@Node3D@1106" type="Node3D" parent="World" unique_id=1681217821]
 transform = Transform3D(0.921061, -0.38941833, 0, 0.38941833, 0.921061, 0, 0, 0, 1, 47.62, 3.65, -2.64)
 
-[node name="@MeshInstance3D@1112" type="MeshInstance3D" parent="World/@Node3D@1111" unique_id=183806580]
-material_override = SubResource("ShaderMaterial_6qgdb")
+[node name="@MeshInstance3D@1107" type="MeshInstance3D" parent="World/@Node3D@1106" unique_id=1603637558]
+material_override = SubResource("ShaderMaterial_b3evu")
 mesh = SubResource("BoxMesh_d0g87")
 
-[node name="@MeshInstance3D@1113" type="MeshInstance3D" parent="World" unique_id=78231008]
+[node name="@MeshInstance3D@1108" type="MeshInstance3D" parent="World" unique_id=2095372952]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 80.5, 3.6, -2.78)
 material_override = SubResource("ShaderMaterial_eig6t")
 mesh = SubResource("CylinderMesh_d7v5a")
 
-[node name="@MeshInstance3D@1114" type="MeshInstance3D" parent="World" unique_id=1951194967]
+[node name="@MeshInstance3D@1109" type="MeshInstance3D" parent="World" unique_id=1683415877]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 80.5, 3.6, -2.69)
 material_override = SubResource("ShaderMaterial_yjkpu")
 mesh = SubResource("CylinderMesh_5looe")
 
-[node name="@Node3D@1115" type="Node3D" parent="World" unique_id=1829807072]
+[node name="@Node3D@1110" type="Node3D" parent="World" unique_id=1903538468]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80.5, 3.81, -2.66)
 
-[node name="@MeshInstance3D@1116" type="MeshInstance3D" parent="World/@Node3D@1115" unique_id=712732058]
-material_override = SubResource("ShaderMaterial_gy0gq")
+[node name="@MeshInstance3D@1111" type="MeshInstance3D" parent="World/@Node3D@1110" unique_id=1983739690]
+material_override = SubResource("ShaderMaterial_6qgdb")
 mesh = SubResource("BoxMesh_2wjxp")
 
-[node name="@Node3D@1117" type="Node3D" parent="World" unique_id=1660105536]
+[node name="@Node3D@1112" type="Node3D" parent="World" unique_id=763758832]
 transform = Transform3D(0.921061, -0.38941833, 0, 0.38941833, 0.921061, 0, 0, 0, 1, 80.62, 3.65, -2.64)
 
-[node name="@MeshInstance3D@1118" type="MeshInstance3D" parent="World/@Node3D@1117" unique_id=1411714125]
-material_override = SubResource("ShaderMaterial_c5jmy")
+[node name="@MeshInstance3D@1113" type="MeshInstance3D" parent="World/@Node3D@1112" unique_id=924064773]
+material_override = SubResource("ShaderMaterial_gy0gq")
 mesh = SubResource("BoxMesh_emqn3")
 
 [node name="FadedNotice" type="Node3D" parent="World" unique_id=1753351261]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 3.1, -2.79)
 
-[node name="@MeshInstance3D@1119" type="MeshInstance3D" parent="World/FadedNotice" unique_id=17976362]
+[node name="@MeshInstance3D@1114" type="MeshInstance3D" parent="World/FadedNotice" unique_id=1557881016]
 material_override = SubResource("ShaderMaterial_flxxe")
 mesh = SubResource("BoxMesh_tlido")
 
@@ -10105,14 +10019,14 @@ CARE"
 font_size = 29
 outline_size = 0
 
-[node name="@Node3D@1120" type="Node3D" parent="World" unique_id=1112109959]
+[node name="@Node3D@1115" type="Node3D" parent="World" unique_id=1829807072]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.1, -2.79)
 
-[node name="@MeshInstance3D@1121" type="MeshInstance3D" parent="World/@Node3D@1120" unique_id=1223426061]
+[node name="@MeshInstance3D@1116" type="MeshInstance3D" parent="World/@Node3D@1115" unique_id=712732058]
 material_override = SubResource("ShaderMaterial_8h07n")
 mesh = SubResource("BoxMesh_0an77")
 
-[node name="@Label3D@1122" type="Label3D" parent="World" unique_id=423839202]
+[node name="@Label3D@1117" type="Label3D" parent="World" unique_id=1782318540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 3.2, -2.75)
 pixel_size = 0.008
 modulate = Color(0.16078432, 0.23529412, 0.23921569, 1)
@@ -10122,14 +10036,14 @@ CARE"
 font_size = 29
 outline_size = 0
 
-[node name="@Node3D@1123" type="Node3D" parent="World" unique_id=2135811803]
+[node name="@Node3D@1118" type="Node3D" parent="World" unique_id=1482322868]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 3.1, -2.79)
 
-[node name="@MeshInstance3D@1124" type="MeshInstance3D" parent="World/@Node3D@1123" unique_id=2100921984]
+[node name="@MeshInstance3D@1119" type="MeshInstance3D" parent="World/@Node3D@1118" unique_id=295206823]
 material_override = SubResource("ShaderMaterial_uq16p")
 mesh = SubResource("BoxMesh_a3yeu")
 
-[node name="@Label3D@1125" type="Label3D" parent="World" unique_id=858722517]
+[node name="@Label3D@1120" type="Label3D" parent="World" unique_id=1140342381]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 3.2, -2.75)
 pixel_size = 0.008
 modulate = Color(0.16078432, 0.23529412, 0.23921569, 1)
@@ -10139,14 +10053,14 @@ CARE"
 font_size = 29
 outline_size = 0
 
-[node name="@Node3D@1126" type="Node3D" parent="World" unique_id=1444501403]
+[node name="@Node3D@1121" type="Node3D" parent="World" unique_id=489542971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66, 3.1, -2.79)
 
-[node name="@MeshInstance3D@1127" type="MeshInstance3D" parent="World/@Node3D@1126" unique_id=1698289869]
+[node name="@MeshInstance3D@1122" type="MeshInstance3D" parent="World/@Node3D@1121" unique_id=1279274618]
 material_override = SubResource("ShaderMaterial_e0qjd")
 mesh = SubResource("BoxMesh_acidl")
 
-[node name="@Label3D@1128" type="Label3D" parent="World" unique_id=1229408173]
+[node name="@Label3D@1123" type="Label3D" parent="World" unique_id=436019305]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66, 3.2, -2.75)
 pixel_size = 0.008
 modulate = Color(0.16078432, 0.23529412, 0.23921569, 1)
@@ -10159,196 +10073,196 @@ outline_size = 0
 [node name="PaperOffcut" type="Node3D" parent="World" unique_id=413355220]
 transform = Transform3D(-0.921872, 0, 0.38749447, 0, 1, 0, -0.38749447, 0, -0.921872, 10.352084, 0.035, 2.2458282)
 
-[node name="@MeshInstance3D@1129" type="MeshInstance3D" parent="World/PaperOffcut" unique_id=670574069]
+[node name="@MeshInstance3D@1124" type="MeshInstance3D" parent="World/PaperOffcut" unique_id=723555077]
 material_override = SubResource("ShaderMaterial_x4i1k")
 mesh = SubResource("BoxMesh_tuh1j")
 
-[node name="@Node3D@1130" type="Node3D" parent="World" unique_id=1661117727]
+[node name="@Node3D@1125" type="Node3D" parent="World" unique_id=1033826625]
 transform = Transform3D(0.88082945, 0, 0.4734337, 0, 1, 0, -0.4734337, 0, 0.88082945, 80.29526, 0.035, 2.5915086)
 
-[node name="@MeshInstance3D@1131" type="MeshInstance3D" parent="World/@Node3D@1130" unique_id=949293268]
+[node name="@MeshInstance3D@1126" type="MeshInstance3D" parent="World/@Node3D@1125" unique_id=1231634644]
 material_override = SubResource("ShaderMaterial_rnpt7")
 mesh = SubResource("BoxMesh_gbtv3")
 
-[node name="@Node3D@1132" type="Node3D" parent="World" unique_id=255390362]
+[node name="@Node3D@1127" type="Node3D" parent="World" unique_id=83689027]
 transform = Transform3D(-0.9923476, 0, 0.12347592, 0, 1, 0, -0.12347592, 0, -0.9923476, 76.740616, 0.035, 1.9462186)
 
-[node name="@MeshInstance3D@1133" type="MeshInstance3D" parent="World/@Node3D@1132" unique_id=154718287]
+[node name="@MeshInstance3D@1128" type="MeshInstance3D" parent="World/@Node3D@1127" unique_id=1705751332]
 material_override = SubResource("ShaderMaterial_bk1nh")
 mesh = SubResource("BoxMesh_7u2yf")
 
-[node name="@Node3D@1134" type="Node3D" parent="World" unique_id=1205379704]
+[node name="@Node3D@1129" type="Node3D" parent="World" unique_id=1219923380]
 transform = Transform3D(0.42675176, 0, -0.9043688, 0, 1, 0, 0.9043688, 0, 0.42675176, 59.74618, 0.035, 2.4564686)
 
-[node name="@MeshInstance3D@1135" type="MeshInstance3D" parent="World/@Node3D@1134" unique_id=332642740]
+[node name="@MeshInstance3D@1130" type="MeshInstance3D" parent="World/@Node3D@1129" unique_id=915889266]
 material_override = SubResource("ShaderMaterial_87b21")
 mesh = SubResource("BoxMesh_w2fxc")
 
-[node name="@Node3D@1136" type="Node3D" parent="World" unique_id=2093039992]
+[node name="@Node3D@1131" type="Node3D" parent="World" unique_id=235109671]
 transform = Transform3D(-0.20769078, 0, -0.97819453, 0, 1, 0, 0.97819453, 0, -0.20769078, 19.89768, 0.035, 2.241934)
 
-[node name="@MeshInstance3D@1137" type="MeshInstance3D" parent="World/@Node3D@1136" unique_id=1627382451]
+[node name="@MeshInstance3D@1132" type="MeshInstance3D" parent="World/@Node3D@1131" unique_id=550121382]
 material_override = SubResource("ShaderMaterial_e2lbb")
 mesh = SubResource("BoxMesh_ejvmt")
 
-[node name="@Node3D@1138" type="Node3D" parent="World" unique_id=2054360543]
+[node name="@Node3D@1133" type="Node3D" parent="World" unique_id=1273168161]
 transform = Transform3D(-0.51239604, 0, -0.8587493, 0, 1, 0, 0.8587493, 0, -0.51239604, 36.92262, 0.035, 2.059464)
 
-[node name="@MeshInstance3D@1139" type="MeshInstance3D" parent="World/@Node3D@1138" unique_id=1006958046]
+[node name="@MeshInstance3D@1134" type="MeshInstance3D" parent="World/@Node3D@1133" unique_id=1586401210]
 material_override = SubResource("ShaderMaterial_dfitk")
 mesh = SubResource("BoxMesh_t81b2")
 
-[node name="@Node3D@1140" type="Node3D" parent="World" unique_id=2084978484]
+[node name="@Node3D@1135" type="Node3D" parent="World" unique_id=1526667000]
 transform = Transform3D(-0.9983693, 0, 0.057085373, 0, 1, 0, -0.057085373, 0, -0.9983693, 36.10122, 0.035, 2.200117)
 
-[node name="@MeshInstance3D@1141" type="MeshInstance3D" parent="World/@Node3D@1140" unique_id=392484516]
+[node name="@MeshInstance3D@1136" type="MeshInstance3D" parent="World/@Node3D@1135" unique_id=2067853063]
 material_override = SubResource("ShaderMaterial_emm0i")
 mesh = SubResource("BoxMesh_h52y5")
 
-[node name="@Node3D@1142" type="Node3D" parent="World" unique_id=60960320]
+[node name="@Node3D@1137" type="Node3D" parent="World" unique_id=1856361223]
 transform = Transform3D(-0.95035994, 0, -0.3111527, 0, 1, 0, 0.3111527, 0, -0.95035994, 15.923033, 0.035, 2.0133853)
 
-[node name="@MeshInstance3D@1143" type="MeshInstance3D" parent="World/@Node3D@1142" unique_id=1078803779]
+[node name="@MeshInstance3D@1138" type="MeshInstance3D" parent="World/@Node3D@1137" unique_id=22687558]
 material_override = SubResource("ShaderMaterial_orvg8")
 mesh = SubResource("BoxMesh_ts81n")
 
-[node name="@Node3D@1144" type="Node3D" parent="World" unique_id=452046312]
+[node name="@Node3D@1139" type="Node3D" parent="World" unique_id=1162223942]
 transform = Transform3D(0.696501, 0, 0.7175558, 0, 1, 0, -0.7175558, 0, 0.696501, 34.546112, 0.035, 2.2168822)
 
-[node name="@MeshInstance3D@1145" type="MeshInstance3D" parent="World/@Node3D@1144" unique_id=814014162]
+[node name="@MeshInstance3D@1140" type="MeshInstance3D" parent="World/@Node3D@1139" unique_id=516803280]
 material_override = SubResource("ShaderMaterial_8ukb0")
 mesh = SubResource("BoxMesh_3o8tc")
 
-[node name="@Node3D@1146" type="Node3D" parent="World" unique_id=236780711]
+[node name="@Node3D@1141" type="Node3D" parent="World" unique_id=557688183]
 transform = Transform3D(-0.27315086, 0, 0.9619712, 0, 1, 0, -0.9619712, 0, -0.27315086, 14.975896, 0.035, 2.0488954)
 
-[node name="@MeshInstance3D@1147" type="MeshInstance3D" parent="World/@Node3D@1146" unique_id=1576953515]
+[node name="@MeshInstance3D@1142" type="MeshInstance3D" parent="World/@Node3D@1141" unique_id=1290140607]
 material_override = SubResource("ShaderMaterial_ohfst")
 mesh = SubResource("BoxMesh_hx6tq")
 
-[node name="@Node3D@1148" type="Node3D" parent="World" unique_id=473982601]
+[node name="@Node3D@1143" type="Node3D" parent="World" unique_id=576858096]
 transform = Transform3D(0.98389494, 0, -0.17874776, 0, 1, 0, 0.17874776, 0, 0.98389494, 42.983078, 0.035, 2.4934316)
 
-[node name="@MeshInstance3D@1149" type="MeshInstance3D" parent="World/@Node3D@1148" unique_id=1574266644]
+[node name="@MeshInstance3D@1144" type="MeshInstance3D" parent="World/@Node3D@1143" unique_id=351343946]
 material_override = SubResource("ShaderMaterial_keb4u")
 mesh = SubResource("BoxMesh_i8rn2")
 
-[node name="@Node3D@1150" type="Node3D" parent="World" unique_id=1330842816]
+[node name="@Node3D@1145" type="Node3D" parent="World" unique_id=1521021137]
 transform = Transform3D(-0.22059637, 0, 0.97536516, 0, 1, 0, -0.97536516, 0, -0.22059637, 67.340164, 0.035, 1.94937)
 
-[node name="@MeshInstance3D@1151" type="MeshInstance3D" parent="World/@Node3D@1150" unique_id=319330577]
+[node name="@MeshInstance3D@1146" type="MeshInstance3D" parent="World/@Node3D@1145" unique_id=12016915]
 material_override = SubResource("ShaderMaterial_4reg6")
 mesh = SubResource("BoxMesh_fshqk")
 
-[node name="@Node3D@1152" type="Node3D" parent="World" unique_id=740831176]
+[node name="@Node3D@1147" type="Node3D" parent="World" unique_id=1127366275]
 transform = Transform3D(-0.46576837, 0, 0.88490665, 0, 1, 0, -0.88490665, 0, -0.46576837, 39.402153, 0.035, 2.3893156)
 
-[node name="@MeshInstance3D@1153" type="MeshInstance3D" parent="World/@Node3D@1152" unique_id=447818052]
+[node name="@MeshInstance3D@1148" type="MeshInstance3D" parent="World/@Node3D@1147" unique_id=1116115229]
 material_override = SubResource("ShaderMaterial_mgw7f")
 mesh = SubResource("BoxMesh_bc62p")
 
-[node name="@Node3D@1154" type="Node3D" parent="World" unique_id=1744841959]
+[node name="@Node3D@1149" type="Node3D" parent="World" unique_id=24348983]
 transform = Transform3D(0.16040051, 0, 0.987052, 0, 1, 0, -0.987052, 0, 0.16040051, 15.728901, 0.035, 2.5541792)
 
-[node name="@MeshInstance3D@1155" type="MeshInstance3D" parent="World/@Node3D@1154" unique_id=1967395704]
+[node name="@MeshInstance3D@1150" type="MeshInstance3D" parent="World/@Node3D@1149" unique_id=1569253522]
 material_override = SubResource("ShaderMaterial_uo3y4")
 mesh = SubResource("BoxMesh_dp3ev")
 
-[node name="@Node3D@1156" type="Node3D" parent="World" unique_id=126929356]
+[node name="@Node3D@1151" type="Node3D" parent="World" unique_id=564646441]
 transform = Transform3D(0.9003836, 0, -0.43509695, 0, 1, 0, 0.43509695, 0, 0.9003836, 77.42796, 0.035, 2.6113443)
 
-[node name="@MeshInstance3D@1157" type="MeshInstance3D" parent="World/@Node3D@1156" unique_id=324462766]
+[node name="@MeshInstance3D@1152" type="MeshInstance3D" parent="World/@Node3D@1151" unique_id=68005016]
 material_override = SubResource("ShaderMaterial_t6ixu")
 mesh = SubResource("BoxMesh_l8ekp")
 
-[node name="@Node3D@1158" type="Node3D" parent="World" unique_id=1164982298]
+[node name="@Node3D@1153" type="Node3D" parent="World" unique_id=2033727632]
 transform = Transform3D(0.7857023, 0, 0.6186048, 0, 1, 0, -0.6186048, 0, 0.7857023, 66.02794, 0.035, 1.9114048)
 
-[node name="@MeshInstance3D@1159" type="MeshInstance3D" parent="World/@Node3D@1158" unique_id=1663108533]
+[node name="@MeshInstance3D@1154" type="MeshInstance3D" parent="World/@Node3D@1153" unique_id=1898770782]
 material_override = SubResource("ShaderMaterial_fk0nr")
 mesh = SubResource("BoxMesh_jk1p4")
 
-[node name="@Node3D@1160" type="Node3D" parent="World" unique_id=1993691765]
+[node name="@Node3D@1155" type="Node3D" parent="World" unique_id=190656759]
 transform = Transform3D(0.2830178, 0, -0.9591147, 0, 1, 0, 0.9591147, 0, 0.2830178, 35.682636, 0.035, 2.6285121)
 
-[node name="@MeshInstance3D@1161" type="MeshInstance3D" parent="World/@Node3D@1160" unique_id=1225462819]
+[node name="@MeshInstance3D@1156" type="MeshInstance3D" parent="World/@Node3D@1155" unique_id=745958059]
 material_override = SubResource("ShaderMaterial_gyado")
 mesh = SubResource("BoxMesh_7h76a")
 
-[node name="@Node3D@1162" type="Node3D" parent="World" unique_id=507892530]
+[node name="@Node3D@1157" type="Node3D" parent="World" unique_id=1698209483]
 transform = Transform3D(0.50097525, 0, -0.8654616, 0, 1, 0, 0.8654616, 0, 0.50097525, 34.45249, 0.035, 2.4445436)
 
-[node name="@MeshInstance3D@1163" type="MeshInstance3D" parent="World/@Node3D@1162" unique_id=1522518410]
+[node name="@MeshInstance3D@1158" type="MeshInstance3D" parent="World/@Node3D@1157" unique_id=1371196780]
 material_override = SubResource("ShaderMaterial_ylawh")
 mesh = SubResource("BoxMesh_b0hfi")
 
-[node name="@Node3D@1164" type="Node3D" parent="World" unique_id=1421083904]
+[node name="@Node3D@1159" type="Node3D" parent="World" unique_id=1088112974]
 transform = Transform3D(-0.9904905, 0, -0.13758123, 0, 1, 0, 0.13758123, 0, -0.9904905, 78.02707, 0.035, 2.3989673)
 
-[node name="@MeshInstance3D@1165" type="MeshInstance3D" parent="World/@Node3D@1164" unique_id=107172559]
+[node name="@MeshInstance3D@1160" type="MeshInstance3D" parent="World/@Node3D@1159" unique_id=2061784249]
 material_override = SubResource("ShaderMaterial_3qajj")
 mesh = SubResource("BoxMesh_5ddfy")
 
-[node name="@Node3D@1166" type="Node3D" parent="World" unique_id=2051432286]
+[node name="@Node3D@1161" type="Node3D" parent="World" unique_id=89875423]
 transform = Transform3D(-0.8755015, 0, 0.4832154, 0, 1, 0, -0.4832154, 0, -0.8755015, 58.07264, 0.035, 2.3381908)
 
-[node name="@MeshInstance3D@1167" type="MeshInstance3D" parent="World/@Node3D@1166" unique_id=1691774922]
+[node name="@MeshInstance3D@1162" type="MeshInstance3D" parent="World/@Node3D@1161" unique_id=650241644]
 material_override = SubResource("ShaderMaterial_lbqdm")
 mesh = SubResource("BoxMesh_rccfe")
 
-[node name="@Node3D@1168" type="Node3D" parent="World" unique_id=1350596910]
+[node name="@Node3D@1163" type="Node3D" parent="World" unique_id=1758819796]
 transform = Transform3D(-0.38270533, 0, -0.92387044, 0, 1, 0, 0.92387044, 0, -0.38270533, 31.16731, 0.035, 2.0069704)
 
-[node name="@MeshInstance3D@1169" type="MeshInstance3D" parent="World/@Node3D@1168" unique_id=1726628095]
+[node name="@MeshInstance3D@1164" type="MeshInstance3D" parent="World/@Node3D@1163" unique_id=1185303849]
 material_override = SubResource("ShaderMaterial_qqw77")
 mesh = SubResource("BoxMesh_l2gd0")
 
-[node name="@Node3D@1170" type="Node3D" parent="World" unique_id=959376926]
+[node name="@Node3D@1165" type="Node3D" parent="World" unique_id=2116634439]
 transform = Transform3D(0.76890653, 0, -0.6393612, 0, 1, 0, 0.6393612, 0, 0.76890653, 74.16825, 0.035, 1.9670788)
 
-[node name="@MeshInstance3D@1171" type="MeshInstance3D" parent="World/@Node3D@1170" unique_id=1280321192]
+[node name="@MeshInstance3D@1166" type="MeshInstance3D" parent="World/@Node3D@1165" unique_id=126644428]
 material_override = SubResource("ShaderMaterial_6s6g1")
 mesh = SubResource("BoxMesh_arqbg")
 
-[node name="@Node3D@1172" type="Node3D" parent="World" unique_id=23611149]
+[node name="@Node3D@1167" type="Node3D" parent="World" unique_id=861486441]
 transform = Transform3D(-0.9687527, 0, 0.2480287, 0, 1, 0, -0.2480287, 0, -0.9687527, 11.450218, 0.035, 1.9286907)
 
-[node name="@MeshInstance3D@1173" type="MeshInstance3D" parent="World/@Node3D@1172" unique_id=992565810]
+[node name="@MeshInstance3D@1168" type="MeshInstance3D" parent="World/@Node3D@1167" unique_id=1923017211]
 material_override = SubResource("ShaderMaterial_ofg6u")
 mesh = SubResource("BoxMesh_cqkwc")
 
-[node name="@Node3D@1174" type="Node3D" parent="World" unique_id=1773937816]
+[node name="@Node3D@1169" type="Node3D" parent="World" unique_id=863039099]
 transform = Transform3D(0.8686663, 0, -0.49539766, 0, 1, 0, 0.49539766, 0, 0.8686663, 27.251442, 0.035, 2.0311623)
 
-[node name="@MeshInstance3D@1175" type="MeshInstance3D" parent="World/@Node3D@1174" unique_id=1957408601]
+[node name="@MeshInstance3D@1170" type="MeshInstance3D" parent="World/@Node3D@1169" unique_id=887049841]
 material_override = SubResource("ShaderMaterial_d21oc")
 mesh = SubResource("BoxMesh_di587")
 
-[node name="@Node3D@1176" type="Node3D" parent="World" unique_id=2130387111]
+[node name="@Node3D@1171" type="Node3D" parent="World" unique_id=1071642057]
 transform = Transform3D(0.23604769, 0, -0.9717415, 0, 1, 0, 0.9717415, 0, 0.23604769, 45.09414, 0.035, 2.3873484)
 
-[node name="@MeshInstance3D@1177" type="MeshInstance3D" parent="World/@Node3D@1176" unique_id=976506829]
+[node name="@MeshInstance3D@1172" type="MeshInstance3D" parent="World/@Node3D@1171" unique_id=186758163]
 material_override = SubResource("ShaderMaterial_iywdi")
 mesh = SubResource("BoxMesh_3evit")
 
-[node name="@Node3D@1178" type="Node3D" parent="World" unique_id=839458909]
+[node name="@Node3D@1173" type="Node3D" parent="World" unique_id=836561723]
 transform = Transform3D(-0.7710575, 0, -0.6367655, 0, 1, 0, 0.6367655, 0, -0.7710575, 52.79111, 0.035, 2.078385)
 
-[node name="@MeshInstance3D@1179" type="MeshInstance3D" parent="World/@Node3D@1178" unique_id=937102927]
+[node name="@MeshInstance3D@1174" type="MeshInstance3D" parent="World/@Node3D@1173" unique_id=1552157053]
 material_override = SubResource("ShaderMaterial_strmp")
 mesh = SubResource("BoxMesh_iw3es")
 
-[node name="@Node3D@1180" type="Node3D" parent="World" unique_id=1454586788]
+[node name="@Node3D@1175" type="Node3D" parent="World" unique_id=1628873340]
 transform = Transform3D(0.9999999, 0, -0.00044578017, 0, 1, 0, 0.00044578017, 0, 0.9999999, 73.33128, 0.035, 2.1444626)
 
-[node name="@MeshInstance3D@1181" type="MeshInstance3D" parent="World/@Node3D@1180" unique_id=467763435]
+[node name="@MeshInstance3D@1176" type="MeshInstance3D" parent="World/@Node3D@1175" unique_id=288444221]
 material_override = SubResource("ShaderMaterial_shxwh")
 mesh = SubResource("BoxMesh_0tcnl")
 
-[node name="@Node3D@1182" type="Node3D" parent="World" unique_id=469499944]
+[node name="@Node3D@1177" type="Node3D" parent="World" unique_id=797341627]
 transform = Transform3D(0.95244795, 0, -0.30470127, 0, 1, 0, 0.30470127, 0, 0.95244795, 1.8109357, 0.035, 2.6503804)
 
-[node name="@MeshInstance3D@1183" type="MeshInstance3D" parent="World/@Node3D@1182" unique_id=864980650]
+[node name="@MeshInstance3D@1178" type="MeshInstance3D" parent="World/@Node3D@1177" unique_id=1596869836]
 material_override = SubResource("ShaderMaterial_vs0hw")
 mesh = SubResource("BoxMesh_4wvip")
 

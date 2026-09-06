@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/prop_visual.gd" id="1_ew0oj"]
+[ext_resource type="PackedScene" path="res://assets/models/props/brake.glb" id="2_exgvb"]
+
+[node name="Brake" type="Node3D" unique_id=823563164]
+script = ExtResource("1_ew0oj")
+kind = "brake"
+
+[node name="Model" type="Node3D" parent="." unique_id=1142253598 instance=ExtResource("2_exgvb")]
