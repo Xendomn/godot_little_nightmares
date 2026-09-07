@@ -18,7 +18,7 @@ var presentation: Node3D
 var phase := 0.0
 var lift: AnimatableBody3D
 var gate: AnimatableBody3D
-var water: MeshInstance3D
+var water: Node3D
 var hazards: Array = []
 var initial: Dictionary
 var press_visual: Node3D
@@ -182,16 +182,8 @@ func build() -> void:
 	if spec.get("belt",false): model(self,"conveyor",Vector3(19,-.53,0),Vector3(3.5,1,1))
 	if spec.get("press",false): press_visual = model(self,"press",Vector3(23,0,-1.1))
 	if spec.get("water",false):
-		water = MeshInstance3D.new()
-		var water_mesh := BoxMesh.new()
-		water_mesh.size = Vector3(16,.08,4.1)
-		water.mesh = water_mesh
-		water.position = Vector3(24,.1,0)
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(.10,.36,.40,.45)
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mat.roughness = .15
-		water.material_override = mat
+		water = preload("res://scenes/props/water_basin.tscn").instantiate()
+		water.position = Vector3(24,0,0)
 		add_child(water)
 		model(self,"tank",Vector3(18,0,-3),Vector3(1.4,1.2,1))
 		model(self,"tank",Vector3(31,0,-3),Vector3(1.4,1.2,1))
@@ -265,7 +257,7 @@ func _physics_process(delta: float) -> void:
 			if not met("cargo_plate"): crate.move_and_collide(Vector3(direction*delta*1.3,0,0))
 	if water:
 		var wet := not met("drain") if index == 0 else (met("fill") or met("transfer:1") or met("pressure:1"))
-		water.position.y = move_toward(water.position.y,1.9 if wet else -.05,delta*.6)
+		water.set_water_level(move_toward(water.water_level,1.9 if wet else -.05,delta*.6))
 		if index == 0 and not met("drain") and local_player().x > 18 and local_player().x < 31: chapter.fail()
 	if theme == "workshop" and index == 0:
 		update_fuse_presence()
@@ -311,7 +303,7 @@ func capture_state() -> Dictionary:
 	var states := {}
 	for id in objects:
 		states[id] = objects[id].capture_state()
-	return {"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"fuse_revealed":fuse_revealed,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.position.y if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
+	return {"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"fuse_revealed":fuse_revealed,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.water_level if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
 
 func restore_state(data: Dictionary) -> void:
 	completed = bool(data.get("completed",false))
@@ -336,7 +328,7 @@ func restore_state(data: Dictionary) -> void:
 	update_fuse_presence()
 	gate.position.y = 6.3 if completed else 2.0
 	if lift: lift.position.y = float(data.get("lift_y",-.09))
-	if water: water.position.y = float(data.get("water_y",.1))
+	if water: water.set_water_level(float(data.get("water_y",.1)))
 	var heights: Array = data.get("bridge_y",[])
 	for i in range(bridge_bodies.size()):
 		bridge_bodies[i].position.y = float(heights[i]) if i < heights.size() else -3.0

@@ -1,0 +1,172 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/water_basin.gd" id="1"]
+[ext_resource type="Shader" path="res://assets/shaders/basin_water.gdshader" id="2"]
+[sub_resource type="ShaderMaterial" id="SurfaceMaterial"]
+shader = ExtResource("2")
+shader_parameter/surface = true
+[sub_resource type="ShaderMaterial" id="VolumeMaterial"]
+shader = ExtResource("2")
+shader_parameter/surface = false
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.13, 0.23, 0.24, 1)
+metallic = 0.65
+roughness = 0.62
+[sub_resource type="StandardMaterial3D" id="Brass"]
+albedo_color = Color(0.40, 0.32, 0.15, 1)
+metallic = 0.7
+roughness = 0.48
+[sub_resource type="StandardMaterial3D" id="Glass"]
+transparency = 1
+albedo_color = Color(0.32, 0.52, 0.55, 0.065)
+roughness = 0.16
+[sub_resource type="PlaneMesh" id="SurfaceMesh"]
+size = Vector2(16, 4.1)
+[sub_resource type="BoxMesh" id="WallMesh"]
+size = Vector3(16.24, 0.3, 0.20)
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(16.24, 2.16, 0.20)
+[sub_resource type="BoxMesh" id="UnitBox"]
+size = Vector3(1, 1, 1)
+[node name="WaterBasin" type="Node3D"]
+script = ExtResource("1")
+[node name="Surface" type="MeshInstance3D" parent="."]
+mesh = SubResource("SurfaceMesh")
+material_override = SubResource("SurfaceMaterial")
+cast_shadow = 0
+[node name="Volume" type="MeshInstance3D" parent="."]
+material_override = SubResource("VolumeMaterial")
+cast_shadow = 0
+[node name="FrontWall" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.08, 2.18)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrontWall"]
+shape = SubResource("WallShape")
+[node name="Base" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(0, -0.93, 0)
+mesh = SubResource("WallMesh")
+material_override = SubResource("Metal")
+[node name="Upright0" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-8.06, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright1" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-4, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright2" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(0, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright3" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(4, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright4" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(8.06, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="TopRim" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(0, 1.04, 0)
+scale = Vector3(16.24, 0.08, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark0" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-7.91, -0.65, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark1" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-7.91, -0.25, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark2" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-7.91, 0.15, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark3" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(-7.91, 0.55, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="BackWall" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.08, -2.18)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackWall"]
+shape = SubResource("WallShape")
+[node name="Base" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(0, -0.93, 0)
+mesh = SubResource("WallMesh")
+material_override = SubResource("Metal")
+[node name="Upright0" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-8.06, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright1" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-4, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright2" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(0, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright3" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(4, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="Upright4" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(8.06, 0, 0)
+scale = Vector3(0.10, 2.16, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="TopRim" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(0, 1.04, 0)
+scale = Vector3(16.24, 0.08, 0.20)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark0" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-7.91, -0.65, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark1" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-7.91, -0.25, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark2" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-7.91, 0.15, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="LevelMark3" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(-7.91, 0.55, 0.11)
+scale = Vector3(0.18, 0.025, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Brass")
+[node name="BasinFloor" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.04, 0)
+scale = Vector3(16.24, 0.05, 4.56)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Metal")
+[node name="InspectionGlass" type="MeshInstance3D" parent="FrontWall"]
+position = Vector3(0, 0.15, 0)
+scale = Vector3(16.02, 1.86, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Glass")
+cast_shadow = 0
+[node name="InspectionGlass" type="MeshInstance3D" parent="BackWall"]
+position = Vector3(0, 0.15, 0)
+scale = Vector3(16.02, 1.86, 0.025)
+mesh = SubResource("UnitBox")
+material_override = SubResource("Glass")
+cast_shadow = 0
