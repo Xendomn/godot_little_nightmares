@@ -5,7 +5,7 @@ const TestInput = preload("res://tests/input_events.gd")
 const CONTENT = preload("res://scripts/puzzles/campaign_content.gd")
 const ROUTES := {
 	"workshop": [
-		["pull:3", "item:fuse", "fuse_socket", "hatch"],
+		["push:10", "pull:3", "push:10", "pull:3", "item:fuse", "fuse_socket", "hatch"],
 		["route", "up", "upper_latch", "down", "route", "cargo"],
 		["belt", "wait:cargo_plate", "delivery"],
 		["power", "push:23", "power", "service"],

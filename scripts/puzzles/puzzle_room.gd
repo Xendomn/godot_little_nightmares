@@ -11,6 +11,7 @@ var chapter: Node3D
 var objects: Dictionary = {}
 var completed := false
 var ladder_unlocked := false
+var fuse_revealed := false
 var phase := 0.0
 var lift: AnimatableBody3D
 var gate: AnimatableBody3D
@@ -27,6 +28,7 @@ var base_color := Color(.19,.16,.11)
 func _ready() -> void:
 	base_color = {"workshop":Color(.24,.18,.10),"laundry":Color(.10,.22,.24),"thread_vault":Color(.17,.14,.20),"clocktower":Color(.23,.19,.11)}[theme]
 	build()
+	update_fuse_presence()
 	initial = capture_state()
 
 func solid(label: String, pos: Vector3, size: Vector3, color: Color, moving: bool = false) -> PhysicsBody3D:
@@ -83,7 +85,10 @@ func build() -> void:
 		for x in [16,25,34]:
 			bridge_bodies.append(solid("Span",Vector3(x,-3,0),Vector3(4,.3,4),base_color,true))
 	else:
-		solid("Floor",Vector3(23,-.35,0),Vector3(46,.7,5),base_color)
+		var floor_body := solid("Floor",Vector3(23,-.35,0),Vector3(46,.7,5),base_color)
+		# Boards finish at y=0. Keep their backing below them, without changing footing.
+		for child in floor_body.get_children():
+			if child is MeshInstance3D: child.position.y -= .025
 	solid("Backwall",Vector3(23,4,-2.4),Vector3(46,8,.3),base_color*.6)
 	for x in range(0,46,4):
 		model(self,"wall_panel",Vector3(x,0,-2.1))
@@ -153,6 +158,9 @@ func build() -> void:
 		# Separate lift well at x=21; upper walkway begins beside it, not over it.
 		solid("UpperWalk",Vector3(29,3.05,0),Vector3(12,.3,3.6),base_color)
 		lift = solid("Lift",Vector3(21,-.09,0),Vector3(4.2,.18,3.4),base_color,true)
+		# At the bottom stop, separate the platform skin from boards and their backing.
+		for child in lift.get_children():
+			if child is MeshInstance3D: child.position.y -= .01
 		model(lift,"cargo_basket",Vector3(0,.09,0),Vector3(1.4,.15,1.8))
 		ladder = LADDER.new()
 		ladder.name = "ReturnLadder"
@@ -253,10 +261,7 @@ func _physics_process(delta: float) -> void:
 		water.position.y = move_toward(water.position.y,1.9 if wet else -.05,delta*.6)
 		if index == 0 and not met("drain") and local_player().x > 18 and local_player().x < 31: chapter.fail()
 	if theme == "workshop" and index == 0:
-		var revealed: bool = objects.crate.position.x < 5.0
-		objects.fuse.visible = revealed
-		if revealed and not objects.fuse.is_in_group("puzzle_interactable"): objects.fuse.add_to_group("puzzle_interactable")
-		if not revealed: objects.fuse.remove_from_group("puzzle_interactable")
+		update_fuse_presence()
 	if bridge_bodies.size() == 3:
 		var raised := [met("winch_a") or met("pin_a"),met("winch_b") or met("pin_b"),met("pin_b")]
 		for i in 3:
@@ -278,15 +283,22 @@ func _physics_process(delta: float) -> void:
 func local_player() -> Vector3:
 	return to_local(chapter.player.global_position)
 
+func update_fuse_presence() -> void:
+	if theme != "workshop" or index != 0: return
+	var fuse = objects.fuse
+	fuse_revealed = fuse_revealed or objects.crate.position.x < 5.0 or fuse.held or not fuse.socket_id.is_empty()
+	fuse.set_concealed(not fuse_revealed)
+
 func capture_state() -> Dictionary:
 	var states := {}
 	for id in objects:
 		states[id] = objects[id].capture_state()
-	return {"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.position.y if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
+	return {"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"fuse_revealed":fuse_revealed,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.position.y if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
 
 func restore_state(data: Dictionary) -> void:
 	completed = bool(data.get("completed",false))
 	ladder_unlocked = bool(data.get("ladder_unlocked",false))
+	fuse_revealed = bool(data.get("fuse_revealed",false))
 	phase = float(data.get("phase",0))
 	var states: Dictionary = data.get("objects",{})
 	for id in objects:
@@ -297,6 +309,13 @@ func restore_state(data: Dictionary) -> void:
 			if socket:
 				object.attach_to_socket(socket)
 				socket.occupied = object
+	if theme == "workshop" and index == 0 and not data.has("fuse_revealed"):
+		var fuse = objects.fuse
+		# Old saves used z=.5; ordinary settling on the floor is not discovery.
+		var at_original_spot: bool = absf(fuse.position.x - 8.2) < .02 and fuse.position.y < .12 and (absf(fuse.position.z - .5) < .02 or absf(fuse.position.z - 1.05) < .02)
+		fuse_revealed = not at_original_spot
+		if at_original_spot and fuse.socket_id.is_empty(): fuse.position.z = 1.05
+	update_fuse_presence()
 	gate.position.y = 6.3 if completed else 2.0
 	if lift: lift.position.y = float(data.get("lift_y",-.09))
 	if water: water.position.y = float(data.get("water_y",.1))
