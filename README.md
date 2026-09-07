@@ -111,7 +111,76 @@ godot --headless --path . --script tools/build_full_campaign.gd
 
 四章的功能文字占位已替换为 19 件原创机械道具，包括阀门、铃铛、绞盘、配电箱、压板、推车和各章出口。道具提供活动部件、共享 PBR 材质、机械音效及检查点状态恢复；模型与 Blender 源文件见 `assets/models/props/`、`assets/sources/props/`，详细清单见 `docs/mechanical-assets.md`。
 
-Windows 导出：`godot --headless --path . --export-release "Windows Desktop" build/MidnightWorkshop.exe`。预设引用 `build/export_templates/templates/` 的 4.7.2 官方 Windows x64 模板；换机器后需安装对应模板或调整预设。
+## 一键导出
+
+脚本检查已安装的 **Godot 4.7.2.stable** 和导出模板，自动导入资源、导出 Release、校验程序并生成 ZIP。无需 Python 或 Blender，不联网下载依赖，也不会自动启动游戏。可从任意目录用完整脚本路径运行，路径支持空格和中文。
+
+### macOS
+
+准备下节说明的 Godot 和 Standard 导出模板，确保以下文件存在：
+
+```text
+~/Library/Application Support/Godot/export_templates/4.7.2.stable/macos.zip
+```
+
+双击 `tools/export_macos.command`，或在工程根目录运行：
+
+```bash
+bash tools/export_macos.command
+# 手动指定编辑器路径：
+GODOT="/Applications/Godot.app/Contents/MacOS/Godot" bash tools/export_macos.command
+```
+
+默认先查找 PATH 中的 `godot`，再尝试 `/Applications/Godot.app`；设置 `GODOT` 后严格使用指定位置。架构检查使用 `lipo`，需要可用的 Apple Command Line Tools（或 Xcode）；缺少工具时按脚本提示准备。其他打包工具为 macOS 自带的 `codesign`、`ditto`、`unzip`。
+
+输出：`build/MidnightWorkshop.app`（Universal）与 `build/MidnightWorkshop-macOS.zip`。ZIP 会解压复核程序和 PCK 内容，并再次校验应用签名。
+
+### Windows PowerShell
+
+准备 Godot 4.7.2 Standard Windows 编辑器，并将同版模板中的 `windows_release_x86_64.exe` 放在：
+
+```text
+build/export_templates/templates/windows_release_x86_64.exe
+```
+
+若已通过 Godot 的模板管理器安装，可从标准目录复制：
+
+```powershell
+New-Item -ItemType Directory -Path build/export_templates/templates -Force | Out-Null
+Copy-Item "$env:APPDATA/Godot/export_templates/4.7.2.stable/windows_release_x86_64.exe" build/export_templates/templates/
+```
+
+在 PowerShell 中运行，或右键脚本选择“使用 PowerShell 运行”：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/export_windows.ps1
+# 编辑器不在 PATH 时：
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/export_windows.ps1 -GodotPath "C:\Tools\Godot\Godot.exe"
+```
+
+脚本采用 Windows PowerShell 5.1 兼容语法，也可使用 PowerShell 7。路径选择顺序为 `-GodotPath`、环境变量 `GODOT`、PATH 中的 `godot`。上述执行策略选项只作用于本次进程。
+
+输出：`build/MidnightWorkshop.exe`（x64、内嵌 PCK）与 `build/MidnightWorkshop-Windows.zip`。ZIP 包含程序、README、素材来源和许可文件，并校验压缩包内程序的 SHA-256。
+
+### 失败处理与验证
+
+每次运行使用独立临时目录和日志目录。只有导出、程序校验及打包全部成功后才替换正式产物；失败返回非零退出码，保留上一份构建。若文件占用或权限问题使回滚也失败，脚本会保留恢复文件并打印位置。
+
+日志位于 `artifacts/export-macos.*` 或 `artifacts/export-windows-*`。两份脚本共享 `build/.export.lock` 防止同时导出；若进程被强制终止，请先确认没有导出进程运行，再删除遗留锁文件重试。
+
+导出脚本不默认运行全部游戏测试。开发验证分别执行：
+
+```bash
+python3 tests/test_export_macos.py
+bash tools/verify.sh
+```
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tests/test_export_windows.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/verify.ps1
+```
+
+脚本测试只使用临时工程和模拟 Godot，不执行真实导出。平台实测范围见 [导出脚本验证记录](docs/export-scripts-verification.md)。手动导出仍可使用原有 `--export-release` 命令。
 
 ## macOS 导出与运行
 
