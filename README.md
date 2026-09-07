@@ -1,12 +1,13 @@
 ﻿# 午夜工坊 · Midnight Workshop
 
-原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。Windows 键鼠／Xbox 手柄、单人、无血腥。
+原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。支持 Windows 与 Apple Silicon macOS 本机游玩，单人、无血腥。
 
 ## 开始游戏
 
-- 双击 `build/MidnightWorkshop.exe`，或解压 `build/MidnightWorkshop-Windows.zip` 后运行。
+- Windows：双击 `build/MidnightWorkshop.exe`，或解压 `build/MidnightWorkshop-Windows.zip` 后运行。
+- macOS（Apple Silicon）：导出后双击 `build/MidnightWorkshop.app`。首次从源码使用请按下方「macOS 导出与运行」操作；运行导出的应用无需安装 Godot 或 Blender。
 - Godot 4.7.2 打开 `project.godot`，按 F5。主场景为 `scenes/main.tscn`。
-- 命令行：`godot --path .`。默认窗口 1280×720，界面按 1920×1080 缩放，Forward+ / Vulkan。
+- 命令行：`godot --path .`。默认窗口 1280×720，界面按 1920×1080 缩放，Forward+；Windows 使用 Vulkan，本次 macOS 实测使用 Metal。
 
 ## 操作与进度
 
@@ -22,7 +23,11 @@
 
 菜单使用方向键、左摇杆或十字键选择；音量滑块左右调整。提示跟随最近使用的设备切换。游玩时正在使用的手柄断开会暂停，重连后需要主动继续，键盘始终可用。支持 Windows 下 Godot 识别的 Xbox 手柄；本版不含震动、自定义改键或多人分配。实体手柄验收状态见 `docs/controller-verification.md`。
 
+macOS 的 `Ctrl` 指 **Control（⌃）**，不是 Command（⌘）；其余键盘操作相同。macOS 实体手柄尚未验收，自动输入测试不代表 USB／蓝牙硬件兼容性。
+
 每章三个检查点，失败自动重生。检查点和已解锁章节保存至 Godot `user://campaign.json`，主菜单可继续旅程或选择已解锁章节。存档写入使用临时文件与备份，主档损坏时尝试恢复备份。音量独立保存在 `user://settings.cfg`。开始新旅程需确认，会清除章节进度，保留音量。
+
+macOS 的 `user://` 位于 `~/Library/Application Support/Godot/app_userdata/午夜工坊 · Midnight Workshop/`，包含 `campaign.json`（及备份）和 `settings.cfg`。
 
 ## 四个章节
 
@@ -57,10 +62,22 @@
 
 ## 验证与重建
 
+Windows：
+
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/verify.ps1
 python tests/test_builder.py
 ```
+
+macOS（先按下方说明安装 Godot 并导入资源）：
+
+```bash
+bash tools/verify.sh
+# Godot 不在 PATH 时，可指定完整路径（支持路径中的空格）：
+GODOT="/Applications/Godot.app/Contents/MacOS/Godot" bash tools/verify.sh
+```
+
+脚本兼容 macOS 自带 Bash 3.2，可从任意工作目录通过完整脚本路径调用。失败返回非零状态，检查引擎日志和标准输出／错误；只有全部通过才生成 `artifacts/verification-results.json`。重建验证 `python3 tests/test_builder.py` 会重新生成场景，应在临时工程副本中运行。
 
 20 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。窗口路线与性能检查：
 
@@ -93,5 +110,39 @@ godot --headless --path . --script tools/build_expansion.gd
 四章的功能文字占位已替换为 19 件原创机械道具，包括阀门、铃铛、绞盘、配电箱、压板、推车和各章出口。道具提供活动部件、共享 PBR 材质、机械音效及检查点状态恢复；模型与 Blender 源文件见 `assets/models/props/`、`assets/sources/props/`，详细清单见 `docs/mechanical-assets.md`。
 
 Windows 导出：`godot --headless --path . --export-release "Windows Desktop" build/MidnightWorkshop.exe`。预设引用 `build/export_templates/templates/` 的 4.7.2 官方 Windows x64 模板；换机器后需安装对应模板或调整预设。
+
+## macOS 导出与运行
+
+目标为 **Apple Silicon（M 系列）本机使用**，使用官方 Universal 模板（包含 `arm64`，在 M 系列 Mac 原生运行，无需 Rosetta），最低系统版本设为 macOS 13.0（Metal）；当前实测环境为 macOS 15.7.9 / Apple M4。最低版本声明不等于逐版本验收，Intel、其他系统版本和实体手柄未实测。结果见 [macOS 验证记录](docs/macos-verification.md)。
+
+1. 下载 [Godot 4.7.2 Standard macOS 版](https://godotengine.org/download/archive/4.7.2-stable/)，将 `Godot.app` 放入 `/Applications`。本工程无需 .NET 或 Blender。
+2. 打开 Godot，在「编辑器 → 管理导出模板（Editor → Manage Export Templates）」安装 **4.7.2.stable** 模板。也可从同一官方页面下载 Standard 的 `.tpz`，在模板管理器选择「从文件安装」。模板版本必须与编辑器一致；本预设使用标准模板位置，不依赖 Windows 的自定义模板目录。
+3. 在终端进入项目根目录，执行：
+
+```bash
+export PATH="/Applications/Godot.app/Contents/MacOS:$PATH"
+godot --version  # 应为 4.7.2.stable
+godot --headless --path . --editor --import --quit
+bash tools/verify.sh
+mkdir -p build
+godot --headless --path . --export-release "macOS" build/MidnightWorkshop.app
+open build/MidnightWorkshop.app
+```
+
+官方 4.7.2 模板仅提供 Universal 二进制，因此不要把预设架构直接改成 `arm64`，否则会报缺少 `godot_macos_release.arm64`；包内的 Intel 架构不属于本次验收范围。
+
+工程已启用 Apple Silicon 导出必需的 `渲染 → 纹理 → VRAM 压缩 → 导入 ETC2 ASTC`；同时保留 Windows 使用的纹理格式。更改该设置后必须重新导入资源。
+
+也可在编辑器打开 `project.godot`，按 F5 运行；导出时选择「项目 → 导出 → macOS → 导出项目」，保存为 `build/MidnightWorkshop.app`，取消「导出调试」。`.app` 是包含可执行文件和游戏资源的应用包，复制时保留整个包。
+
+预设使用内置 **ad-hoc 临时签名**，Bundle ID 为 `local.midnightworkshop.game`，无需开发者证书；公证关闭，适用于这里的本机使用范围。下载或转移来的未公证应用可能被 Gatekeeper 拦截，应只对可信来源按系统提示在「系统设置 → 隐私与安全性」允许打开；无需关闭系统安全保护。公开分发需另行配置 Developer ID 签名和公证，参见 [Godot 官方 macOS 导出说明](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_macos.html)。
+
+若提示找不到 `godot`，检查应用路径或直接使用 `/Applications/Godot.app/Contents/MacOS/Godot` 替代命令。若提示缺少模板，回到模板管理器安装匹配版本。导出后可用以下命令检查架构、签名并查看启动日志：
+
+```bash
+file build/MidnightWorkshop.app/Contents/MacOS/*
+codesign --verify --deep --strict --verbose=2 build/MidnightWorkshop.app
+"./build/MidnightWorkshop.app/Contents/MacOS/午夜工坊 · Midnight Workshop" --verbose
+```
 
 RTX 3070 上四章 1080p 代表场景含移动、动画、AI，平均约 165 FPS，接近刷新率上限。这不是整场最低帧率保证，也不代表其他硬件。当前采用脚本输入通关与渲染截图验收，尚未做新玩家时长和多人主观手感测试。详情见 `docs/verification-expansion.md`。
