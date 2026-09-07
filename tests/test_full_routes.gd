@@ -1,6 +1,7 @@
 extends SceneTree
 ## Walkthrough smoke test: all progress comes from Input actions and physics.
 ## No player teleport, direct interact(), state mutation, or completion shortcuts.
+const TestInput = preload("res://tests/input_events.gd")
 const CONTENT = preload("res://scripts/puzzles/campaign_content.gd")
 const ROUTES := {
 	"workshop": [
@@ -46,7 +47,7 @@ func _initialize() -> void:
 	call_deferred("run")
 func release_inputs() -> void:
 	for action in ["left", "right", "depth_up", "depth_down", "interact", "jump", "run"]:
-		Input.action_release(action)
+		TestInput.release(action)
 func frame(count: int = 1) -> void:
 	for _i in count:
 		await physics_frame
@@ -79,7 +80,7 @@ func walk_to(destination: Vector3, tolerance: float = .18, max_frames: int = 180
 						break
 					await frame()
 				# Start close enough that this short crossing does not recurse.
-				Input.action_press("right")
+				TestInput.press("right")
 				for _cross in 70:
 					await frame()
 					if not actor.enabled:
@@ -95,14 +96,14 @@ func walk_to(destination: Vector3, tolerance: float = .18, max_frames: int = 180
 			release_inputs()
 			await frame(3)
 			return true
-		Input.action_release("left")
-		Input.action_release("right")
-		Input.action_release("depth_up")
-		Input.action_release("depth_down")
+		TestInput.release("left")
+		TestInput.release("right")
+		TestInput.release("depth_up")
+		TestInput.release("depth_down")
 		if absf(difference.x) > tolerance * .6:
-			Input.action_press("right" if difference.x > 0 else "left")
+			TestInput.press("right" if difference.x > 0 else "left")
 		if absf(difference.z) > tolerance * .6:
-			Input.action_press("depth_down" if difference.z > 0 else "depth_up")
+			TestInput.press("depth_down" if difference.z > 0 else "depth_up")
 		await frame()
 		if not actor.enabled and room_index == 5 and actor.global_position.x >= 273:
 			release_inputs()
@@ -118,11 +119,11 @@ func walk_to(destination: Vector3, tolerance: float = .18, max_frames: int = 180
 			return fail("Physical obstruction walking to " + str(destination))
 	return fail("Walk timeout to " + str(destination))
 func press_interact() -> void:
-	Input.action_release("interact")
+	TestInput.release("interact")
 	await frame(2)
-	Input.action_press("interact")
+	TestInput.press("interact")
 	await frame(2)
-	Input.action_release("interact")
+	TestInput.release("interact")
 	await frame(4)
 func descendants(node: Node) -> Array[Node]:
 	var result: Array[Node] = []
@@ -173,11 +174,11 @@ func push_crate(destination_x: float, pulling: bool = false) -> bool:
 	var direction := 1.0 if target_x > crate.global_position.x else -1.0
 	if not await walk_to(crate.global_position + Vector3((direction if pulling else -direction) * .85, 0, 0)):
 		return false
-	Input.action_press("interact")
+	TestInput.press("interact")
 	await frame(3)
 	if actor.get_node("Interactions").pushed != crate:
 		return fail("Crate did not enter push mode")
-	Input.action_press("right" if direction > 0 else "left")
+	TestInput.press("right" if direction > 0 else "left")
 	var previous: float = crate.global_position.x
 	var stalled := 0
 	for _i in 1800:
@@ -231,7 +232,7 @@ func descend_ladder() -> bool:
 	await press_interact()
 	if actor.get_node("Interactions").ladder != room.ladder:
 		return fail("Ladder failed to attach")
-	Input.action_press("depth_down")
+	TestInput.press("depth_down")
 	for _i in 240:
 		await frame()
 		if actor.global_position.y < .1:

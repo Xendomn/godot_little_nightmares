@@ -13,6 +13,8 @@ var current: String = ""
 var locked_time := 0.0
 var head_bone := -1
 var crouch_moving := false
+var climbing := false
+var saved_process_mode := AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE
 
 func setup(model: Node3D) -> void:
 	visual = model
@@ -102,7 +104,29 @@ func update_motion(speed: float, grounded: bool, crouching: bool, pushing: bool,
 		crouch_moving = false
 		play("run" if speed > 3.2 else ("walk" if speed > 0.15 else "idle"))
 
+func begin_climb() -> void:
+	if not tree or not clips.has("climb"): return
+	if not climbing: saved_process_mode = tree.callback_mode_process
+	climbing = true
+	locked_time = 0
+	playback.start("climb")
+	current = "climb"
+	tree.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+	tree.advance(0)
+
+func advance_climb(elapsed: float) -> void:
+	if climbing and tree and elapsed > 0:
+		tree.advance(elapsed)
+
+func end_climb() -> void:
+	if not climbing: return
+	climbing = false
+	if tree: tree.callback_mode_process = saved_process_mode
+	locked_time = 0
+	play("idle")
+
 func reset_pose() -> void:
+	end_climb()
 	crouch_moving = false
 	locked_time = 0
 	current = ""

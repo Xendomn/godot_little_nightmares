@@ -5,8 +5,8 @@ signal controller_lost
 var using_controller := false
 var controller_id := -1
 var blocked: Dictionary = {}
-const KEY_LABELS = {"move": "WASD / 方向键", "horizontal": "A/D 或 ←/→", "jump": "空格", "run": "Shift", "crouch": "Ctrl", "interact": "E", "pause": "Esc", "accept": "Enter", "cancel": "Esc"}
-const PAD_LABELS = {"move": "左摇杆 / 十字键", "horizontal": "左摇杆 / 十字键左右", "jump": "A", "run": "RT", "crouch": "B", "interact": "X", "pause": "Menu", "accept": "A", "cancel": "B"}
+const KEY_LABELS = {"move": "WASD / 方向键", "horizontal": "A/D 或 ←/→", "vertical": "W/S 或 ↑/↓", "jump": "空格", "run": "Shift", "crouch": "Ctrl", "interact": "E", "pause": "Esc", "accept": "Enter", "cancel": "Esc"}
+const PAD_LABELS = {"move": "左摇杆 / 十字键", "horizontal": "左摇杆 / 十字键左右", "vertical": "左摇杆 / 十字键上下", "jump": "A", "run": "RT", "crouch": "B", "interact": "X", "pause": "菜单键", "accept": "A", "cancel": "B"}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS

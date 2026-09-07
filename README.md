@@ -75,7 +75,7 @@ GODOT="/Applications/Godot.app/Contents/MacOS/Godot" bash tools/verify.sh
 
 脚本兼容 macOS 自带 Bash 3.2，可从任意工作目录通过完整脚本路径调用。失败返回非零状态，检查引擎日志和标准输出／错误；只有全部通过才生成 `artifacts/verification-results.json`。重建验证 `python3 tests/test_builder.py` 会重新生成场景，应在临时工程副本中运行。
 
-25 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。窗口路线与性能检查：
+26 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。道路碰撞、梯子衔接及中文提示修复见 [验证记录](docs/room-repairs-verification.md)。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd

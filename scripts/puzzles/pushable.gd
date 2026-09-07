@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 func can_interact(actor: Node3D) -> bool:
 	return actor.get_node("Interactions").carried == null and absf(actor.global_position.y - global_position.y) < 1.3
 func get_prompt() -> String:
-	return "Hold {interact} + {horizontal} · Push / pull"
+	return "按住 {interact} + {horizontal} · 推拉箱子"
 func interact(actor: Node3D) -> void:
 	actor.get_node("Interactions").begin_push(self)
 func move_with_actor(actor: CharacterBody3D, direction: float, delta: float) -> void:

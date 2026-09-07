@@ -8,6 +8,10 @@ var prompt_text := ""
 var ladder: Node3D
 var pushed: CharacterBody3D
 var pickup_position := Vector3.ZERO
+var ladder_exiting := false
+var ladder_returning := false
+var just_left_ladder := false
+var ladder_grip: SkeletonModifier3D
 func _ready() -> void:
 	actor = get_parent() as CharacterBody3D
 func target_position(target: Node3D) -> Vector3:
@@ -36,22 +40,51 @@ func refresh_target() -> void:
 			if distance < best:
 				current_target = candidate
 				best = distance
-	prompt_text = current_target.get_prompt() if current_target != null else ("{interact} · Place item" if carried != null else "")
+	prompt_text = current_target.get_prompt() if current_target != null else ("{interact} · 放下物品" if carried != null else "")
 func tick(delta: float) -> bool:
 	if not actor.enabled:
 		cancel_interaction()
 		return false
 	if is_instance_valid(ladder):
-		prompt_text = "W/S · Climb   {interact} / {jump} · Let go"
+		prompt_text = "{vertical} · 攀爬   {interact} / {jump} · 松手"
 		if InputHints.just_pressed("jump") or InputHints.just_pressed("interact"):
-			ladder = null
-			actor.velocity = Vector3.ZERO
+			detach_ladder()
 			return false
 		var vertical := Input.get_axis("depth_down", "depth_up")
-		var next_y := clampf(actor.global_position.y + vertical * 1.8 * delta, ladder.global_position.y, ladder.global_position.y + ladder.height)
 		actor.velocity = Vector3.ZERO
-		actor.move_and_collide(Vector3(0, next_y - actor.global_position.y, 0))
-		actor.animate_doll(delta, absf(vertical))
+		var before := actor.global_position
+		if ladder_exiting:
+			var target: Vector3 = ladder.to_global(ladder.top_exit)
+			if vertical < -.05: ladder_returning = true
+			if ladder_returning:
+				target = Vector3(ladder.global_position.x,actor.global_position.y,ladder.global_position.z)
+			var travel := target - actor.global_position
+			# Check the entire remaining path before starting or continuing the transfer.
+			if not actor.test_move(actor.global_transform, travel):
+				actor.visual_driver.end_climb()
+				actor.move_and_collide(travel.limit_length(delta * 2.4))
+			else:
+				prompt_text = "平台被挡住了 · {vertical} 攀爬 · {interact} 松手"
+			if actor.global_position.distance_to(target) < .015:
+				if ladder_returning:
+					ladder_exiting = false
+					ladder_returning = false
+					actor.visual_driver.begin_climb()
+				else:
+					detach_ladder()
+					return false
+		else:
+			var next_y := clampf(actor.global_position.y + vertical * 1.8 * delta, ladder.global_position.y, ladder.global_position.y + ladder.height)
+			actor.move_and_collide(Vector3(0, next_y - actor.global_position.y, 0))
+			if vertical > .05 and actor.global_position.y >= ladder.global_position.y + ladder.height - .005 and ladder.has_top_exit:
+				ladder_exiting = true
+			if vertical < -.05 and actor.global_position.y <= ladder.global_position.y + .005:
+				detach_ladder()
+				return false
+		actor.model.rotation.y = ladder.facing_y
+		if ladder_grip:
+			ladder_grip.influence = clampf(1.0 - absf(actor.global_position.x-ladder.global_position.x)/.45,0,1)
+		actor.visual_driver.advance_climb(actor.global_position.distance_to(before) / 1.8)
 		return true
 	if is_instance_valid(pushed):
 		if not InputHints.pressed("interact") or not reachable(pushed):
@@ -122,13 +155,48 @@ func begin_push(target: CharacterBody3D) -> bool:
 func attach_ladder(target: Node3D) -> bool:
 	if carried != null or not reachable(target):
 		return false
+	if actor.global_position.y < target.global_position.y - .03 or actor.global_position.y > target.global_position.y + target.height + .03:
+		return false
 	var destination := Vector3(target.global_position.x, actor.global_position.y, target.global_position.z)
 	if actor.test_move(actor.global_transform, destination - actor.global_position):
 		return false
+	var standing := CapsuleShape3D.new()
+	standing.radius = .25
+	standing.height = 1.2
+	var clearance := PhysicsShapeQueryParameters3D.new()
+	clearance.shape = standing
+	clearance.transform = Transform3D(Basis.IDENTITY,destination+Vector3(0,.62,0))
+	clearance.collision_mask = 1
+	clearance.exclude = [actor.get_rid()]
+	if not actor.get_world_3d().direct_space_state.intersect_shape(clearance,1).is_empty(): return false
 	actor.global_position = destination
 	actor.velocity = Vector3.ZERO
+	actor.running = false
+	actor.crouching = false
+	(actor.collider.shape as CapsuleShape3D).height = 1.2
+	actor.collider.position.y = .62
 	ladder = target
+	just_left_ladder = false
+	ladder_exiting = false
+	ladder_returning = false
+	actor.model.rotation.y = target.facing_y
+	actor.visual_driver.begin_climb()
+	if not ladder_grip and actor.visual_driver.skeleton:
+		ladder_grip = preload("res://scripts/puzzles/ladder_grip.gd").new()
+		ladder_grip.controller = self
+		actor.visual_driver.skeleton.add_child(ladder_grip)
+	if ladder_grip:
+		ladder_grip.active = true
+		ladder_grip.influence = 1
 	return true
+func detach_ladder() -> void:
+	ladder = null
+	just_left_ladder = true
+	ladder_exiting = false
+	ladder_returning = false
+	actor.velocity = Vector3.ZERO
+	actor.visual_driver.end_climb()
+	if ladder_grip: ladder_grip.active = false
 func cancel_interaction() -> void:
 	if is_instance_valid(carried):
 		if not place_carried():
@@ -138,7 +206,10 @@ func cancel_interaction() -> void:
 	if is_instance_valid(pushed):
 		pushed.handler = null
 	pushed = null
+	if is_instance_valid(ladder): detach_ladder()
 	ladder = null
+	ladder_exiting = false
+	ladder_returning = false
 	current_target = null
 	prompt_text = ""
 	if is_instance_valid(actor):

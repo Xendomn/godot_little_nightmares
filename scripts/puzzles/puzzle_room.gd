@@ -60,6 +60,22 @@ func model(parent: Node3D, asset: String, pos: Vector3 = Vector3.ZERO, scale_val
 	parent.add_child(visual)
 	return visual
 
+func add_arch_collision(arch: Node3D) -> void:
+	var body := StaticBody3D.new()
+	body.name = "ArchCollision"
+	arch.add_child(body)
+	# Match authored structural parts; thin brass trim does not need collision.
+	for mesh in arch.find_children("*", "MeshInstance3D", true, false):
+		if not (str(mesh.name).contains("Fluted") or str(mesh.name).contains("Plinth") or str(mesh.name).contains("Segmented")):
+			continue
+		var bounds: AABB = mesh.mesh.get_aabb()
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = bounds.size
+		shape.shape = box
+		body.add_child(shape)
+		shape.global_transform = mesh.global_transform * Transform3D(Basis.IDENTITY, bounds.get_center())
+
 func build() -> void:
 	if spec.get("bridges",false):
 		for segment in [[0,14],[18,23],[27,32],[36,46]]:
@@ -77,7 +93,10 @@ func build() -> void:
 			model(self,asset,Vector3(x,3.6,-1.7),Vector3(2.5,2.5,1))
 		if not spec.get("bridges",false): model(self,"floor_panel",Vector3(x,-.20,0))
 		if x % 8 == 0:
-			model(self,"arch",Vector3(x,0,-.5),Vector3(1,1.8,1))
+			var arch := model(self,"arch",Vector3(x,0,0),Vector3(1.2,1.8,1))
+			arch.rotation.y = PI / 2
+			add_arch_collision(arch)
+			arch.add_child(preload("res://scripts/puzzles/foreground_arch.gd").new())
 			model(self,"lamp",Vector3(x+1,3.9,-1.5))
 			var light := OmniLight3D.new()
 			light.position = Vector3(x+1,3.8,.1)
@@ -139,9 +158,11 @@ func build() -> void:
 		ladder.name = "ReturnLadder"
 		ladder.object_id = "ladder"
 		ladder.position = Vector3(35.7,0,0)
-		ladder.height = 3.35
+		ladder.height = 3.23
+		ladder.top_exit = Vector3(-1.1,3.23,0)
+		ladder.has_top_exit = true
 		add_child(ladder)
-		model(ladder,"ladder",Vector3(0,0,-.35),Vector3(1,1.12,1))
+		model(ladder,"ladder",Vector3(0,0,-.35))
 		objects.ladder = ladder
 	if spec.get("belt",false): model(self,"conveyor",Vector3(19,-.53,0),Vector3(3.5,1,1))
 	if spec.get("press",false): press_visual = model(self,"press",Vector3(23,0,-1.1))

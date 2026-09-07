@@ -1,5 +1,5 @@
 """Original modular Midnight Workshop kit. Blender 5.2.1; no character regeneration.
-Run: blender -b --python tools/create_expansion_kit.py [-- --no-render]
+Run: blender -b --python tools/create_expansion_kit.py [-- --no-render --only ladder]
 Blender Z-up/-Y-front becomes Godot Y-up/+Z-front. All source feet at zero.
 """
 import os
@@ -73,9 +73,10 @@ def build(n):
         for x in [-1.8,1.8]:
             for y in [-1.35,1.35]:cyl('Nail',(x,y,.203),.023,.008,I)
     elif n=='ladder':
-        for x in [-.34,.34]:box('Wood rail',(x,0,1.5),(.12,.16,3),W)
-        for z in np.arange(.25,3,.30):cyl('Worn rung',(0,-.03,float(z)),.045,.72,B,axis='X')
-        for z in [.15,2.8]:
+        # Keep hand support above the 3.2 m landing, with the feet at zero.
+        for x in [-.34,.34]:box('Wood rail',(x,0,2.275),(.12,.16,4.55),W)
+        for step in range(15):cyl('Worn rung',(0,-.03,.25+step*.30),.045,.72,B,axis='X')
+        for z in [.15,2.8,4.25]:
             for x in [-.34,.34]:box('Wall bracket',(x,.10,z),(.2,.35,.08),I)
     elif n in ['cargo_basket','floating_crate']:
         w,d,h=(2,1.6,1.3) if n=='cargo_basket' else (.95,.95,.95)
@@ -176,8 +177,14 @@ def save_portable_source(path):
     bpy.ops.wm.save_as_mainfile(filepath=str(path), relative_remap=False)
 
 def main():
-    reports={}
-    for name in NAMES:
+    names=NAMES
+    if '--only' in sys.argv:
+        names=sys.argv[sys.argv.index('--only')+1].split(',')
+        unknown=set(names)-set(NAMES)
+        if unknown:raise ValueError(f'Unknown assets: {sorted(unknown)}')
+    measurements=S/'measurements.json'
+    reports=json.loads(measurements.read_text()) if measurements.exists() else {}
+    for name in names:
         clear(name);build(name)
         for o in list(bpy.context.scene.objects):
             if o.type!='MESH':continue
@@ -193,12 +200,15 @@ def main():
         print('EXPORTED',name,reports[name],flush=True)
     (S/'measurements.json').write_text(json.dumps(reports,indent=2)+'\n')
     # Independent roundtrip: every model imports with nonempty mesh, UVs and all pivots.
-    for name in NAMES:
+    for name in names:
         bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False);bpy.ops.import_scene.gltf(filepath=str(M/f'{name}.glb'))
         meshes=[o for o in bpy.context.scene.objects if o.type=='MESH'];assert meshes and all(o.data.uv_layers for o in meshes),name
         assert all(any(o.name==p for o in bpy.context.scene.objects) for p in reports[name]['pivots']),name
         reports[name]['roundtrip_verified']=True
     (S/'measurements.json').write_text(json.dumps(reports,indent=2)+'\n')
+    if names!=NAMES:
+        print('VERIFIED',len(names),'Blender GLB roundtrips',flush=True)
+        return
     sheet=np.full((5*256,5*256,3),28,dtype=np.uint8)
     for i,name in enumerate(NAMES):
         path=P/f'{name}_threequarter.png'

@@ -37,7 +37,8 @@ func can_interact(actor: Node3D) -> bool:
 func interact(actor: Node3D) -> void:
 	actor.get_node("Interactions").pickup(self)
 func get_prompt() -> String:
-	return "{interact} · Pick up " + item_kind.replace("_", " ")
+	var names := {"fuse":"保险丝", "gear":"齿轮", "weight":"砝码", "wheel":"手轮"}
+	return "{interact} · 拾取" + str(names.get(item_kind,"物品"))
 func set_held(value: bool) -> void:
 	held = value
 	collision_layer = 0 if held else 1

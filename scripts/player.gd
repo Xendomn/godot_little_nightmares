@@ -47,6 +47,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if extended_interactions and interactions.tick(delta):
 		return
+	# move_and_collide on ladders does not update CharacterBody's floor state.
+	var left_ladder: bool = extended_interactions and interactions.just_left_ladder
+	if left_ladder: interactions.just_left_ladder = false
 	var carrying: bool = extended_interactions and interactions.carried != null
 	var axis := Input.get_vector("left", "right", "depth_up", "depth_down")
 	var wants_crouch := InputHints.pressed("crouch")
@@ -74,11 +77,14 @@ func _physics_process(delta: float) -> void:
 		facing = signf(axis.x)
 	coyote = 0.12 if is_on_floor() else coyote - delta
 	jump_buffer = 0.14 if InputHints.just_pressed("jump") else jump_buffer - delta
+	if left_ladder:
+		coyote = 0
+		jump_buffer = 0
 	if jump_buffer > 0 and coyote > 0 and not crouching and not pushing and not carrying:
 		velocity.y = JUMP_SPEED
 		coyote = 0
 		jump_buffer = 0
-	if not is_on_floor():
+	if left_ladder or not is_on_floor():
 		velocity.y -= GRAVITY * delta
 	var was_grounded := is_on_floor()
 	move_and_slide()
