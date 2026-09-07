@@ -1,5 +1,6 @@
 extends Node3D
 ## A physical control; dependency expressions are evaluated by the owning room.
+const LABELS = preload("res://scripts/puzzles/device_labels.gd")
 var object_id := ""
 var spec: Dictionary
 var room: Node3D
@@ -54,12 +55,69 @@ func interact(actor: Node3D) -> void:
 			state = 1
 			timer = 12.0
 		_: state = 1
-	room.feedback("fuse_insert" if spec.kind == "socket" else "metal_latch")
+	room.feedback("bell" if object_id == "bell" else ("fuse_insert" if spec.kind == "socket" else "metal_latch"))
 	actor.visual_driver.play("interact", .35)
 
 func get_prompt() -> String:
-	var labels := {"selector":"切换档位", "socket":"取放部件", "brake":"制动 12 秒", "latch":"扳动门闩"}
-	return "{interact} · " + str(labels.get(spec.kind,"互动")) + ("  [" + str(state) + "]" if spec.kind == "selector" else "")
+	var action := "操作"
+	match spec.kind:
+		"selector": action = "切换 · 当前：" + state_label(state)
+		"socket": action = ("取回" if satisfied() else "安装") + str(LABELS.PARTS.get(spec.get("accept", ""), "部件"))
+		"brake": action = "剩余 %.1f 秒 · 重新制动 12 秒" % timer if timer > 0 else "重新制动 12 秒"
+		"latch": action = "已开启" if satisfied() else "开启"
+		"plate": action = "重物已到位" if satisfied() else "需要箱子压住踏板"
+	return "{interact} · " + display_name() + " · " + action
+
+func display_name() -> String:
+	return str(LABELS.describe(room.theme, room.index, object_id, spec).display_name)
+
+func state_label(value: int) -> String:
+	var names: Array = LABELS.describe(room.theme, room.index, object_id, spec).state_names
+	return str(names[value]) if value >= 0 and value < names.size() else "档位 %d" % value
+
+func get_blocked_reason(actor: Node3D) -> String:
+	if spec.kind == "plate":
+		return "需要箱子压住" + display_name() if not satisfied() else "重物已到位"
+	var reasons: Array[String] = []
+	for expression in spec.get("needs", []):
+		_append_unmet(str(expression), reasons)
+	if not reasons.is_empty():
+		return "需要先完成：" + "；".join(reasons)
+	if spec.kind != "socket":
+		return ""
+	var carried = actor.get_node("Interactions").carried
+	var part_name: String = LABELS.PARTS.get(spec.get("accept", ""), "部件")
+	if satisfied():
+		return "插座已装满；请退开后按{interact}放下手中物品，再取回" + part_name if carried != null else ""
+	if carried == null:
+		return "需要携带" + part_name + "，再安装到" + display_name()
+	if carried.item_kind != spec.accept:
+		return display_name() + "需要" + part_name + "；手中部件不匹配"
+	if carried not in room.objects.values():
+		return "需要本房间的" + part_name
+	return ""
+
+func _append_unmet(expression: String, reasons: Array[String]) -> void:
+	if expression.contains("&"):
+		for part in expression.split("&"):
+			_append_unmet(part, reasons)
+		return
+	var parts := expression.split(":")
+	var device = room.objects.get(parts[0])
+	if device == null:
+		if not reasons.has("缺少前置机关"): reasons.append("缺少前置机关")
+		return
+	var reason := ""
+	if parts.size() > 1:
+		var required := int(parts[1])
+		if device.state != required:
+			reason = device.display_name() + " → " + device.state_label(required)
+	elif not device.satisfied():
+		reason = device.display_name()
+		if device.spec.kind == "brake": reason += "（重新制动 12 秒）"
+		elif device.spec.kind == "plate": reason += "（用箱子压住）"
+		elif device.spec.kind == "socket": reason += "（安装" + str(LABELS.PARTS.get(device.spec.get("accept", ""), "部件")) + "）"
+	if not reason.is_empty() and not reasons.has(reason): reasons.append(reason)
 
 func update(delta: float) -> void:
 	timer = maxf(0,timer-delta)

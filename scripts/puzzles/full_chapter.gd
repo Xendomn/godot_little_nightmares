@@ -36,6 +36,8 @@ func _ready() -> void:
 		room.position.x = i*46
 		world.add_child(room)
 		rooms.append(room)
+		room.guidance_changed.connect(func():
+			if room == rooms[active_room] and is_instance_valid(ui): refresh_objective())
 	player = load("res://scenes/actors/player.tscn").instantiate()
 	player.name = "Player"
 	player.extended_interactions = true
@@ -173,12 +175,26 @@ func _process(delta: float) -> void:
 			checkpoint("room_"+str(active_room+1)+"_mid")
 	update_encounter(room,delta)
 	ui.prompt.text = InputHints.format_text(player.get_node("Interactions").prompt_text)
+	refresh_brake_status()
 	if player.position.x > 274 and rooms[5].completed: finish_game()
 
 func refresh() -> void:
 	ui.chapter.text = CONTENT.TITLES[CONTENT.IDS.find(level_id)]+" · "+str(active_room+1)+" / 6 · "+rooms[active_room].spec.title
-	ui.objective.text = rooms[active_room].spec.objective
+	refresh_objective()
 	ui.set_puzzle_hints(level_id+"_"+str(active_room),rooms[active_room].spec.hints)
+
+func refresh_objective() -> void:
+	ui.objective.text = rooms[active_room].stage_objective()
+	refresh_brake_status()
+
+func refresh_brake_status() -> void:
+	var timers := PackedStringArray()
+	var expired := false
+	for device in rooms[active_room].objects.values():
+		if device.has_method("satisfied") and device.spec.kind == "brake":
+			if device.timer > 0: timers.append(device.display_name() + "剩余 %.1f 秒" % device.timer)
+			elif device.state > 0: expired = true
+	ui.mechanism_status.text = "  ·  ".join(timers) if not timers.is_empty() else ("制动已结束 · 可返回制动杆重新启动" if expired else "")
 
 func fail() -> void:
 	if not playing or respawning: return

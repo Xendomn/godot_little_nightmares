@@ -75,8 +75,15 @@ func walk_to(destination: Vector3, tolerance: float = .18, max_frames: int = 180
 				if not await walk_to(Vector3(hx - .95, actor.global_position.y, destination.z)):
 					return false
 				for _wait in 360:
-					var cycle: float = fmod(room.phase + h * 1.4, 4)
-					if room.met("brake_a" if h == 0 else "brake_b") or (cycle >= 2.1 and cycle < 2.4):
+					# Observe a fresh safe-light transition, just as a player can.
+					var light_color: Color = room.danger_lights[h].light_color
+					if room.met("brake_a" if h == 0 else "brake_b"):
+						break
+					if light_color.r > light_color.g:
+						for _signal in 240:
+							await frame()
+							light_color = room.danger_lights[h].light_color
+							if light_color.g > light_color.r: break
 						break
 					await frame()
 				# Start close enough that this short crossing does not recurse.

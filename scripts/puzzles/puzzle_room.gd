@@ -1,4 +1,5 @@
 extends Node3D
+signal guidance_changed
 ## One authored machine bay, with local persistent registry and reversible inputs.
 const DEVICE = preload("res://scripts/puzzles/device.gd")
 const CARRY = preload("res://scripts/puzzles/carry_item.gd")
@@ -12,6 +13,8 @@ var objects: Dictionary = {}
 var completed := false
 var ladder_unlocked := false
 var fuse_revealed := false
+var guidance_text := ""
+var presentation: Node3D
 var phase := 0.0
 var lift: AnimatableBody3D
 var gate: AnimatableBody3D
@@ -28,6 +31,10 @@ var base_color := Color(.19,.16,.11)
 func _ready() -> void:
 	base_color = {"workshop":Color(.24,.18,.10),"laundry":Color(.10,.22,.24),"thread_vault":Color(.17,.14,.20),"clocktower":Color(.23,.19,.11)}[theme]
 	build()
+	presentation = preload("res://scripts/puzzles/puzzle_presentation.gd").new()
+	presentation.name = "PuzzlePresentation"
+	add_child(presentation)
+	presentation.setup(self)
 	update_fuse_presence()
 	initial = capture_state()
 
@@ -279,9 +286,20 @@ func _physics_process(delta: float) -> void:
 		var pivot = hazards[i].find_child("Pendulum",true,false)
 		if pivot: pivot.rotation.z = 0 if stopped else sin(phase*1.6+i)*.85
 		if danger and absf(local_player().x-(21 if i == 0 else 32)) < .65: chapter.fail()
+	update_guidance(delta)
 
 func local_player() -> Vector3:
 	return to_local(chapter.player.global_position)
+
+func stage_objective() -> String:
+	return preload("res://scripts/puzzles/room_guidance.gd").objective(self, chapter.player)
+
+func update_guidance(delta: float) -> void:
+	if is_instance_valid(presentation): presentation.update(delta)
+	var next_text := stage_objective()
+	if next_text != guidance_text:
+		guidance_text = next_text
+		guidance_changed.emit()
 
 func update_fuse_presence() -> void:
 	if theme != "workshop" or index != 0: return
@@ -322,3 +340,5 @@ func restore_state(data: Dictionary) -> void:
 	var heights: Array = data.get("bridge_y",[])
 	for i in range(bridge_bodies.size()):
 		bridge_bodies[i].position.y = float(heights[i]) if i < heights.size() else -3.0
+	guidance_text = ""
+	if is_instance_valid(presentation): presentation.update(0)

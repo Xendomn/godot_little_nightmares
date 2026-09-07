@@ -14,6 +14,7 @@ var pause_menu: Control
 var ending: Control
 var hud: Control
 var objective: Label
+var mechanism_status: Label
 var prompt: Label
 var chapter: Label
 var hint: Label
@@ -79,6 +80,7 @@ func _ready() -> void:
 	hud = full_control(base)
 	chapter = label(hud, "01 / 工作台下", Vector2(66, 78), 18, MUTED)
 	objective = label(hud, "寻找离开工坊的路", Vector2(66, 111), 25, PAPER)
+	mechanism_status = label(hud, "", Vector2(66, 153), 18, Color("edac81"))
 	prompt = label(hud, "", Vector2(0, 860), 26, PAPER)
 	prompt.size.x = 1920
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -304,7 +306,7 @@ func close_chapters() -> void:
 
 func refresh_input_hints() -> void:
 	if not hint: return
-	hint.text = InputHints.format_text("{move} 移动   {jump} 跳跃   {run} 奔跑   {crouch} 蹲伏   {interact} 互动   {pause} 暂停")
+	hint.text = InputHints.format_text("{move} 移动   {jump} 跳跃   {run} 奔跑   {crouch} 蹲伏   {interact} 互动   {pause} 暂停／需要一点提示")
 	for panel in [menu, pause_menu, chapter_menu, ending]:
 		if not panel: continue
 		for child in panel.get_children():

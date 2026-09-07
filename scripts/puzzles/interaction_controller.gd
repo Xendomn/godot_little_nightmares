@@ -34,13 +34,21 @@ func reachable(target: Node3D) -> bool:
 func refresh_target() -> void:
 	current_target = null
 	var best := INF
+	var blocked_target: Node3D
+	var blocked_distance := INF
 	for candidate in get_tree().get_nodes_in_group("puzzle_interactable"):
-		if candidate is Node3D and candidate.has_method("can_interact") and candidate.can_interact(actor) and reachable(candidate):
+		if candidate is Node3D and candidate.has_method("can_interact") and reachable(candidate):
 			var distance: float = (actor.global_position + Vector3(0, .6, 0)).distance_squared_to(target_position(candidate))
-			if distance < best:
+			if candidate.can_interact(actor) and distance < best:
 				current_target = candidate
 				best = distance
-	prompt_text = current_target.get_prompt() if current_target != null else ("{interact} · 放下物品" if carried != null else "")
+			elif candidate.has_method("get_blocked_reason") and distance < blocked_distance:
+				blocked_target = candidate
+				blocked_distance = distance
+	if current_target == null: current_target = blocked_target
+	prompt_text = "{interact} · 放下物品" if carried != null else ""
+	if current_target != null:
+		prompt_text = current_target.get_prompt() if current_target.can_interact(actor) else current_target.display_name() + " · " + current_target.get_blocked_reason(actor)
 func tick(delta: float) -> bool:
 	if not actor.enabled:
 		cancel_interaction()
@@ -100,7 +108,10 @@ func tick(delta: float) -> bool:
 	refresh_target()
 	if InputHints.just_pressed("interact"):
 		if current_target != null:
-			current_target.interact(actor)
+			if current_target.can_interact(actor):
+				current_target.interact(actor)
+			elif current_target.has_method("get_blocked_reason"):
+				actor.get_parent().ui.notice(current_target.get_blocked_reason(actor), 3)
 		elif carried != null:
 			place_carried()
 	if is_instance_valid(carried):
