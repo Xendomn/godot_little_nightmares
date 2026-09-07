@@ -33,6 +33,13 @@ var notice_template := ""
 var repeat_action := ""
 var repeat_time := 0.0
 var pending_disconnect := false
+var hint_button: Button
+var hint_panel: Control
+var hint_body: Label
+var hint_next: Button
+var puzzle_hint_id := ""
+var puzzle_hints: Array = []
+var hint_step := 0
 const PAPER := Color("ded7c3")
 const MUTED := Color("acb9b5")
 
@@ -91,7 +98,7 @@ func _ready() -> void:
 	button(menu, "离开工坊", Vector2(118, 683), func(): quit_requested.emit())
 	var controls_hint := label(menu, "", Vector2(118, 860), 18, MUTED)
 	controls_hint.set_meta("input_template", "{move} 移动 / {jump} 跳跃 / {interact} 互动")
-	label(menu, "建议佩戴耳机  ·  原创短篇  ·  约 5–10 分钟", Vector2(118, 900), 17, MUTED)
+	label(menu, "建议佩戴耳机  ·  一则机械童话", Vector2(118, 900), 17, MUTED)
 	pause_menu = overlay(base)
 	label(pause_menu, "让齿轮歇一会儿", Vector2(660, 265), 46, PAPER)
 	button(pause_menu, "继续旅程", Vector2(740, 382), func(): resume_requested.emit())
@@ -226,7 +233,9 @@ func _input(event: InputEvent) -> void:
 		if event.is_echo() or (event.is_action_pressed("pause") and InputHints.blocked.has("pause")):
 			return
 		InputHints.block_held()
-		if chapter_menu and chapter_menu.visible:
+		if hint_panel and hint_panel.visible:
+			close_puzzle_hints()
+		elif chapter_menu and chapter_menu.visible:
 			close_chapters()
 		elif pause_menu.visible:
 			resume_requested.emit()
@@ -248,6 +257,7 @@ func _input(event: InputEvent) -> void:
 
 func current_panel() -> Control:
 	if confirm_new and confirm_new.visible: return null
+	if hint_panel and hint_panel.visible: return hint_panel
 	if chapter_menu and chapter_menu.visible: return chapter_menu
 	if ending.visible: return ending
 	if pause_menu.visible: return pause_menu
@@ -313,6 +323,7 @@ func controller_disconnected() -> void:
 		subtitles.show()
 
 func begin() -> void:
+	if hint_panel: hint_panel.hide()
 	InputHints.block_held()
 	menu.hide()
 	ending.hide()
@@ -324,6 +335,7 @@ func begin() -> void:
 		chapter_menu.hide()
 
 func set_pause(value: bool) -> void:
+	if not value and hint_panel: hint_panel.hide()
 	InputHints.block_held()
 	pause_menu.visible = value
 	subtitles.visible = not value
@@ -361,7 +373,7 @@ func enable_campaign(has_save: bool, unlocked: Array) -> void:
 	chapter_menu.hide()
 	# Reuse the existing audio slider; replace the pause actions only.
 	for child in pause_menu.get_children():
-		if child is Button:
+		if child is Button and child != hint_button:
 			child.hide()
 			child.queue_free()
 	button(pause_menu, "继续旅程", Vector2(740, 355), func(): resume_requested.emit())
@@ -405,3 +417,50 @@ func request_new_journey() -> void:
 		confirm_new.get_cancel_button().grab_focus()
 	else:
 		new_journey_requested.emit()
+
+func set_puzzle_hints(puzzle_id: String, hints: Array) -> void:
+	if not hint_panel:
+		hint_button = button(pause_menu, "需要一点提示", Vector2(1240, 428), open_puzzle_hints)
+		hint_panel = overlay(menu.get_parent())
+		hint_panel.get_child(0).color.a = 1.0
+		label(hint_panel, "一点线索", Vector2(500, 230), 46, PAPER)
+		label(hint_panel, "按需查看：观察 → 方向 → 解法", Vector2(500, 310), 22, MUTED)
+		hint_body = label(hint_panel, "", Vector2(500, 385), 26, PAPER)
+		hint_body.size = Vector2(920, 260)
+		hint_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		hint_next = button(hint_panel, "查看第一条提示", Vector2(740, 680), reveal_next_hint)
+		button(hint_panel, "返回暂停菜单", Vector2(740, 760), close_puzzle_hints)
+		hint_panel.hide()
+	if puzzle_id != puzzle_hint_id or puzzle_hints != hints:
+		puzzle_hint_id = puzzle_id
+		puzzle_hints = hints.slice(0, 3).duplicate()
+		hint_step = 0
+		hint_body.text = ""
+		hint_next.text = "查看第一条提示"
+		hint_next.disabled = puzzle_hints.is_empty()
+	hint_button.visible = not puzzle_hint_id.is_empty() and not puzzle_hints.is_empty()
+	if not hint_button.visible and hint_panel.visible:
+		close_puzzle_hints()
+
+func open_puzzle_hints() -> void:
+	if not hint_button or not hint_button.visible or not pause_menu.visible: return
+	hint_panel.show()
+	focus_panel(hint_panel)
+
+func reveal_next_hint() -> void:
+	if hint_step >= puzzle_hints.size(): return
+	hint_step += 1
+	var revealed := PackedStringArray()
+	for index in range(hint_step):
+		revealed.append(str(puzzle_hints[index]))
+	hint_body.text = "\n\n".join(revealed)
+	hint_next.text = "查看下一条提示 (%d/3)" % hint_step
+	hint_next.disabled = hint_step >= puzzle_hints.size()
+	if hint_next.disabled:
+		hint_next.text = "已查看全部提示"
+		focus_panel(hint_panel)
+
+func close_puzzle_hints() -> void:
+	hint_panel.hide()
+	focus_panel(pause_menu)
+	if hint_button.visible: hint_button.grab_focus()

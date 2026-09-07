@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_0e5g2"]
+
+[node name="Room3" type="Node3D" unique_id=1031596778]
+script = ExtResource("1_0e5g2")
+spec = {
+"belt": true,
+"crate": 12.0,
+"devices": [{
+"id": "belt",
+"kind": "selector",
+"modes": 3,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "cargo_plate",
+"kind": "plate",
+"mass": 3.0,
+"needs": [],
+"x": 26.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "delivery",
+"kind": "latch",
+"needs": ["cargo_plate"],
+"x": 35.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["delivery"],
+"hints": ["黄铜踏板与货箱一样宽。", "输送带可以反转，另一端的开关会锁存货箱到位状态。", "将货箱推上输送带，选择向右的档位，等货箱压住踏板，再打开货运闩。"],
+"items": [],
+"mid": "cargo_plate",
+"objective": "把货箱送到隔栅另一侧",
+"title": "逆行的传送带"
+}
+index = 2

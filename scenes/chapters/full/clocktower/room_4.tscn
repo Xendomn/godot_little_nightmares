@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_7hcqq"]
+
+[node name="Room4" type="Node3D" unique_id=25092522]
+script = ExtResource("1_7hcqq")
+spec = {
+"devices": [{
+"accept": "gear",
+"id": "lift_power",
+"kind": "socket",
+"needs": [],
+"x": 9.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "gear",
+"id": "slow_axis",
+"kind": "socket",
+"needs": [],
+"x": 34.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "fast_axis",
+"kind": "latch",
+"needs": ["lift_power", "slow_axis"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["fast_axis"],
+"hints": ["慢轴的齿轮在上层工作台。", "第一枚齿轮也能给货篮供能。", "装第一枚齿轮，乘篮取回楼上齿轮，装入慢轴，然后联动两轴。"],
+"items": [{
+"id": "gear_a",
+"kind": "gear",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}, {
+"id": "gear_b",
+"kind": "gear",
+"x": 27.0,
+"y": 3.28,
+"z": 0.5
+}],
+"lift": "lift_power",
+"objective": "把两枚齿轮带到对应的轴上",
+"title": "快轴与慢轴",
+"upper": true
+}
+theme = "clocktower"
+index = 3

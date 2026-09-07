@@ -23,7 +23,7 @@ func setup(model: Node3D) -> void:
 	for full_name in animator.get_animation_list():
 		var name: String = str(full_name).get_slice("/", str(full_name).get_slice_count("/") - 1)
 		clips[name] = full_name
-		if name in ["idle", "walk", "run", "crouch_walk", "listen", "chase"]:
+		if name in ["idle", "walk", "run", "crouch_walk", "listen", "chase", "carry_idle", "carry_walk", "pull", "climb"]:
 			animator.get_animation(full_name).loop_mode = Animation.LOOP_LINEAR
 		else:
 			animator.get_animation(full_name).loop_mode = Animation.LOOP_NONE

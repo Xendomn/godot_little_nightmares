@@ -1,6 +1,6 @@
-﻿# 午夜工坊 · Midnight Workshop
+# 午夜工坊 · Midnight Workshop
 
-原创 3D 恐怖童话小游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。支持 Windows 与 Apple Silicon macOS 本机游玩，单人、无血腥。
+原创 3D 环境解谜恐怖童话游戏：无面织物精灵穿过四个相连章节，躲开畸形缝纫师，寻找工坊外的晨光。支持 Windows 与 Apple Silicon macOS 本机游玩，单人、无血腥。
 
 ## 开始游戏
 
@@ -18,6 +18,8 @@
 | 奔跑；近处会被听见 | 按住 Shift | 按住 RT |
 | 蹲伏；低通道自动保持蹲伏 | 按住 Ctrl | 按住 B |
 | 互动／推箱、洗衣车或线轴箱 | E／按住 E 并左右移动 | X／按住 X 并左右移动 |
+| 拾取／放置小物件 | E | X |
+| 爬梯／松手 | E 进入，W/S 攀爬，Space 松手 | X 进入，左摇杆上下，A 松手 |
 | 暂停／继续 | Esc | Menu |
 | 菜单确认／返回 | Enter／Esc | A／B |
 
@@ -25,7 +27,7 @@
 
 macOS 的 `Ctrl` 指 **Control（⌃）**，不是 Command（⌘）；其余键盘操作相同。macOS 实体手柄尚未验收，自动输入测试不代表 USB／蓝牙硬件兼容性。
 
-每章三个检查点，失败自动重生。检查点和已解锁章节保存至 Godot `user://campaign.json`，主菜单可继续旅程或选择已解锁章节。存档写入使用临时文件与备份，主档损坏时尝试恢复备份。音量独立保存在 `user://settings.cfg`。开始新旅程需确认，会清除章节进度，保留音量。
+每章六组连续机关、九个稳定 ID 检查点，失败自动重生。检查点和已解锁章节保存至 Godot `user://campaign.json`，主菜单可继续旅程或选择已解锁章节。存档写入使用临时文件与备份，主档损坏时尝试恢复备份。音量独立保存在 `user://settings.cfg`。开始新旅程需确认，会清除章节进度，保留音量。
 
 macOS 的 `user://` 位于 `~/Library/Application Support/Godot/app_userdata/午夜工坊 · Midnight Workshop/`，包含 `campaign.json`（及备份）和 `settings.cfg`。
 
@@ -33,27 +35,21 @@ macOS 的 `user://` 位于 `~/Library/Application Support/Godot/app_userdata/午
 
 | 章节 | 主要玩法 |
 |---|---|
-| 午夜工坊 | 推箱登台取保险丝、装配车间潜行供电、输送带追逐 |
-| 染洗间 | 排水、洗衣车压住升降台、桌底潜行、限时蒸汽通道 |
-| 悬线库 | 线轴配重、双绞盘悬桥、反复摇铃诱敌 |
-| 钟楼 | 八秒摆锤制动、上弦升降台、放开钟锤后的最终追逐 |
+| 午夜工坊 | 藏匿保险丝、配电切换、反转输送带、压机限位、双路供电、落闸追逐 |
+| 染洗间 | 进排水、浮箱定位、连通水槽、阀轮回运、压力旁路、水轮蒸汽 |
+| 悬线库 | 双配重、上下托盘、插销回收、竖井货运、铃声诱敌、三段悬桥 |
+| 钟楼 | 缺齿传动、离合分流、双组制动、快慢轴、钟面校准、晨光逃生 |
 
-<details>
-<summary>路线提示（含谜题答案）</summary>
+每章首次游玩目标为 15–20 分钟；这属于设计目标，尚未用真人盲测确认。暂停菜单可主动逐级查看三条提示，HUD 只显示当前目标。搬运时不能跑跳或爬梯，需要利用往返货篮；物件可以从插槽取回重复使用。按住互动键时，左右移动既能推也能拉。
 
-- 工坊：把箱子推到工作台边，连续两跳登台拿保险丝。蹲过低通道，装入配电箱。沿靠镜头一侧蹲到桌底，等守卫向左经过再走。拉电闸后奔跑跳过三处断口，中间低通道需蹲伏。
-- 染洗间：E 排水，过水槽；推洗衣车到黄色 LOAD 框。移到升降台靠后的空位，E 灌水，等台面上升后向右走。沿桌底跟在守卫后面通过，蒸汽熄灭再过。
-- 悬线库：推线轴箱压住配重板，等踏板降下。依次操作第一、第二绞盘；在出口区摇铃，蹲进第一张桌子，等守卫走向左侧铃声，再沿桌底向右离开。
-- 钟楼：制动杆前按 E，八秒内跑过两个摆锤。站上升降台靠后侧按 E 上弦；到上层释放钟锤。跑过三个断口，在 CTRL 低通道蹲伏，最后奔向发光出口。
-
-</details>
+存档已升级为 v2，记录机关、松散物件、插槽和搬运状态。首次读取旧版存档会保留已解锁章节和当前章节，将旧文件存为 `campaign.json.v1.bak`，从该章入口开始，并显示迁移提示。
 
 ## 工程与原创素材
 
 - `scenes/main.tscn`：持久化章节管理器，只加载当前一章。
-- `scenes/chapters/`：四个独立可编辑关卡；`scenes/actors/`：共用角色、镜头、界面、声音。
+- `scenes/chapters/full/`：四章与 24 个独立房间场景；旧章节保留为回归测试场景；`scenes/actors/`：共用角色、镜头、界面、声音。
 - `resources/levels/`：章节顺序、场景地址、镜头边界和检查点定义。
-- `scripts/campaign/`：存档与切换；`scripts/chapters/`：机关、平台、危险区。
+- `scripts/campaign/`：存档与切换；`scripts/puzzles/`：完整章节、机关条件、搬运与场景搭建；`campaign_content.gd` 是房间数据源。
 - `assets/models/`：原创 GLB。主角 19,296 三角形、12 段动画；怪物 32,044 三角形、7 段动画。
 - `assets/sources/`：Blender 源文件、新版角色预览；`assets/textures/characters/`：原创 2K 布料纹理。
 - `assets/audio/`：14 个原创合成 WAV，含三章氛围、怪物空间呼吸、布料和重脚步。
@@ -79,12 +75,13 @@ GODOT="/Applications/Godot.app/Contents/MacOS/Godot" bash tools/verify.sh
 
 脚本兼容 macOS 自带 Bash 3.2，可从任意工作目录通过完整脚本路径调用。失败返回非零状态，检查引擎日志和标准输出／错误；只有全部通过才生成 `artifacts/verification-results.json`。重建验证 `python3 tests/test_builder.py` 会重新生成场景，应在临时工程副本中运行。
 
-20 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。窗口路线与性能检查：
+25 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd
 godot --path . --resolution 1920x1080 --script tests/test_campaign_ui.gd
-godot --path . --resolution 1920x1080 --script tests/benchmark_expansion.gd
+godot --path . --resolution 1920x1080 --script tests/benchmark_full_campaign.gd
+godot --path . --fixed-fps 60 --script tests/test_full_routes.gd
 godot --path . --fixed-fps 60 --script tests/test_crouch_render.gd
 godot --path . --fixed-fps 60 --script tests/test_controller_ui.gd
 godot --path . --fixed-fps 60 --script tests/test_routes.gd -- --controller
@@ -99,11 +96,16 @@ blender --background --python tools/create_characters_v2.py
 blender --background --python tools/create_mechanical_props.py
 python tools/create_expansion_audio.py
 python tools/create_prop_audio.py
+blender --background --python tools/create_expansion_kit.py
+blender --background --python assets/sources/expansion/create_interaction_animations.py
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tools/build_prop_scenes.gd
 godot --headless --path . --script tools/build_scene.gd
 godot --headless --path . --script tools/build_expansion.gd
+godot --headless --path . --script tools/build_full_campaign.gd
 ```
+
+新增 23 件 Blender 原创机械道具、角色搬运／攀爬动画、CC0 木材贴图和七个机械音效；[素材来源与复现说明](docs/production/expansion-assets.md)。LIMBO、INSIDE 官方截图仅作视觉参考，不进入游戏导出。新关卡验证见 [扩充验收记录](docs/production/full-campaign-verification.md)。
 
 旧素材生成器会覆盖角色，之后必须运行 v2 生成器。运行现有工程无需 Blender 或重新生成。
 

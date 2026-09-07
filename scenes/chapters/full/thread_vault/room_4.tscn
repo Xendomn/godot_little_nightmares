@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_8ko22"]
+
+[node name="Room4" type="Node3D" unique_id=692291674]
+script = ExtResource("1_8ko22")
+spec = {
+"devices": [{
+"id": "hoist",
+"kind": "selector",
+"modes": 2,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "weight",
+"id": "receiver",
+"kind": "socket",
+"needs": [],
+"x": 28.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"id": "shaft_gate",
+"kind": "latch",
+"needs": ["receiver"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["shaft_gate"],
+"hints": ["井口太高，梯子无法携带砝码。", "把货篮当成移动的地面。", "开启绞盘，带着砝码乘篮上楼，装进高处托盘，再下梯开门。"],
+"items": [{
+"id": "weight",
+"kind": "weight",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"lift": "hoist:1",
+"objective": "让砝码通过狭窄竖井",
+"title": "深井货运",
+"upper": true
+}
+theme = "thread_vault"
+index = 3

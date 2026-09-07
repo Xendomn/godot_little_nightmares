@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_owoob"]
+
+[node name="Room1" type="Node3D" unique_id=915065787]
+script = ExtResource("1_owoob")
+spec = {
+"devices": [{
+"accept": "weight",
+"id": "tray_a",
+"kind": "socket",
+"needs": [],
+"x": 10.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "weight",
+"id": "tray_b",
+"kind": "socket",
+"needs": [],
+"x": 14.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "landing",
+"kind": "latch",
+"needs": ["tray_a", "tray_b"],
+"x": 28.0,
+"y": 4.0,
+"z": -0.9
+}],
+"goal": ["landing"],
+"hints": ["一枚砝码不够抬起货篮。", "两个托盘共同给绳轮施力。", "将两枚砝码分别放入托盘，乘平衡篮到上层开闩。"],
+"items": [{
+"id": "weight_a",
+"kind": "weight",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}, {
+"id": "weight_b",
+"kind": "weight",
+"x": 19.0,
+"y": 0.08,
+"z": 0.5
+}],
+"lift": "tray_a&tray_b",
+"objective": "让空中的货篮停在正确高度",
+"title": "两个砝码",
+"upper": true
+}
+theme = "thread_vault"

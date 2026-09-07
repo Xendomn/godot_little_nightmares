@@ -8,7 +8,13 @@ const RUN_SPEED := 4.6
 const CROUCH_SPEED := 1.35
 const GRAVITY := 20.0
 const JUMP_SPEED := 7.2
-var enabled: bool = false
+@export var extended_interactions: bool = false
+var interactions: Node
+var enabled: bool = false:
+	set(value):
+		enabled = value
+		if not value and is_instance_valid(interactions):
+			interactions.cancel_interaction()
 var crouching: bool = false
 var running: bool = false
 var pushing: bool = false
@@ -23,6 +29,10 @@ var visual_driver: Node
 @onready var collider: CollisionShape3D = $CollisionShape3D
 
 func _ready() -> void:
+	if extended_interactions:
+		interactions = preload("res://scripts/puzzles/interaction_controller.gd").new()
+		interactions.name = "Interactions"
+		add_child(interactions)
 	model = $Visual
 	visual_driver = preload("res://scripts/character_visual.gd").new()
 	add_child(visual_driver)
@@ -35,6 +45,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not enabled:
 		return
+	if extended_interactions and interactions.tick(delta):
+		return
+	var carrying: bool = extended_interactions and interactions.carried != null
 	var axis := Input.get_vector("left", "right", "depth_up", "depth_down")
 	var wants_crouch := InputHints.pressed("crouch")
 	if wants_crouch:
@@ -51,7 +64,7 @@ func _physics_process(delta: float) -> void:
 	var cap = collider.shape as CapsuleShape3D
 	cap.height = 0.64 if crouching else 1.2
 	collider.position.y = 0.34 if crouching else 0.62
-	running = Input.is_action_pressed("run") and not crouching and not pushing and axis.length() > 0.1
+	running = Input.is_action_pressed("run") and not crouching and not pushing and not carrying and axis.length() > 0.1
 	var speed: float = CROUCH_SPEED if crouching else (RUN_SPEED if running else WALK_SPEED)
 	if pushing:
 		speed = 1.25
@@ -61,7 +74,7 @@ func _physics_process(delta: float) -> void:
 		facing = signf(axis.x)
 	coyote = 0.12 if is_on_floor() else coyote - delta
 	jump_buffer = 0.14 if InputHints.just_pressed("jump") else jump_buffer - delta
-	if jump_buffer > 0 and coyote > 0 and not crouching and not pushing:
+	if jump_buffer > 0 and coyote > 0 and not crouching and not pushing and not carrying:
 		velocity.y = JUMP_SPEED
 		coyote = 0
 		jump_buffer = 0
@@ -84,7 +97,20 @@ func animate_doll(delta: float, movement: float) -> void:
 	if visual_driver.animator:
 		model.scale = Vector3.ONE
 		model.position.y = 0
-		visual_driver.update_motion(Vector2(velocity.x, velocity.z).length(), is_on_floor(), crouching, pushing, velocity.y)
+		var interaction_clip := ""
+		if extended_interactions and is_instance_valid(interactions):
+			if is_instance_valid(interactions.ladder):
+				interaction_clip = "climb"
+			elif is_instance_valid(interactions.carried):
+				interaction_clip = "carry_walk" if Vector2(velocity.x, velocity.z).length() > .15 else "carry_idle"
+			elif is_instance_valid(interactions.pushed):
+				facing = signf(interactions.pushed.global_position.x - global_position.x)
+				if Input.get_axis("left", "right") * facing < -.05:
+					interaction_clip = "pull"
+		if not interaction_clip.is_empty() and visual_driver.clips.has(interaction_clip):
+			visual_driver.play(interaction_clip)
+		else:
+			visual_driver.update_motion(Vector2(velocity.x, velocity.z).length(), is_on_floor(), crouching, pushing, velocity.y)
 	if is_on_floor() and movement > 0.15:
 		step_timer -= delta
 		if step_timer <= 0:
@@ -92,6 +118,8 @@ func animate_doll(delta: float, movement: float) -> void:
 			footstep.emit()
 
 func reset_to(spawn: Vector3) -> void:
+	if is_instance_valid(interactions):
+		interactions.cancel_interaction()
 	global_position = spawn
 	velocity = Vector3.ZERO
 	coyote = 0

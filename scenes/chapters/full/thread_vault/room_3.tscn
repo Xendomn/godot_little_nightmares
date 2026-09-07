@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_bt66m"]
+
+[node name="Room3" type="Node3D" unique_id=626029875]
+script = ExtResource("1_bt66m")
+spec = {
+"devices": [{
+"accept": "weight",
+"id": "tray",
+"kind": "socket",
+"needs": [],
+"x": 9.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "pin",
+"kind": "latch",
+"needs": ["tray"],
+"x": 27.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"accept": "weight",
+"id": "reuse",
+"kind": "socket",
+"needs": ["pin"],
+"x": 36.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["reuse"],
+"hints": ["插销能独立承受桥面的重量。", "先在上层锁桥，配重就可以取走。", "装配重、乘篮到上层插销，下梯取回配重，再把它送到下一托盘。"],
+"items": [{
+"id": "weight",
+"kind": "weight",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"ladder_lock": "pin",
+"lift": "tray",
+"mid": "pin",
+"objective": "锁住桥面，再取回配重",
+"title": "插销与回路",
+"upper": true
+}
+theme = "thread_vault"
+index = 2

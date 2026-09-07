@@ -19,7 +19,7 @@ printf '[\n' > "$results"
 suites=(progress gameplay controls stealth save_store chapter_rules platform
     character_rig expansion routes campaign campaign_ui respawn crouch_states
     keeper_navigation input_devices controller_ui arrow_movement prop_visual
-    mechanical_props)
+    mechanical_props save_v2 puzzle_hints puzzle_interactions full_routes puzzle_rooms)
 separator=""
 for suite in "${suites[@]}"; do
     log_path="$project_root/artifacts/verify-$suite.log"

@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_x8j7k"]
+
+[node name="Room5" type="Node3D" unique_id=276609384]
+script = ExtResource("1_x8j7k")
+spec = {
+"chase": true,
+"devices": [{
+"id": "bell",
+"kind": "latch",
+"needs": [],
+"x": 9.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "hoist",
+"kind": "selector",
+"modes": 2,
+"needs": ["bell"],
+"x": 16.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "quiet_gate",
+"kind": "latch",
+"needs": ["hoist:1"],
+"x": 28.0,
+"y": 4.0,
+"z": -0.9
+}],
+"goal": ["quiet_gate"],
+"hints": ["铃声会把守卫引向左边。", "摇铃后货篮的路线比地面安全。", "摇铃，打开绞盘，乘篮避开守卫，在上层落闩。"],
+"items": [],
+"lift": "hoist:1",
+"mid": "bell",
+"objective": "让守卫离开货运通道",
+"title": "铃声的另一侧",
+"upper": true
+}
+theme = "thread_vault"
+index = 4

@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ll0af"]
+
+[node name="Room2" type="Node3D" unique_id=283615730]
+script = ExtResource("1_ll0af")
+spec = {
+"devices": [{
+"id": "clutch",
+"kind": "selector",
+"modes": 3,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "shortcut",
+"kind": "latch",
+"needs": ["clutch:1"],
+"x": 28.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"id": "pendulum_gate",
+"kind": "latch",
+"needs": ["shortcut", "clutch:2"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["pendulum_gate"],
+"hints": ["离合器只能驱动一条线路。", "先借升降台打开上层捷径。", "第一档上楼开闩，下梯后换到第二档，穿过摆锤线路。"],
+"items": [],
+"lift": "clutch:1",
+"objective": "从摆锤线路借来升降动力",
+"title": "离合器",
+"upper": true
+}
+theme = "clocktower"
+index = 1

@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_jq4rl"]
+
+[node name="Room5" type="Node3D" unique_id=699476544]
+script = ExtResource("1_jq4rl")
+spec = {
+"devices": [{
+"accept": "wheel",
+"id": "bypass",
+"kind": "socket",
+"needs": [],
+"x": 10.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "pressure",
+"kind": "selector",
+"modes": 3,
+"needs": ["bypass"],
+"x": 16.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "vent",
+"kind": "latch",
+"needs": ["pressure:1"],
+"x": 27.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"id": "seal",
+"kind": "latch",
+"needs": ["vent", "pressure:2"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["seal"],
+"hints": ["压力表指向不同的管道。", "安装旁路轮，再去上层释放困住的空气。", "装轮，切到第一档乘台开排气阀，回来选第二档开启密封门。"],
+"items": [{
+"id": "wheel",
+"kind": "wheel",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"lift": "pressure:1",
+"mid": "vent",
+"objective": "释放密封闸门的压力",
+"title": "压力旁路",
+"upper": true,
+"water": true
+}
+theme = "laundry"
+index = 4

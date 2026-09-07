@@ -1,0 +1,37 @@
+{
+  "original_animation_tracks_byte_identical": true,
+  "original_clips": [
+    "caught",
+    "crouch",
+    "crouch_walk",
+    "fall",
+    "idle",
+    "interact",
+    "jump",
+    "land",
+    "pickup",
+    "push",
+    "run",
+    "walk"
+  ],
+  "expanded_clips": [
+    "carry_idle",
+    "carry_walk",
+    "caught",
+    "climb",
+    "crouch",
+    "crouch_walk",
+    "fall",
+    "idle",
+    "interact",
+    "jump",
+    "land",
+    "pickup",
+    "pull",
+    "push",
+    "run",
+    "walk"
+  ],
+  "bones": 20,
+  "repair": "Only variant sewn patch grids/stitch positions, their weights, and patch material changed; hands, main character meshes, rig and original action tracks preserved."
+}

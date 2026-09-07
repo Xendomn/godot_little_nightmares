@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ntdgo"]
+
+[node name="Room4" type="Node3D" unique_id=2033261204]
+script = ExtResource("1_ntdgo")
+spec = {
+"crate": 15.0,
+"devices": [{
+"id": "power",
+"initial": 1,
+"kind": "selector",
+"modes": 2,
+"needs": [],
+"x": 7.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "limiter",
+"kind": "plate",
+"mass": 3.0,
+"needs": [],
+"x": 23.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "service",
+"kind": "latch",
+"needs": ["limiter", "power:1"],
+"x": 34.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["service"],
+"hints": ["电机旁的指示灯决定压机是否运行。", "支撑车只有在压机断电时才能进入工作区。", "断电后把车推入黄框，再接通电源，让机械限位撑住压机。"],
+"items": [],
+"objective": "让压机停在可穿行的位置",
+"press": true,
+"title": "压机的牙齿"
+}
+index = 3

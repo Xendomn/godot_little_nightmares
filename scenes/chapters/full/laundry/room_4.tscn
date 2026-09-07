@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_y4kxu"]
+
+[node name="Room4" type="Node3D" unique_id=1625819441]
+script = ExtResource("1_y4kxu")
+spec = {
+"devices": [{
+"id": "basket",
+"kind": "selector",
+"modes": 2,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "wheel",
+"id": "valve_socket",
+"kind": "socket",
+"needs": [],
+"x": 34.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "return",
+"kind": "latch",
+"needs": ["valve_socket"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["return"],
+"hints": ["断开的阀门轴需要一个轮子。", "轮子在上层；双向货篮能让你携物返回。", "启动货篮上楼，拾取阀轮后乘篮下楼，安装轮子并转动出口阀。"],
+"items": [{
+"id": "wheel",
+"kind": "wheel",
+"x": 27.0,
+"y": 3.28,
+"z": 0.5
+}],
+"lift": "basket:1",
+"objective": "把阀轮带回干燥的机房",
+"title": "失落的阀轮",
+"upper": true
+}
+theme = "laundry"
+index = 3

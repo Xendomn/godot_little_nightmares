@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_u1u4v"]
+
+[node name="Room6" type="Node3D" unique_id=543505613]
+script = ExtResource("1_u1u4v")
+spec = {
+"bridges": true,
+"devices": [{
+"accept": "weight",
+"id": "winch_a",
+"kind": "socket",
+"needs": [],
+"x": 9.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "pin_a",
+"kind": "latch",
+"needs": ["winch_a"],
+"x": 18.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "weight",
+"id": "winch_b",
+"kind": "socket",
+"needs": ["pin_a"],
+"x": 22.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "pin_b",
+"kind": "latch",
+"needs": ["winch_b"],
+"x": 31.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "far_latch",
+"kind": "latch",
+"needs": ["pin_a", "pin_b"],
+"x": 39.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["far_latch"],
+"hints": ["桥面可以插销固定，砝码可以重复使用。", "先固定第一段，再取回砝码驱动第二个绞盘。", "配重装左绞盘、固定第一闩、取回配重装右绞盘、固定第二闩，最后打开远端门。"],
+"items": [{
+"id": "weight",
+"kind": "weight",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"mid": "pin_a",
+"objective": "让三个绳结依次承重",
+"title": "三段悬桥"
+}
+theme = "thread_vault"
+index = 5

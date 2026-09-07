@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_gfurl"]
+
+[node name="Room3" type="Node3D" unique_id=19331185]
+script = ExtResource("1_gfurl")
+spec = {
+"devices": [{
+"id": "transfer",
+"kind": "selector",
+"modes": 4,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "left_valve",
+"kind": "latch",
+"needs": ["transfer:1"],
+"x": 24.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"id": "right_valve",
+"kind": "latch",
+"needs": ["left_valve", "transfer:3"],
+"x": 34.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["right_valve"],
+"hints": ["同一份水会在两座水箱之间移动。", "第一档抬起左侧浮台，第三档给右侧出口提供压力。", "转到第一档乘台开上层阀，下梯回来后转到第三档，再开右阀。"],
+"items": [],
+"lift": "transfer:1",
+"mid": "left_valve",
+"objective": "平衡两边水位，接通出口",
+"title": "连通的两座水箱",
+"upper": true,
+"water": true
+}
+theme = "laundry"
+index = 2

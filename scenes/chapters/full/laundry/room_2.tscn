@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_erim5"]
+
+[node name="Room2" type="Node3D" unique_id=1054884967]
+script = ExtResource("1_erim5")
+spec = {
+"crate": 16.0,
+"devices": [{
+"id": "float_plate",
+"kind": "plate",
+"mass": 3.0,
+"needs": [],
+"x": 18.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "fill",
+"kind": "latch",
+"needs": ["float_plate"],
+"x": 12.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "high_valve",
+"kind": "latch",
+"needs": ["fill"],
+"x": 28.0,
+"y": 4.0,
+"z": -0.9
+}],
+"goal": ["high_valve"],
+"hints": ["水面能抬起浮箱。", "干燥时才能把浮箱推到标记下方。", "先把浮箱推到黄框，开灌水阀，再乘浮台到上层开阀。"],
+"items": [],
+"lift": "fill",
+"objective": "借助水位登上高台",
+"title": "空槽中的木筏",
+"upper": true,
+"water": true
+}
+theme = "laundry"
+index = 1

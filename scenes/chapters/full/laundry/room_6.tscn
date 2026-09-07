@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_x5dby"]
+
+[node name="Room6" type="Node3D" unique_id=1209566621]
+script = ExtResource("1_x5dby")
+spec = {
+"devices": [{
+"accept": "gear",
+"id": "wheel_drive",
+"kind": "socket",
+"needs": [],
+"x": 9.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "timing",
+"kind": "selector",
+"modes": 3,
+"needs": ["wheel_drive"],
+"x": 17.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "steam_lock",
+"kind": "latch",
+"needs": ["timing:2"],
+"x": 36.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["steam_lock"],
+"hazards": "steam",
+"hints": ["蒸汽喷口会在安静与喷发之间交替。", "水轮的第二档会让三组喷口依次休息。", "装齿轮、选第二档，在每块安全踏板等待下一组蒸汽关闭后前进。"],
+"items": [{
+"id": "gear",
+"kind": "gear",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"mid": "timing:2",
+"objective": "让水轮与蒸汽错开节拍",
+"title": "蒸汽的呼吸"
+}
+theme = "laundry"
+index = 5

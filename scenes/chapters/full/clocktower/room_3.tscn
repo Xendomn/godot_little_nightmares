@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_astjx"]
+
+[node name="Room3" type="Node3D" unique_id=1909750089]
+script = ExtResource("1_astjx")
+spec = {
+"devices": [{
+"id": "brake_a",
+"kind": "brake",
+"needs": [],
+"x": 12.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "brake_b",
+"kind": "brake",
+"needs": ["brake_a"],
+"x": 25.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "phase_gate",
+"kind": "latch",
+"needs": ["brake_b"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["phase_gate"],
+"hazards": "pendulum",
+"hints": ["制动只会维持一小段时间。", "两组摆锤之间有不会被扫到的停靠点。", "先制动第一组并穿到中岛，再制动第二组，抓住停摆时间通过。"],
+"items": [],
+"mid": "brake_a",
+"objective": "为两组摆锤找到安全相位",
+"title": "摆锤之间"
+}
+theme = "clocktower"
+index = 2

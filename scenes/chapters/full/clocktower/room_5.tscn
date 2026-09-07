@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_hr4hm"]
+
+[node name="Room5" type="Node3D" unique_id=96979099]
+script = ExtResource("1_hr4hm")
+spec = {
+"devices": [{
+"accept": "weight",
+"id": "counterweight",
+"kind": "socket",
+"needs": [],
+"x": 10.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "phase",
+"kind": "selector",
+"modes": 4,
+"needs": ["counterweight"],
+"x": 18.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "clock_brake",
+"kind": "brake",
+"needs": ["phase:3"],
+"x": 27.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "hammer",
+"kind": "latch",
+"needs": ["clock_brake", "phase:3"],
+"x": 38.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["hammer"],
+"hints": ["刻度 III 对着钟锤的释放臂。", "配重、相位和制动必须同时成立。", "安装配重，拨到第三档，在刻度对齐时制动，并在制动结束前拉下钟锤闩。"],
+"items": [{
+"id": "weight",
+"kind": "weight",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"mid": "phase:3",
+"objective": "让钟锤与刻度重新对齐",
+"title": "钟面上的记号"
+}
+theme = "clocktower"
+index = 4

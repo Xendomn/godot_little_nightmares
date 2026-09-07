@@ -35,7 +35,7 @@ func build() -> void:
 		var definition = load("res://scripts/campaign/level_definition.gd").new()
 		definition.id = IDS[index]
 		definition.title = TITLES[index]
-		definition.scene_path = "res://scenes/chapters/" + IDS[index] + ".tscn"
+		definition.scene_path = "res://scenes/chapters/full/" + IDS[index] + ".tscn"
 		definition.next_id = IDS[index + 1] if index < 3 else ""
 		definition.camera_max = 64 if index == 3 else (56 if index > 0 else 84)
 		var spawns := [[Vector3(2, .05, 0), Vector3(25, .05, 0), Vector3(55, .05, 0)], [Vector3(2, .05, 0), Vector3(18, .05, 0), Vector3(31, 2.65, 1.1)], [Vector3(2, .05, 0), Vector3(18, .05, 0), Vector3(40, .05, 1.1)], [Vector3(2, .05, 0), Vector3(18, .05, 0), Vector3(35, 2.65, 0)]]

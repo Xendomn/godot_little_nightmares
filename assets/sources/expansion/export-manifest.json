@@ -1,0 +1,163 @@
+[
+  {
+    "path": "assets/models/expansion/arch.glb",
+    "sha256": "21df8655d1bbceac320cdfc8011ad02cb613e9c39a34d58af5d1625e596fff34",
+    "meshes": 24,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/cargo_basket.glb",
+    "sha256": "6ae09cc16c592d3a1aa4c00d295bed336afc795400be0dff479960e996f9aaa0",
+    "meshes": 34,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/clutch.glb",
+    "sha256": "21459b9057636c0edc39d5126dfe1af92ae89656ef71044558dda99bb1ace83a",
+    "meshes": 13,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/control_pedestal.glb",
+    "sha256": "1312adca83c00c963f57b1ea4ce4cc3cab7e736b922fc6c5bddbb8b796af2a86",
+    "meshes": 6,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/conveyor.glb",
+    "sha256": "fd1e4a8b2a3b198de88a8c32371ed9b7acdcc05b1c6535632a337078badc6415",
+    "meshes": 26,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/doll_interactions.glb",
+    "sha256": "0bec4ac2ccb2e588318bc2a4c90872c1fd67a46556ec3629203da9b9ef953460",
+    "meshes": 33,
+    "animations": [
+      "carry_idle",
+      "carry_walk",
+      "caught",
+      "climb",
+      "crouch",
+      "crouch_walk",
+      "fall",
+      "idle",
+      "interact",
+      "jump",
+      "land",
+      "pickup",
+      "pull",
+      "push",
+      "run",
+      "walk"
+    ]
+  },
+  {
+    "path": "assets/models/expansion/floating_crate.glb",
+    "sha256": "61e6fd1e41582486aa8ee0254a5da2fddb43aa84bb4dfa4b2fc6626bc873fed7",
+    "meshes": 34,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/floor_panel.glb",
+    "sha256": "b745bfc1b7a9dbaecb946009fd6639200a336083e3e4cc0594b7baaf45552fb7",
+    "meshes": 12,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/fuse.glb",
+    "sha256": "bc239b0451fc43603528d91aeb75a50ca080f2cd2952492f4616d87b0cf1d3d4",
+    "meshes": 4,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/gate.glb",
+    "sha256": "a927d1cde7e1d5f486a1f25f3736b5fb69a31a1e729ae38abc6a8087e641d6c6",
+    "meshes": 23,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/gear.glb",
+    "sha256": "f1969f249f90ca8f2ace2d2e3544a16a0479af4a7e9c02d901eed592a0617c6d",
+    "meshes": 24,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/generator.glb",
+    "sha256": "0546d2f6a7bb76e3a01efc5fac2f1025be5250e5079c81df412a1b48c3a13cb1",
+    "meshes": 16,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/ladder.glb",
+    "sha256": "7cfa7929cc464ada8fe0c06c661a2c574a45a50b9deff9d7a6befbb071f2f0de",
+    "meshes": 16,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/lamp.glb",
+    "sha256": "549c79f7999ff9d01870a0297c781120f2d4510b3625e5244f3da9e15d97af1b",
+    "meshes": 9,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/pendulum.glb",
+    "sha256": "17334219fd5026bfedde844c4aeed1c6b416d75d4cd8dbf1bc264e503d4b0dfe",
+    "meshes": 3,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/press.glb",
+    "sha256": "6d29425a2a2f35a03f95f7a1ad3a527b369092df9faeac98fb74a136353baf5d",
+    "meshes": 23,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/rack.glb",
+    "sha256": "505f29cb6ad0476d71781c7d1b65315514e991ab9cec23a55f630431cae18f66",
+    "meshes": 17,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/selector.glb",
+    "sha256": "ec3ea2b93bd9b52631322a276a48d7028c76471e53061ce29dbe11b1aeec07dd",
+    "meshes": 6,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/tank.glb",
+    "sha256": "e36b2ed4f73ebc26a256173777dfdd9c000a87ac154bbf228cfc9892abbe1abf",
+    "meshes": 12,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/valve.glb",
+    "sha256": "97a279dab9386c7a33bfbae99841b9c7c30c9b8ecad6a17795d5fc403d4f10f5",
+    "meshes": 11,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/wall_panel.glb",
+    "sha256": "f75645b7c4fa844f2da22a5ca28996ee3eba6a6ad0366d3354ac083f2ed39117",
+    "meshes": 22,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/weight.glb",
+    "sha256": "9fb79e91d41d95b08a122b9f0190d22532609f1fe563e14914e5116c5b26c3e0",
+    "meshes": 4,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/wheel.glb",
+    "sha256": "87d1b3e09296121cd84b96df8b62f510b85481dc59c564e0e40e65b08829499f",
+    "meshes": 8,
+    "animations": []
+  },
+  {
+    "path": "assets/models/expansion/winch.glb",
+    "sha256": "f8721bb0c6706a2360df87dbc2aad120fb8966958eed0babe8a9055ee6c34b0b",
+    "meshes": 21,
+    "animations": []
+  }
+]

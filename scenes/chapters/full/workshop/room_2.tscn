@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ska8c"]
+
+[node name="Room2" type="Node3D" unique_id=695270375]
+script = ExtResource("1_ska8c")
+spec = {
+"devices": [{
+"id": "route",
+"kind": "selector",
+"modes": 3,
+"needs": [],
+"x": 8.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "upper_latch",
+"kind": "latch",
+"needs": [],
+"x": 26.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"id": "cargo",
+"kind": "latch",
+"needs": ["upper_latch", "route:2"],
+"x": 36.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["cargo"],
+"hints": ["配电旋钮连接着灯和升降台。", "升降台通往上层，那里能打开回程梯；货运线路需要另一档电力。", "先选升降档，乘台到上层开闩，下梯后切换到第二档，再去出口。"],
+"items": [],
+"ladder_lock": "upper_latch",
+"lift": "route:1",
+"objective": "从上层配电室接通货运通道",
+"title": "一根电缆，两条路",
+"upper": true
+}
+index = 1

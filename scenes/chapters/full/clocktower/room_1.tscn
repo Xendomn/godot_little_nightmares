@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_gn0eh"]
+
+[node name="Room1" type="Node3D" unique_id=1659431237]
+script = ExtResource("1_gn0eh")
+spec = {
+"devices": [{
+"accept": "gear",
+"id": "gear_socket",
+"kind": "socket",
+"needs": [],
+"x": 10.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "direction",
+"kind": "selector",
+"modes": 3,
+"needs": ["gear_socket"],
+"x": 18.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"id": "gear_door",
+"kind": "latch",
+"needs": ["direction:2"],
+"x": 35.0,
+"y": 0.8,
+"z": -0.9
+}],
+"goal": ["gear_door"],
+"hints": ["齿轮座上留着一圈空痕。", "传动的方向与有没有动力同样重要。", "装上齿轮，将旋钮拨到反向档，再打开主轴门。"],
+"items": [{
+"id": "gear",
+"kind": "gear",
+"x": 5.0,
+"y": 0.08,
+"z": 0.5
+}],
+"objective": "让第一根主轴重新转动",
+"title": "缺齿的传动"
+}
+theme = "clocktower"

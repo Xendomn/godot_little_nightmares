@@ -1,0 +1,81 @@
+{
+  "blender": "5.2.1 LTS",
+  "runtime_files_unchanged": true,
+  "sources": {
+    "arch.blend": {
+      "relative_image_paths": 6
+    },
+    "cargo_basket.blend": {
+      "relative_image_paths": 6,
+      "relocated_images_loaded": 6
+    },
+    "clutch.blend": {
+      "relative_image_paths": 6
+    },
+    "control_pedestal.blend": {
+      "relative_image_paths": 6
+    },
+    "conveyor.blend": {
+      "relative_image_paths": 6
+    },
+    "doll_interactions.blend": {
+      "relative_image_paths": 4,
+      "relocated_images_loaded": 4
+    },
+    "floating_crate.blend": {
+      "relative_image_paths": 6
+    },
+    "floor_panel.blend": {
+      "relative_image_paths": 6
+    },
+    "fuse.blend": {
+      "relative_image_paths": 6
+    },
+    "gate.blend": {
+      "relative_image_paths": 6
+    },
+    "gear.blend": {
+      "relative_image_paths": 6
+    },
+    "generator.blend": {
+      "relative_image_paths": 6
+    },
+    "ladder.blend": {
+      "relative_image_paths": 6
+    },
+    "lamp.blend": {
+      "relative_image_paths": 6
+    },
+    "pendulum.blend": {
+      "relative_image_paths": 6
+    },
+    "press.blend": {
+      "relative_image_paths": 6
+    },
+    "rack.blend": {
+      "relative_image_paths": 6
+    },
+    "selector.blend": {
+      "relative_image_paths": 6
+    },
+    "tank.blend": {
+      "relative_image_paths": 6
+    },
+    "valve.blend": {
+      "relative_image_paths": 6
+    },
+    "wall_panel.blend": {
+      "relative_image_paths": 6
+    },
+    "weight.blend": {
+      "relative_image_paths": 6
+    },
+    "wheel.blend": {
+      "relative_image_paths": 6
+    },
+    "winch.blend": {
+      "relative_image_paths": 6
+    }
+  },
+  "relocated_test_root": "/var/folders/hx/lrmlx73136zdd660ppx16q9m0000gp/T/expansion-portability-wey1i3oh"
+}
