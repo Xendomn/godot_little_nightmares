@@ -168,6 +168,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/export_windows.ps1 -Go
 
 日志位于 `artifacts/export-macos.*` 或 `artifacts/export-windows-*`。两份脚本共享 `build/.export.lock` 防止同时导出；若进程被强制终止，请先确认没有导出进程运行，再删除遗留锁文件重试。
 
+Windows 脚本按 UTF-8 接收 Godot 输出，`console.log` 和汇总 `engine.log` 使用带 BOM 的 UTF-8；控制台汇总会去除 ANSI 颜色控制字符。脚本结束时恢复调用方编码，无需修改系统区域设置。历史乱码日志无法通过修改文件编码完整恢复，请重新运行生成；各阶段的 `*-engine.log` 保留 Godot 原始日志。
+
 导出脚本不默认运行全部游戏测试。开发验证分别执行：
 
 ```bash

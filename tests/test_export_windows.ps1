@@ -71,8 +71,12 @@ exit 0
         }
         $invokeArgs = @('-NoProfile', '-File', (Join-Path $fixture 'tools/export_windows.ps1'))
         if ($Mode -eq 'success-environment') { $env:GODOT = $mock } else { $invokeArgs += @('-GodotPath', $Path) }
-        $output = & $hostExe @invokeArgs 2>&1
-        $code = $LASTEXITCODE
+        $savedPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            $output = & $hostExe @invokeArgs 2>&1
+            $code = $LASTEXITCODE
+        } finally { $ErrorActionPreference = $savedPreference }
         if (($code -eq 0) -ne $Success) { throw "FAIL: $Mode exit $code`n$output" }
         if (-not $Success) {
             $oldZipPath = $zip
@@ -120,3 +124,5 @@ exit 0
     Remove-Item Env:EXPORT_TEST_MODE -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $fixture -Recurse -Force -ErrorAction SilentlyContinue
 }
+
+& (Join-Path $PSScriptRoot 'test_export_windows_encoding.ps1')

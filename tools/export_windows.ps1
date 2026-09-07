@@ -11,10 +11,13 @@ $stageDirectory = Join-Path $buildDirectory ".export-windows-$runId"
 $lockPath = Join-Path $buildDirectory '.export.lock'
 $lock = $null
 $exitCode = 1
+$utf8LogEncoding = New-Object Text.UTF8Encoding($true)
+$savedConsoleEncoding = [Console]::OutputEncoding
+$savedOutputEncoding = $OutputEncoding
 
 function Write-Status([string]$Message) {
     Write-Host $Message
-    Add-Content -LiteralPath (Join-Path $logDirectory 'console.log') -Value $Message -Encoding UTF8
+    [IO.File]::AppendAllText((Join-Path $logDirectory 'console.log'), $Message + [Environment]::NewLine, $utf8LogEncoding)
 }
 
 function Invoke-Godot([string[]]$Arguments) {
@@ -28,6 +31,8 @@ function Invoke-Godot([string[]]$Arguments) {
         $nativeExit = $LASTEXITCODE
     } finally { $ErrorActionPreference = $savedPreference }
     $content = ($lines | ForEach-Object { $_.ToString() }) -join "`n"
+    # Strip CSI terminal formatting before display, persistence and error detection.
+    $content = [regex]::Replace($content, ([string][char]27 + '\[[0-?]*[ -/]*[@-~]'), '')
     if ($content) { Write-Status $content }
     if ($nativeExit -ne 0) { throw "Godot exited with code $nativeExit" }
     if ($content -match '(?m)^ERROR:|SCRIPT ERROR:|^FAIL:') { throw 'Godot reported an error in console output' }
@@ -41,7 +46,7 @@ function Invoke-Stage([string]$Name, [string[]]$Arguments) {
     if (-not (Test-Path -LiteralPath $engineLog -PathType Leaf)) { throw "Missing Godot log: $engineLog" }
     $content = [IO.File]::ReadAllText($engineLog)
     if ([string]::IsNullOrWhiteSpace($content)) { throw "Empty Godot log: $engineLog" }
-    Add-Content -LiteralPath (Join-Path $logDirectory 'engine.log') -Value "Stage: $Name`n$content" -Encoding UTF8
+    [IO.File]::AppendAllText((Join-Path $logDirectory 'engine.log'), "Stage: $Name`n$content" + [Environment]::NewLine, $utf8LogEncoding)
     if ($content -match '(?m)^ERROR:|SCRIPT ERROR:|^FAIL:') { throw "Godot reported an error in $engineLog" }
 }
 
@@ -63,9 +68,12 @@ function Assert-WindowsExport([string]$Path) {
 }
 
 try {
+    # Native stdout/stderr must be decoded as UTF-8 before becoming PS strings.
+    [Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
+    $OutputEncoding = New-Object Text.UTF8Encoding($false)
     [IO.Directory]::CreateDirectory($logDirectory) | Out-Null
-    [IO.File]::WriteAllText((Join-Path $logDirectory 'console.log'), '')
-    [IO.File]::WriteAllText((Join-Path $logDirectory 'engine.log'), '')
+    [IO.File]::WriteAllText((Join-Path $logDirectory 'console.log'), '', $utf8LogEncoding)
+    [IO.File]::WriteAllText((Join-Path $logDirectory 'engine.log'), '', $utf8LogEncoding)
     Write-Status "Logs: $logDirectory"
     Write-Status 'Stage: preflight'
     if (-not $GodotPath) { $GodotPath = $env:GODOT }
@@ -158,12 +166,17 @@ try {
     $message = "FAIL: $($_.Exception.Message)"
     if (Test-Path -LiteralPath $logDirectory) { Write-Status $message } else { Write-Output $message }
 } finally {
-    # Retain backups if rollback itself failed, so recovery data is never deleted.
-    if (Test-Path -LiteralPath $stageDirectory) {
-        $hasBackup = (Test-Path -LiteralPath (Join-Path $stageDirectory 'previous.exe')) -or (Test-Path -LiteralPath (Join-Path $stageDirectory 'previous.zip'))
-        if ($exitCode -eq 0 -or -not $hasBackup) { Remove-Item -LiteralPath $stageDirectory -Recurse -Force -ErrorAction SilentlyContinue }
-        else { Write-Output "Recovery files retained: $stageDirectory" }
+    try {
+        # Retain backups if rollback itself failed, so recovery data is never deleted.
+        if (Test-Path -LiteralPath $stageDirectory) {
+            $hasBackup = (Test-Path -LiteralPath (Join-Path $stageDirectory 'previous.exe')) -or (Test-Path -LiteralPath (Join-Path $stageDirectory 'previous.zip'))
+            if ($exitCode -eq 0 -or -not $hasBackup) { Remove-Item -LiteralPath $stageDirectory -Recurse -Force -ErrorAction SilentlyContinue }
+            else { Write-Output "Recovery files retained: $stageDirectory" }
+        }
+        if ($null -ne $lock) { $lock.Dispose(); Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue }
+    } finally {
+        [Console]::OutputEncoding = $savedConsoleEncoding
+        $OutputEncoding = $savedOutputEncoding
     }
-    if ($null -ne $lock) { $lock.Dispose(); Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue }
 }
 exit $exitCode

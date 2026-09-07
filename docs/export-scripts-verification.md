@@ -1,5 +1,20 @@
 # 一键导出脚本验证记录
 
+## Windows 日志编码修复复验（2026-09-07）
+
+Windows PowerShell 5.1.26100.9168、Godot 4.7.2.stable。原生 Godot UTF-8 输出曾被 CP936 解码，导致 `console.log` 中文损坏；同次运行的 Godot 原始日志中文正常。最小字节输出实验复现了“项目初始化”变为“椤圭洰鍒濆鍖?”。
+
+导出器现在显式使用 UTF-8 接收原生输出，汇总日志统一使用 UTF-8 BOM，在显示、持久化和错误检测前移除 ANSI CSI 控制字符，并在最外层清理结束后恢复调用方编码。
+
+- `tests/test_export_windows.ps1`：原有 21 个导出场景及新增 6 个编码场景通过。新增测试编译本机 C# 控制台程序，直接向 stdout/stderr 写 UTF-8 字节，覆盖 CP936／UTF-8 初始环境、中文路径、彩色错误、非零退出和调用方编码恢复。
+- 在 `artifacts/encoding-export-validation/` 隔离工程中，从 CP936 环境执行真实脚本：导入、Windows Release 导出、PE/PCK 校验、打包及发布全部成功，退出码 0。
+- 核验真实 `console.log` 与汇总 `engine.log` 的 UTF-8 BOM、中文和无 ANSI／替代字符；两个阶段的原始中文日志行均完整出现在控制台汇总中。
+- 独立检查真实 ZIP：5 个条目、CRC 完整，内外 EXE SHA-256 一致。未改写工作区原有发行文件或既有 `.import` 修改。
+- `tools/verify.ps1`：当前全部 25 套游戏回归通过。
+- 本机未安装 PowerShell 7，此次动态复验使用 Windows PowerShell 5.1；下方 macOS / PowerShell 7 记录属于此前验证。
+
+日志：`artifacts/export-encoding-tests.log`、`artifacts/export-encoding-game-tests.log`；真实导出的分阶段日志保留在上述隔离工程的 `artifacts/export-windows-*/`。
+
 2026-09-07；macOS 15.7.9 / Apple M4，Godot 4.7.2.stable，系统 Bash 3.2，临时 PowerShell 7.5.3。
 
 ## 结果
