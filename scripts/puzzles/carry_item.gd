@@ -17,9 +17,9 @@ func _ready() -> void:
 		var collision := CollisionShape3D.new()
 		collision.name = "CollisionShape3D"
 		var shape := BoxShape3D.new()
-		shape.size = Vector3(.34, .34, .34)
+		shape.size = Vector3(.24, .5, .24) if item_kind == "fuse" else Vector3(.34, .34, .34)
 		collision.shape = shape
-		collision.position.y = .17
+		collision.position.y = shape.size.y * .5
 		add_child(collision)
 func _physics_process(delta: float) -> void:
 	if held or concealed:
@@ -60,6 +60,8 @@ func refresh_presence() -> void:
 		remove_from_group("puzzle_interactable")
 	elif not is_in_group("puzzle_interactable"):
 		add_to_group("puzzle_interactable")
+	var presentation = get_node_or_null("ItemPresentation")
+	if presentation: presentation.refresh()
 func attach_to_socket(target: Node3D) -> void:
 	socket = target
 	socket_id = str(target.get("object_id")) if "object_id" in target else str(target.name)

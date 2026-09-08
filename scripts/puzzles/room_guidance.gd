@@ -5,7 +5,7 @@ const PART_NAMES := {"fuse":"保险丝", "gear":"齿轮", "weight":"砝码", "wh
 static func objective(room: Node3D, actor: Node3D) -> String:
 	if room.completed: return "通道已开启 · 沿亮起的引导向右前进"
 	if room.theme == "workshop" and room.index == 0 and not room.fuse_revealed:
-		return "拉开木箱，寻找藏在后面的保险丝"
+		return "移开木箱，寻找后面的保险丝"
 	for goal in room.spec.goal:
 		if not room.met(str(goal)): return requirement(room, str(goal), actor, 0)
 	return str(room.spec.objective)

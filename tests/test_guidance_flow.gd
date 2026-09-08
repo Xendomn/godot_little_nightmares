@@ -43,7 +43,7 @@ func run() -> void:
 	spare.queue_free()
 	room.objects.crate.position.x = 3
 	await frames(3)
-	check(game.ui.objective.text.contains("保险丝") and not game.ui.objective.text.contains("拉开"), "objective advances after discovery")
+	check(game.ui.objective.text.contains("保险丝") and not game.ui.objective.text.contains("移开"), "objective advances after discovery")
 	var fuse = room.objects.fuse
 	fuse.attach_to_socket(room.objects.fuse_socket)
 	room.objects.fuse_socket.occupied = fuse

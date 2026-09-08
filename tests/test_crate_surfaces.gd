@@ -50,8 +50,8 @@ func run() -> void:
 			room._physics_process(0)
 			var hidden_position: Vector3 = fuse.position
 			await frames(20)
-			check(not fuse.visible and fuse.collision_layer == 0 and not fuse.is_in_group("puzzle_interactable"), "concealed fuse has no invisible obstacle or interaction")
-			check(fuse.position.is_equal_approx(hidden_position), "concealed fuse does not fall while collision is disabled")
+			check(fuse.visible and fuse.collision_layer == 1 and fuse.is_in_group("puzzle_interactable"), "initial fuse remains real and interactive behind crate")
+			check(fuse.position.y >= 0 and is_equal_approx(fuse.position.x, hidden_position.x), "initial fuse settles on floor without lateral movement")
 			for i in range(150):
 				crate.move_with_actor(actor, 1, 1.0 / 60)
 				await physics_frame
@@ -85,19 +85,19 @@ func run() -> void:
 			room.restore_state(legacy)
 			check(fuse.visible and fuse.socket == room.objects.fuse_socket and fuse.collision_layer == 0, "old installed snapshot recovers discovery and socket state")
 			room.restore_state(room.initial)
-			check(not fuse.visible and fuse.collision_layer == 0, "checkpoint reset immediately restores concealed state")
+			check(fuse.visible and fuse.collision_layer == 1, "checkpoint reset restores real fuse behind crate")
 			legacy = room.initial.duplicate(true)
 			legacy.erase("fuse_revealed")
 			legacy.objects.fuse.position = [8.2, .001, .5]
 			room.restore_state(legacy)
-			check(not fuse.visible and is_equal_approx(fuse.position.z, 1.05), "untouched legacy fuse migrates out of crate lane without discovery")
+			check(fuse.visible and is_equal_approx(fuse.position.z, -.95), "untouched legacy fuse migrates out of crate lane without discovery")
 			legacy.objects.fuse.position = [10.0, .001, 1.2]
 			room.restore_state(legacy)
 			check(fuse.visible and fuse.collision_layer == 1, "legacy dropped fuse remains discovered and physical")
 			legacy.objects.crate.position[0] = 3.0
 			legacy.objects.fuse.position = [8.2, .001, .5]
 			room.restore_state(legacy)
-			check(fuse.visible and is_equal_approx(fuse.position.z, 1.05), "legacy pulled crate reveals fuse safely beside lane")
+			check(fuse.visible and is_equal_approx(fuse.position.z, -.95), "legacy pulled crate reveals fuse safely beside lane")
 			room.restore_state(room.initial)
 			actor.position = Vector3(10, .03, 0)
 			var control = actor.get_node("Interactions")
@@ -115,7 +115,7 @@ func run() -> void:
 				game.saved_snapshot = {}
 				game.fail()
 				await frames(45)
-				check(not game.respawning and not fuse.visible and fuse.collision_layer == 0, "repeated death returns to initial hidden state")
+				check(not game.respawning and fuse.visible and fuse.collision_layer == 1, "repeated death restores physical fuse")
 		game.queue_free()
 		await frames(4)
 	print("CRATE SURFACE FAILURES: ", failures)

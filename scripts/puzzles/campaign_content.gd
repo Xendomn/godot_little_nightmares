@@ -20,7 +20,7 @@ static func room(title: String, objective: String, devices: Array, items: Array,
 static func rooms(id: String) -> Array:
 	match id:
 		"workshop": return [
-			room("藏在木箱之后", "找回维修通道的电力", [control("hatch","latch",16,["fuse_socket"]),control("fuse_socket","socket",12,[],{"accept":"fuse"})], [item("fuse","fuse",8.2,0.08,1.05)], ["hatch"], ["木箱后有一束微弱的蓝光。","箱子既能推，也能向后拉；保险丝可以带走。","按住互动键拉开箱子，把保险丝装进蓝色插座，再打开维修闩。"], {"crate":7.0,"crate_target":3.0}),
+			room("藏在木箱之后", "找回维修通道的电力", [control("hatch","latch",16,["fuse_socket"]),control("fuse_socket","socket",12,[],{"accept":"fuse"})], [item("fuse","fuse",7.0,0.08,-.95)], ["hatch"], ["木箱后有一束微弱的蓝光。","箱子既能推，也能向后拉；保险丝可以带走。","按住互动键移开箱子，把保险丝装进蓝色插座，再打开维修闩。"], {"crate":7.0}),
 			room("一根电缆，两条路", "从上层配电室接通货运通道", [control("route","selector",8,[],{"modes":3}),control("upper_latch","latch",26,[],{"y":4.0}),control("cargo","latch",36,["upper_latch","route:2"])], [], ["cargo"], ["配电旋钮连接着灯和升降台。","升降台通往上层，那里能打开回程梯；货运线路需要另一档电力。","先选升降档，乘台到上层开闩，下梯后切换到第二档，再去出口。"], {"upper":true,"lift":"route:1","ladder_lock":"upper_latch"}),
 			room("逆行的传送带", "把货箱送到隔栅另一侧", [control("belt","selector",8,[],{"modes":3}),control("cargo_plate","plate",26,[],{"mass":3.0}),control("delivery","latch",35,["cargo_plate"])], [], ["delivery"], ["黄铜踏板与货箱一样宽。","输送带可以反转，另一端的开关会锁存货箱到位状态。","将货箱推上输送带，选择向右的档位，等货箱压住踏板，再打开货运闩。"], {"crate":12.0,"belt":true,"mid":"cargo_plate"}),
 			room("压机的牙齿", "让压机停在可穿行的位置", [control("power","selector",7,[],{"modes":2,"initial":1}),control("limiter","plate",23,[],{"mass":3.0}),control("service","latch",34,["limiter","power:1"])], [], ["service"], ["电机旁的指示灯决定压机是否运行。","支撑车只有在压机断电时才能进入工作区。","断电后把车推入黄框，再接通电源，让机械限位撑住压机。"], {"crate":15.0,"press":true}),

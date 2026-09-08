@@ -148,6 +148,9 @@ func build() -> void:
 		thing.position = Vector3(entry.x,entry.y,entry.z)
 		add_child(thing)
 		model(thing,entry.kind,Vector3.ZERO,Vector3(.55,.55,.55))
+		var item_presentation = preload("res://scripts/puzzles/item_presentation.gd").new()
+		item_presentation.name = "ItemPresentation"
+		thing.add_child(item_presentation)
 		objects[entry.id] = thing
 	if spec.has("crate"):
 		var crate = PUSH.new()
@@ -296,8 +299,10 @@ func update_guidance(delta: float) -> void:
 func update_fuse_presence() -> void:
 	if theme != "workshop" or index != 0: return
 	var fuse = objects.fuse
-	fuse_revealed = fuse_revealed or objects.crate.position.x < 5.0 or fuse.held or not fuse.socket_id.is_empty()
-	fuse.set_concealed(not fuse_revealed)
+	# Discovery is a hint milestone, never a switch for rendering or physics.
+	var clear_of_crate: bool = absf(objects.crate.position.x - fuse.position.x) > .85
+	fuse_revealed = fuse_revealed or clear_of_crate or fuse.held or not fuse.socket_id.is_empty()
+	fuse.set_concealed(false)
 
 func capture_state() -> Dictionary:
 	var states := {}
@@ -319,12 +324,15 @@ func restore_state(data: Dictionary) -> void:
 			if socket:
 				object.attach_to_socket(socket)
 				socket.occupied = object
-	if theme == "workshop" and index == 0 and not data.has("fuse_revealed"):
+	if theme == "workshop" and index == 0:
 		var fuse = objects.fuse
 		# Old saves used z=.5; ordinary settling on the floor is not discovery.
 		var at_original_spot: bool = absf(fuse.position.x - 8.2) < .02 and fuse.position.y < .12 and (absf(fuse.position.z - .5) < .02 or absf(fuse.position.z - 1.05) < .02)
-		fuse_revealed = not at_original_spot
-		if at_original_spot and fuse.socket_id.is_empty(): fuse.position.z = 1.05
+		if not data.has("fuse_revealed"):
+			var at_new_spot: bool = absf(fuse.position.x - 7.0) < .02 and absf(fuse.position.z + .95) < .02 and fuse.position.y < .12
+			fuse_revealed = not at_original_spot and not at_new_spot
+		if at_original_spot and not fuse_revealed and fuse.socket_id.is_empty():
+			fuse.position = Vector3(7,.08,-.95)
 	update_fuse_presence()
 	gate.position.y = 6.3 if completed else 2.0
 	if lift: lift.position.y = float(data.get("lift_y",-.09))
