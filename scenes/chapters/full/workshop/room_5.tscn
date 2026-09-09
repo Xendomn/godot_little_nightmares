@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ws062"]
 
-[node name="Room5" type="Node3D" unique_id=1444102704]
+[node name="Room5" type="Node3D" unique_id=1406566259]
 script = ExtResource("1_ws062")
 spec = {
 "devices": [{
 "accept": "fuse",
+"display_name": "货篮临时电源",
 "id": "socket_a",
 "kind": "socket",
 "needs": [],
@@ -15,22 +16,31 @@ spec = {
 "z": -0.9
 }, {
 "accept": "fuse",
+"display_name": "主轴电源插座",
+"id": "main_socket",
+"kind": "socket",
+"needs": [],
+"x": 29.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "fuse",
 "id": "socket_b",
 "kind": "socket",
 "needs": [],
-"x": 32.0,
+"x": 34.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "junction",
 "kind": "latch",
-"needs": ["socket_a", "socket_b"],
+"needs": ["main_socket", "socket_b"],
 "x": 38.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["junction"],
-"hints": ["应急回路在楼上还有一只保险丝。", "装好第一只后升降台才有电。携带物品时不能爬梯。", "装好左侧保险丝，乘升降台上楼，带着第二只保险丝乘台返回，接通右侧回路。"],
+"hints": ["三条线路，却只有两枚保险丝。", "货篮完成运输后，它的保险丝还能取回。", "先装临时电源，乘篮取回楼上保险丝；返回地面后取回临时保险丝，将两枚分别装入主轴和照明插座。"],
 "items": [{
 "id": "fuse_a",
 "kind": "fuse",
@@ -40,13 +50,14 @@ spec = {
 }, {
 "id": "fuse_b",
 "kind": "fuse",
-"x": 24.0,
+"x": 27.0,
 "y": 3.28,
 "z": 0.5
 }],
 "lift": "socket_a",
+"machine": "power_reuse",
 "mid": "socket_a",
-"objective": "重启主轴与应急照明",
+"objective": "把有限的保险丝交给主轴与应急照明",
 "title": "双路重启",
 "upper": true
 }

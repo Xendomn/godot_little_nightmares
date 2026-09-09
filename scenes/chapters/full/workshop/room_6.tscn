@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_pxql2"]
 
-[node name="Room6" type="Node3D" unique_id=577366384]
+[node name="Room6" type="Node3D" unique_id=492373011]
 script = ExtResource("1_pxql2")
 spec = {
 "chase": true,
@@ -30,10 +30,11 @@ spec = {
 "z": -0.9
 }],
 "goal": ["chute"],
-"hints": ["回转的传送带能拖慢追逐。", "远处的门闩控制追逐通道。", "将皮带切到反转档，奔向闸门落闩，再打开货运滑槽。"],
+"hints": ["门后的影子被启动的电机惊动。", "反向皮带会让追来的脚步变慢；落闸后可以安全喘息。", "启动后将皮带切到反转档，奔向闸门落闩，再打开货运滑槽。"],
 "items": [],
+"machine": "pursuit",
 "mid": "barrier",
-"objective": "封住追来的脚步，离开工坊",
+"objective": "借助运输设备封住身后的脚步",
 "title": "最后一车"
 }
 index = 5

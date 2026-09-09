@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_32xc4"]
 
-[node name="Room1" type="Node3D" unique_id=2137704827]
+[node name="Room1" type="Node3D" unique_id=1465370165]
 script = ExtResource("1_32xc4")
 spec = {
 "devices": [{
@@ -16,23 +16,26 @@ spec = {
 "z": -0.9
 }, {
 "id": "drain",
-"kind": "latch",
+"kind": "selector",
+"modes": 2,
 "needs": ["inlet:0"],
+"state_names": ["排水关闭", "排水开启"],
 "x": 15.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "outlet",
 "kind": "latch",
-"needs": ["drain"],
+"needs": ["water_low"],
 "x": 33.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["outlet"],
-"hints": ["进水和排水不是同一个阀。", "先切断水源，排水阀才能降低水位。", "关闭进水，开启排水，再沿露出的槽底穿到出口。"],
+"hints": ["两只阀门之间，水尺仍高过通道。", "排水需要先截断进水；阀门转动之后，水还需要时间流走。", "关闭进水，开启排水，等水位低于安全刻度再穿过槽底开启出口。"],
 "items": [],
-"objective": "找到水槽下方的出口",
+"machine": "drain_water",
+"objective": "让淹没的维修通道重新露出",
 "title": "被淹没的楼梯",
 "water": true
 }

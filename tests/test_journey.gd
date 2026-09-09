@@ -79,13 +79,7 @@ func verify_retry_and_continue() -> bool:
 	return true
 
 func perform_route_action(action: String) -> bool:
-	if action == "up": return await ride_lift(true)
-	if action == "lift_down": return await ride_lift(false)
-	if action == "down": return await descend_ladder()
-	if action.begins_with("wait:"): return await wait_for_condition(action.get_slice(":", 1))
-	if action.begins_with("pull:"): return await push_crate(float(action.get_slice(":", 1)), true)
-	if action.begins_with("push:"): return await push_crate(float(action.get_slice(":", 1)))
-	return await use_object(action.get_slice(":", 1) if action.begins_with("item:") else action, action.begins_with("item:"))
+	return await execute_action(action)
 
 func run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts"))

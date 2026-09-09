@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ll0af"]
 
-[node name="Room2" type="Node3D" unique_id=283615730]
+[node name="Room2" type="Node3D" unique_id=437896495]
 script = ExtResource("1_ll0af")
 spec = {
 "devices": [{
@@ -16,7 +16,7 @@ spec = {
 }, {
 "id": "shortcut",
 "kind": "latch",
-"needs": ["clutch:1"],
+"needs": ["cargo_at_top"],
 "x": 28.0,
 "y": 4.0,
 "z": -0.9
@@ -29,10 +29,11 @@ spec = {
 "z": -0.9
 }],
 "goal": ["pendulum_gate"],
-"hints": ["离合器只能驱动一条线路。", "先借升降台打开上层捷径。", "第一档上楼开闩，下梯后换到第二档，穿过摆锤线路。"],
+"hints": ["离合器只能带动一条轴，货台边留着停靠插销。", "先让插销承重，转走动力后货台仍会保持高度。", "第一档乘台到上层固定停靠插销，下梯后改用第二档驱动出口。"],
 "items": [],
 "lift": "clutch:1",
-"objective": "从摆锤线路借来升降动力",
+"machine": "clutch_stop",
+"objective": "固定货台，再把动力交给出口机构",
 "title": "离合器",
 "upper": true
 }

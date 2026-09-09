@@ -19,3 +19,5 @@
 ## Full campaign expansion
 
 The additional Blender kit, CC0 Poly Haven wood and Kenney mechanical audio, reference-only Playdead screenshots, and interaction character variant are documented in [the expansion asset ledger](production/expansion-assets.md). Exact downloads and hashes are recorded with the source assets.
+
+2026-09-08 环境解谜升级新增的管路、绳索、刻度、插销、钟面、压头、浮台和蒸汽等待区由本项目 GDScript 原创几何生成，复用上述已有材质、机械模型和声音，没有下载或导入新的第三方运行时素材。LIMBO 网页只作为关卡逻辑研究参考，链接与应用范围见 [关卡升级记录](limbo-puzzle-upgrade.md)。

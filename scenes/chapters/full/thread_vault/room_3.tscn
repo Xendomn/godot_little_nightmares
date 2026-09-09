@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_bt66m"]
 
-[node name="Room3" type="Node3D" unique_id=626029875]
+[node name="Room3" type="Node3D" unique_id=1003972331]
 script = ExtResource("1_bt66m")
 spec = {
 "devices": [{
@@ -16,7 +16,7 @@ spec = {
 }, {
 "id": "pin",
 "kind": "latch",
-"needs": ["tray"],
+"needs": ["bridge_supported"],
 "x": 27.0,
 "y": 4.0,
 "z": -0.9
@@ -30,7 +30,7 @@ spec = {
 "z": -0.9
 }],
 "goal": ["reuse"],
-"hints": ["插销能独立承受桥面的重量。", "先在上层锁桥，配重就可以取走。", "装配重、乘篮到上层插销，下梯取回配重，再把它送到下一托盘。"],
+"hints": ["绳子能抬桥，旁边的插销能承担重量。", "桥还没有锁住时，取回砝码会让它下降。", "装配重，乘篮到上层插销，下梯取回配重，观察桥仍固定，再把它送到出口托盘。"],
 "items": [{
 "id": "weight",
 "kind": "weight",
@@ -40,8 +40,9 @@ spec = {
 }],
 "ladder_lock": "pin",
 "lift": "tray",
+"machine": "pinned_bridge",
 "mid": "pin",
-"objective": "锁住桥面，再取回配重",
+"objective": "让桥面在取走配重后仍能承重",
 "title": "插销与回路",
 "upper": true
 }

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ntdgo"]
 
-[node name="Room4" type="Node3D" unique_id=2033261204]
+[node name="Room4" type="Node3D" unique_id=1075678334]
 script = ExtResource("1_ntdgo")
 spec = {
 "crate": 15.0,
@@ -26,15 +26,16 @@ spec = {
 }, {
 "id": "service",
 "kind": "latch",
-"needs": ["limiter", "power:1"],
+"needs": ["press_supported"],
 "x": 34.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["service"],
-"hints": ["电机旁的指示灯决定压机是否运行。", "支撑车只有在压机断电时才能进入工作区。", "断电后把车推入黄框，再接通电源，让机械限位撑住压机。"],
+"hints": ["压头下方的黄铜框与支撑车同宽。", "断电才适合搬入支撑；接触支撑后，压头的重量由车架承受。", "关闭电源，把支撑车推到黄铜框，离开工作区后复电，等压头落稳再通过。"],
 "items": [],
-"objective": "让压机停在可穿行的位置",
+"machine": "support_press",
+"objective": "在压机下建立稳固的检修通道",
 "press": true,
 "title": "压机的牙齿"
 }

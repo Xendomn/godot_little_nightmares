@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_u1u4v"]
 
-[node name="Room6" type="Node3D" unique_id=543505613]
+[node name="Room6" type="Node3D" unique_id=562588143]
 script = ExtResource("1_u1u4v")
 spec = {
 "bridges": true,
@@ -17,7 +17,7 @@ spec = {
 }, {
 "id": "pin_a",
 "kind": "latch",
-"needs": ["winch_a"],
+"needs": ["span_a_ready"],
 "x": 18.0,
 "y": 0.8,
 "z": -0.9
@@ -32,20 +32,37 @@ spec = {
 }, {
 "id": "pin_b",
 "kind": "latch",
-"needs": ["winch_b"],
-"x": 31.0,
+"needs": ["span_b_ready"],
+"x": 28.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"accept": "weight",
+"display_name": "第三段配重座",
+"id": "winch_c",
+"kind": "socket",
+"needs": ["pin_b"],
+"x": 30.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"display_name": "第三段桥插销",
+"id": "pin_c",
+"kind": "latch",
+"needs": ["span_c_ready"],
+"x": 37.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "far_latch",
 "kind": "latch",
-"needs": ["pin_a", "pin_b"],
+"needs": ["pin_a", "pin_b", "pin_c"],
 "x": 39.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["far_latch"],
-"hints": ["桥面可以插销固定，砝码可以重复使用。", "先固定第一段，再取回砝码驱动第二个绞盘。", "配重装左绞盘、固定第一闩、取回配重装右绞盘、固定第二闩，最后打开远端门。"],
+"hints": ["三段桥各有自己的插销，只有一枚配重。", "每段固定后，重量就可以交给下一段。", "装左配重并固定第一段，取回后装中配重并固定第二段，再取回装第三配重、固定第三段，最后开门。"],
 "items": [{
 "id": "weight",
 "kind": "weight",
@@ -53,8 +70,9 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
+"machine": "three_spans",
 "mid": "pin_a",
-"objective": "让三个绳结依次承重",
+"objective": "用一枚砝码固定三段悬桥",
 "title": "三段悬桥"
 }
 theme = "thread_vault"

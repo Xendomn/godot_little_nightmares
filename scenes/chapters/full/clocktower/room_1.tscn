@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_gn0eh"]
 
-[node name="Room1" type="Node3D" unique_id=1659431237]
+[node name="Room1" type="Node3D" unique_id=2084300666]
 script = ExtResource("1_gn0eh")
 spec = {
 "devices": [{
@@ -24,13 +24,13 @@ spec = {
 }, {
 "id": "gear_door",
 "kind": "latch",
-"needs": ["direction:2"],
+"needs": ["rack_open"],
 "x": 35.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["gear_door"],
-"hints": ["齿轮座上留着一圈空痕。", "传动的方向与有没有动力同样重要。", "装上齿轮，将旋钮拨到反向档，再打开主轴门。"],
+"hints": ["缺口两边的齿轮方向相反，齿条上有退出箭头。", "有动力还不够，齿条需要向远离锁孔的方向移动。", "装入齿轮，选择反向传动，观察齿条退出后打开主轴门。"],
 "items": [{
 "id": "gear",
 "kind": "gear",
@@ -38,7 +38,8 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
-"objective": "让第一根主轴重新转动",
+"machine": "rack_drive",
+"objective": "让传动齿条退出门后的锁孔",
 "title": "缺齿的传动"
 }
 theme = "clocktower"

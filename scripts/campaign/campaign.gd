@@ -25,7 +25,7 @@ func _ready() -> void:
 	if store.migration_failed:
 		chapter.ui.notice("旧存档升级失败，原始进度已保留。请检查存档目录后重试。", 9)
 	elif store.migrated:
-		chapter.ui.notice("旧存档已备份：保留已解锁章节，本章从起点重新开始。", 9)
+		chapter.ui.notice("旧存档已备份：保留已解锁章节，从兼容的章节或房间起点继续。", 9)
 	elif store.failed:
 		chapter.ui.notice("存档无法读取，可以开始一段新旅程。", 7)
 	elif store.recovered:
@@ -84,7 +84,7 @@ func continue_journey() -> void:
 	var migration_notice: bool = store.migrated
 	load_chapter(IDS.find(saved.level_id), saved.checkpoint_id, true, saved.flags)
 	if migration_notice:
-		chapter.ui.notice("旧存档已备份：保留已解锁章节，本章从起点重新开始。", 9)
+		chapter.ui.notice("旧存档已备份：保留已解锁章节，从兼容的章节或房间起点继续。", 9)
 
 func select_chapter(index: int) -> void:
 	if index >= 0 and index < IDS.size() and IDS[index] in unlocked:

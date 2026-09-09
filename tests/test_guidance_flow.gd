@@ -12,7 +12,7 @@ func run() -> void:
 	await frames(4)
 	game.start_game()
 	await frames(4)
-	check(game.ui.objective.text.contains("木箱"), "first objective explains concealed fuse discovery")
+	check(game.ui.objective.text == game.rooms[0].spec.objective, "first objective states goal without revealing concealed fuse route")
 	check(game.ui.hint.text.contains("提示"), "HUD exposes voluntary hint entry")
 	game.player.set_physics_process(false)
 	var room = game.rooms[0]
@@ -43,18 +43,18 @@ func run() -> void:
 	spare.queue_free()
 	room.objects.crate.position.x = 3
 	await frames(3)
-	check(game.ui.objective.text.contains("保险丝") and not game.ui.objective.text.contains("移开"), "objective advances after discovery")
+	check(game.ui.objective.text == room.spec.objective, "discovery leaves next reasoning step to player")
 	var fuse = room.objects.fuse
 	fuse.attach_to_socket(room.objects.fuse_socket)
 	room.objects.fuse_socket.occupied = fuse
 	await frames(3)
-	check(game.ui.objective.text.contains("闩"), "objective advances after supplying fuse")
+	check(game.ui.objective.text == room.spec.objective, "supplied fuse does not turn HUD into solution checklist")
 	room.objects.hatch.state = 1
 	await frames(3)
 	check(game.ui.objective.text.contains("向右"), "solved room gives explicit exit direction")
 	game.restore_checkpoint("room_1")
 	await frames(3)
-	check(game.ui.objective.text.contains("木箱"), "checkpoint reset restores correct stage objective")
+	check(game.ui.objective.text == game.rooms[0].spec.objective, "checkpoint reset restores room goal")
 	game.queue_free()
 	await frames(4)
 	game = load("res://scenes/chapters/full/thread_vault.tscn").instantiate()
@@ -65,10 +65,10 @@ func run() -> void:
 	room = game.rooms[3]
 	room.objects.hoist.state = 1
 	game.player.reset_to(room.position + Vector3(2, .03, 0))
-	check(room.stage_objective().contains("砝码") and not room.stage_objective().contains("乘"), "upper receiver first asks empty-handed player to collect ground weight")
+	check(room.stage_objective() == room.spec.objective, "freight objective states cargo destination")
 	room.objects.weight.set_held(true)
 	game.player.get_node("Interactions").carried = room.objects.weight
-	check(room.stage_objective().contains("乘") and room.stage_objective().contains("砝码"), "upper receiver directs lift travel after weight is carried")
+	check(room.stage_objective() == room.spec.objective, "carrying weight keeps freight route in voluntary hints")
 	game.queue_free()
 	await frames(4)
 	game = load("res://scenes/chapters/full/clocktower.tscn").instantiate()

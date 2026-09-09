@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_y4kxu"]
 
-[node name="Room4" type="Node3D" unique_id=1625819441]
+[node name="Room4" type="Node3D" unique_id=1337723957]
 script = ExtResource("1_y4kxu")
 spec = {
 "devices": [{
@@ -12,6 +12,26 @@ spec = {
 "needs": [],
 "x": 8.0,
 "y": 0.8,
+"z": -0.9
+}, {
+"display_name": "下层货篮呼叫",
+"id": "call_lower",
+"kind": "selector",
+"modes": 2,
+"needs": ["basket:1"],
+"state_names": ["待命", "呼叫"],
+"x": 17.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"display_name": "上层货篮呼叫",
+"id": "call_upper",
+"kind": "selector",
+"modes": 2,
+"needs": ["basket:1"],
+"state_names": ["待命", "呼叫"],
+"x": 25.0,
+"y": 4.0,
 "z": -0.9
 }, {
 "accept": "wheel",
@@ -30,16 +50,17 @@ spec = {
 "z": -0.9
 }],
 "goal": ["return"],
-"hints": ["断开的阀门轴需要一个轮子。", "轮子在上层；双向货篮能让你携物返回。", "启动货篮上楼，拾取阀轮后乘篮下楼，安装轮子并转动出口阀。"],
+"hints": ["货篮两端都有呼叫杆，停靠后不会自行离开。", "站在篮内也能拉动停靠杆，重物可以跟随货篮返回。", "启动货篮，在篮内拉动行程杆上楼；取轮后呼叫货篮，携轮乘篮下楼，再安装出口阀。"],
 "items": [{
 "id": "wheel",
 "kind": "wheel",
-"x": 27.0,
+"x": 29.0,
 "y": 3.28,
 "z": 0.5
 }],
 "lift": "basket:1",
-"objective": "把阀轮带回干燥的机房",
+"machine": "callable_cargo",
+"objective": "把遗失的阀轮运回机房",
 "title": "失落的阀轮",
 "upper": true
 }

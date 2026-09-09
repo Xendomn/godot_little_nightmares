@@ -2,38 +2,40 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_erim5"]
 
-[node name="Room2" type="Node3D" unique_id=1054884967]
+[node name="Room2" type="Node3D" unique_id=1296095409]
 script = ExtResource("1_erim5")
 spec = {
 "crate": 16.0,
 "devices": [{
-"id": "float_plate",
-"kind": "plate",
-"mass": 3.0,
+"display_name": "浮箱通路盖板",
+"id": "roof_hatch",
+"kind": "latch",
 "needs": [],
-"x": 18.0,
+"x": 12.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "fill",
-"kind": "latch",
-"needs": ["float_plate"],
-"x": 12.0,
+"kind": "selector",
+"modes": 3,
+"needs": [],
+"state_names": ["保持水位", "灌水", "排水"],
+"x": 18.2,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "high_valve",
 "kind": "latch",
-"needs": ["fill"],
+"needs": ["raft_high", "roof_hatch"],
 "x": 28.0,
 "y": 4.0,
 "z": -0.9
 }],
 "goal": ["high_valve"],
-"hints": ["木箱能压住供水踏板，右侧另有一座升降台。", "把箱子推入黄铜框，再回到左边开启灌水阀。", "推箱压住踏板，开启灌水，再乘右侧升降台到上层开阀。"],
+"hints": ["木箱上方有盖板，右侧高台留下了水痕。", "先让木箱对准开口，再灌水；放错位置可以排水重新布置。", "推箱到水槽内的开口下，打开盖板，灌水后跳上木箱，随水升起并跳到右侧高台开阀。"],
 "items": [],
-"lift": "fill",
-"objective": "借助水位登上高台",
+"machine": "floating_raft",
+"objective": "让木箱载你抵达水槽上方",
 "title": "空槽中的木筏",
 "upper": true,
 "water": true

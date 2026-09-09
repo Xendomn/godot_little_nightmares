@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_jq4rl"]
 
-[node name="Room5" type="Node3D" unique_id=699476544]
+[node name="Room5" type="Node3D" unique_id=1428025014]
 script = ExtResource("1_jq4rl")
 spec = {
 "devices": [{
@@ -18,26 +18,38 @@ spec = {
 "kind": "selector",
 "modes": 3,
 "needs": ["bypass"],
-"x": 16.0,
+"state_names": ["停止供水", "蓄水排气", "向门供压"],
+"x": 12.3,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "vent",
 "kind": "latch",
-"needs": ["pressure:1"],
+"needs": ["water_high"],
 "x": 27.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"display_name": "上层压力联动杆",
+"id": "pressure_upper",
+"kind": "selector",
+"linked_to": "pressure",
+"modes": 3,
+"needs": ["vent"],
+"state_names": ["停止供水", "蓄水排气", "向门供压"],
+"x": 25.0,
 "y": 4.0,
 "z": -0.9
 }, {
 "id": "seal",
 "kind": "latch",
-"needs": ["vent", "pressure:2"],
+"needs": ["hydraulic_ready"],
 "x": 38.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["seal"],
-"hints": ["压力表指向不同的管道。", "安装旁路轮，再去上层释放困住的空气。", "装轮，切到第一档乘台开排气阀，回来选第二档开启密封门。"],
+"hints": ["水尺升高了，门旁的压力表却没有响应。", "困住的空气需要从高处排出，水位差才会推动门的活塞。", "装轮并选蓄水档，乘浮台上楼排气；在上层用联动杆切到供压档，等活塞推出后下梯打开密封门。"],
 "items": [{
 "id": "wheel",
 "kind": "wheel",
@@ -45,9 +57,9 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
-"lift": "pressure:1",
+"machine": "hydraulic_head",
 "mid": "vent",
-"objective": "释放密封闸门的压力",
+"objective": "让水压推动密封闸门",
 "title": "压力旁路",
 "upper": true,
 "water": true

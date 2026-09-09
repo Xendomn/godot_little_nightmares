@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_8ko22"]
 
-[node name="Room4" type="Node3D" unique_id=692291674]
+[node name="Room4" type="Node3D" unique_id=932579778]
 script = ExtResource("1_8ko22")
 spec = {
 "devices": [{
@@ -30,7 +30,7 @@ spec = {
 "z": -0.9
 }],
 "goal": ["shaft_gate"],
-"hints": ["井口太高，梯子无法携带砝码。", "把货篮当成移动的地面。", "开启绞盘，带着砝码乘篮上楼，装进高处托盘，再下梯开门。"],
+"hints": ["货井有防护栏，旁边窄梯只容得下空手的你。", "把砝码放在货篮里，货物可以自己上楼。", "将砝码放到低处货篮，开启绞盘；空手爬梯到上层，取出货物装入托盘，再下梯开门。"],
 "items": [{
 "id": "weight",
 "kind": "weight",
@@ -38,8 +38,10 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
+"ladder_open": true,
 "lift": "hoist:1",
-"objective": "让砝码通过狭窄竖井",
+"machine": "freight_shaft",
+"objective": "让砝码和你分别通过货井与窄梯",
 "title": "深井货运",
 "upper": true
 }

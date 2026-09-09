@@ -119,7 +119,7 @@ func capture_world() -> Dictionary:
 		for i in range(rooms.size()):
 			for id in rooms[i].objects:
 				if rooms[i].objects[id] == held: carrying = [i,str(id)]
-	return {"rooms":state,"spawn":[player.position.x,player.position.y,player.position.z],"carrying":carrying}
+	return {"content_revision":2,"rooms":state,"spawn":[player.position.x,player.position.y,player.position.z],"carrying":carrying}
 
 func get_checkpoint_snapshot() -> Dictionary:
 	return saved_snapshot.duplicate(true)
@@ -171,7 +171,7 @@ func _process(delta: float) -> void:
 	var room = rooms[active_room]
 	if active_room in [2,4,5] and room.spec.has("mid") and room.met(str(room.spec.mid)):
 		# Commit on stable ground; never save in a lift shaft or a temporary hazard.
-		if player.is_on_floor() and player.position.y < .2:
+		if player.is_on_floor() and room.safe_checkpoint_surface(room.local_player()):
 			checkpoint("room_"+str(active_room+1)+"_mid")
 	update_encounter(room,delta)
 	ui.prompt.text = InputHints.format_text(player.get_node("Interactions").prompt_text)
@@ -229,7 +229,11 @@ func finish_game() -> void:
 func update_encounter(room: Node3D, delta: float) -> void:
 	if not room.spec.get("chase",false):
 		keeper.active = false
+		keeper.set_physics_process(true)
 		keeper.hide()
+		return
+	if level_id == "thread_vault":
+		update_bell_encounter(room,delta)
 		return
 	var local_x: float = room.local_player().x
 	var ended: bool = room.met("barrier") if level_id == "workshop" else room.met("quiet_gate")
@@ -238,7 +242,7 @@ func update_encounter(room: Node3D, delta: float) -> void:
 		keeper.visual_driver.play("stumble")
 		ui.threat.text = ""
 		return
-	if chase_room != active_room and local_x > (12 if level_id == "workshop" else 17):
+	if chase_room != active_room and room.objects.belt.state != 0:
 		chase_room = active_room
 		keeper.position = Vector3(room.position.x+3,.05,0)
 		keeper.finale = true
@@ -248,12 +252,34 @@ func update_encounter(room: Node3D, delta: float) -> void:
 		keeper.active = true
 		keeper.show()
 	if keeper.active:
-		# The reverse belt physically slows the pursuit lane. Vault's bell holds
-		# the keeper at the bell while the player reaches the cargo basket.
+		# The reverse belt physically slows the pursuit lane.
 		if level_id == "workshop" and room.met("belt:2"):
 			keeper.chase_speed = 1.35
-		elif level_id == "thread_vault" and room.met("bell") and keeper.position.x > room.position.x+9:
-			keeper.position.x = room.position.x+9
-			keeper.visual_driver.play("listen",delta*2)
 		ui.threat.text = "脚步正在靠近……"
 		sounds.desired_mix = .75
+
+func update_bell_encounter(room: Node3D, delta: float) -> void:
+	keeper.set_physics_process(false)
+	if room.met("quiet_gate"):
+		keeper.active=false
+		ui.threat.text=""
+		return
+	if chase_room!=active_room:
+		chase_room=active_room
+		keeper.position=room.position+Vector3(23,.03,-.75)
+		keeper.grace=2
+		keeper.active=true
+		keeper.show()
+	var distracted: bool=room.met("bell")
+	var goal_x: float=room.position.x+9 if distracted else room.position.x+23
+	var previous: float=keeper.position.x
+	keeper.position.x=move_toward(keeper.position.x,goal_x,delta*1.2)
+	# Investigating the rear bell clears the foreground cargo aisle.
+	keeper.position.z=move_toward(keeper.position.z,-2.6 if distracted else -.75,delta*1.5)
+	keeper.facing=signf(goal_x-previous) if absf(goal_x-previous)>.05 else keeper.facing
+	keeper.get_node("Visual").rotation.y=keeper.facing*PI*.5
+	keeper.visual_driver.play("listen" if absf(goal_x-keeper.position.x)<.1 else "walk")
+	keeper.grace=maxf(0,keeper.grace-delta)
+	if keeper.grace<=0 and keeper.position.distance_to(player.position)<1.15 and keeper.has_clear_sight(): fail()
+	ui.threat.text="守卫正在调查铃声 · %.0f 秒" % room.objects.bell.timer if distracted else "守卫回到货运通道"
+	sounds.desired_mix=.55

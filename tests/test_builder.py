@@ -16,11 +16,11 @@ for iteration in range(2):
         assert (ROOT / 'scenes' / 'chapters' / (chapter + '.tscn')).stat().st_size > 1000
     full = subprocess.run([GODOT, '--headless', '--path', str(ROOT), '--script', 'res://tools/build_full_campaign.gd',
                            '--log-file', str(ROOT / 'artifacts' / f'full-builder-{iteration}.log')],
-                          capture_output=True, text=True, timeout=90)
+                          capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=90)
     assert full.returncode == 0 and 'BUILT 24 AUTHORED ROOMS' in full.stdout, full.stdout + full.stderr
     for chapter in ['workshop', 'laundry', 'thread_vault', 'clocktower']:
         assert len(list((ROOT / 'scenes' / 'chapters' / 'full' / chapter).glob('room_*.tscn'))) == 6
-        assert f'scenes/chapters/full/{chapter}.tscn' in (ROOT / 'resources' / 'levels' / f'{chapter}.tres').read_text()
+        assert f'scenes/chapters/full/{chapter}.tscn' in (ROOT / 'resources' / 'levels' / f'{chapter}.tres').read_text(encoding='utf-8')
 print('PASS: complete expansion and 24 room generation can run twice')
 
 fixture = ROOT / 'artifacts' / 'builder-fixture'

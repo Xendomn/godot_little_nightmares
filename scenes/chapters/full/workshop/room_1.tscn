@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_a6o6p"]
 
-[node name="Room1" type="Node3D" unique_id=1376987249]
+[node name="Room1" type="Node3D" unique_id=439805383]
 script = ExtResource("1_a6o6p")
 spec = {
 "crate": 7.0,

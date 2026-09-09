@@ -27,10 +27,10 @@ func run() -> void:
 		if id == "workshop":
 			var lift_room = chapter.rooms[1]
 			lift_room.objects.route.state = 1
-			lift_room.phase = 5.0
+			lift_room.machines.travel_target = 1
 			chapter.player.reset_to(Vector3(63,.03,1.3))
 			for _i in 120: await physics_frame
-			lift_room.phase = 10.2
+			lift_room.machines.travel_target = 0
 			chapter.player.reset_to(Vector3(67,.03,0))
 			for _i in 60: await physics_frame
 			check(chapter.player.position.y > -.1 and lift_room.lift.position.y > 1.4,"descending lift holds above a player instead of crushing through floor")

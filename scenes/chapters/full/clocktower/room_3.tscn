@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_astjx"]
 
-[node name="Room3" type="Node3D" unique_id=1909750089]
+[node name="Room3" type="Node3D" unique_id=76215207]
 script = ExtResource("1_astjx")
 spec = {
 "devices": [{
@@ -29,7 +29,7 @@ spec = {
 }],
 "goal": ["phase_gate"],
 "hazards": "pendulum",
-"hints": ["制动只会维持一小段时间。", "两组摆锤之间有不会被扫到的停靠点。", "先制动第一组并穿到中岛，再制动第二组，抓住停摆时间通过。"],
+"hints": ["制动会留住摆锤当前的位置，黄灯会预告它即将接近。", "两组摆锤之间有不会被扫到的停靠点。", "等第一组摆锤离开通道、青灯亮起再制动，穿到中岛；同样在第二组安全时制动并通过。"],
 "items": [],
 "mid": "brake_a",
 "objective": "为两组摆锤找到安全相位",

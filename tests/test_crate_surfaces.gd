@@ -40,7 +40,13 @@ func run() -> void:
 				for direction in [-1, 1]:
 					crate.position = Vector3(38 if direction < 0 else 2, .03, 0)
 					await frames(2)
-					check(not crate.test_move(crate.global_transform, Vector3(direction * 36, 0, 0)), id + " room %d crate lane clear in direction %d" % [room.index + 1, direction])
+					if room.spec.get("machine", "") == "cargo_catch":
+						var hit := KinematicCollision3D.new()
+						check(crate.test_move(crate.global_transform, Vector3(direction * 36, 0, 0), hit) and hit.get_collider().name == "CargoPawl", "cargo lane ends at physical receiving pawl")
+						crate.position.x = 25 if direction < 0 else 2
+						check(not crate.test_move(crate.global_transform, Vector3(direction * 23, 0, 0)), "working belt lane stays clear before receiving pawl")
+					else:
+						check(not crate.test_move(crate.global_transform, Vector3(direction * 36, 0, 0)), id + " room %d crate lane clear in direction %d" % [room.index + 1, direction])
 		if id == "workshop":
 			var room = game.rooms[0]
 			room.restore_state(room.initial)

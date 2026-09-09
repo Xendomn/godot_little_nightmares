@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_x8j7k"]
 
-[node name="Room5" type="Node3D" unique_id=276609384]
+[node name="Room5" type="Node3D" unique_id=30792527]
 script = ExtResource("1_x8j7k")
 spec = {
 "chase": true,
 "devices": [{
+"display_name": "牵引铃",
 "id": "bell",
-"kind": "latch",
+"kind": "bell",
 "needs": [],
 "x": 9.0,
 "y": 0.8,
@@ -17,7 +18,7 @@ spec = {
 "id": "hoist",
 "kind": "selector",
 "modes": 2,
-"needs": ["bell"],
+"needs": [],
 "x": 16.0,
 "y": 0.8,
 "z": -0.9
@@ -30,11 +31,12 @@ spec = {
 "z": -0.9
 }],
 "goal": ["quiet_gate"],
-"hints": ["铃声会把守卫引向左边。", "摇铃后货篮的路线比地面安全。", "摇铃，打开绞盘，乘篮避开守卫，在上层落闩。"],
+"hints": ["守卫会转向铃声，但不会永远停留。", "遮挡后的停靠点可以等待，铃声也能再次响起。", "先启动货篮，再返回敲铃；趁守卫调查声源，经遮挡到货篮上楼，在上层关闩。"],
 "items": [],
 "lift": "hoist:1",
+"machine": "bell_decoy",
 "mid": "bell",
-"objective": "让守卫离开货运通道",
+"objective": "利用声音与遮挡绕过守卫",
 "title": "铃声的另一侧",
 "upper": true
 }

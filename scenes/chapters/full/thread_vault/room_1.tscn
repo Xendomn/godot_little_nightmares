@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_owoob"]
 
-[node name="Room1" type="Node3D" unique_id=915065787]
+[node name="Room1" type="Node3D" unique_id=1145250238]
 script = ExtResource("1_owoob")
 spec = {
 "devices": [{
@@ -24,13 +24,13 @@ spec = {
 }, {
 "id": "landing",
 "kind": "latch",
-"needs": ["tray_a", "tray_b"],
+"needs": ["weight_high"],
 "x": 28.0,
 "y": 4.0,
 "z": -0.9
 }],
 "goal": ["landing"],
-"hints": ["一枚砝码不够抬起货篮。", "两个托盘共同给绳轮施力。", "将两枚砝码分别放入托盘，乘平衡篮到上层开闩。"],
+"hints": ["货篮旁有两条停靠刻度，绳子连着两个配重盘。", "每一枚砝码都会改变货篮的平衡高度。", "装入两枚砝码；用呼叫杆将货篮降回底层，登篮后再松开制动升到上层开闩。"],
 "items": [{
 "id": "weight_a",
 "kind": "weight",
@@ -45,7 +45,8 @@ spec = {
 "z": 0.5
 }],
 "lift": "tray_a&tray_b",
-"objective": "让空中的货篮停在正确高度",
+"machine": "weight_lift",
+"objective": "让配重货篮对上高处的停靠线",
 "title": "两个砝码",
 "upper": true
 }

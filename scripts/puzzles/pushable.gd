@@ -6,6 +6,7 @@ extends CharacterBody3D
 @export var lane_z: float = 0.0
 @export var size := Vector3(1, 1, 1)
 var handler: Node3D
+var buoyancy_target: float = NAN
 func _ready() -> void:
 	add_to_group("puzzle_interactable")
 	collision_layer = 1
@@ -22,8 +23,13 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(handler):
 		return
 	velocity.x = 0
-	velocity.y -= 20 * delta
+	update_vertical_velocity(delta)
 	move_and_slide()
+func update_vertical_velocity(delta: float) -> void:
+	if is_finite(buoyancy_target):
+		velocity.y = clampf((buoyancy_target - global_position.y) / maxf(delta, .001), -1.2, 1.2)
+	else:
+		velocity.y -= 20 * delta
 func can_interact(actor: Node3D) -> bool:
 	return actor.get_node("Interactions").carried == null and absf(actor.global_position.y - global_position.y) < 1.3
 func get_prompt() -> String:
@@ -41,12 +47,15 @@ func move_with_actor(actor: CharacterBody3D, direction: float, delta: float) -> 
 		actor.move_and_collide(movement)
 	actor.remove_collision_exception_with(self)
 	remove_collision_exception_with(actor)
-	velocity = Vector3(0, velocity.y - 20 * delta, 0)
+	velocity.x = 0
+	velocity.z = 0
+	update_vertical_velocity(delta)
 	move_and_slide()
 func capture_state() -> Dictionary:
 	return {"position": [global_position.x, global_position.y, global_position.z]}
 func restore_state(state: Dictionary) -> void:
 	handler = null
+	buoyancy_target = NAN
 	velocity = Vector3.ZERO
 	var p = state.get("position", [])
 	if p is Array and p.size() == 3:

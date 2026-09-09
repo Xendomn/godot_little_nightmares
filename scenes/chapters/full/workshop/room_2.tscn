@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_ska8c"]
 
-[node name="Room2" type="Node3D" unique_id=695270375]
+[node name="Room2" type="Node3D" unique_id=1579992623]
 script = ExtResource("1_ska8c")
 spec = {
 "devices": [{
@@ -29,7 +29,7 @@ spec = {
 "z": -0.9
 }],
 "goal": ["cargo"],
-"hints": ["配电旋钮连接着灯和升降台。", "升降台通往上层，那里能打开回程梯；货运线路需要另一档电力。", "先选升降档，乘台到上层开闩，下梯后切换到第二档，再去出口。"],
+"hints": ["配电旋钮连接着灯和升降台。", "升降台通往上层，那里能打开回程梯；货运线路需要另一档电力。", "选升降档，用下层杆呼叫货篮，登篮拉行程杆；到上层开闩，下梯后切到货运档，再开出口。"],
 "items": [],
 "ladder_lock": "upper_latch",
 "lift": "route:1",

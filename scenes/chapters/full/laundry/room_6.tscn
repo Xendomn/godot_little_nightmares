@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_x5dby"]
 
-[node name="Room6" type="Node3D" unique_id=1209566621]
+[node name="Room6" type="Node3D" unique_id=305245309]
 script = ExtResource("1_x5dby")
 spec = {
 "devices": [{

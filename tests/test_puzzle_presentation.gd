@@ -66,5 +66,5 @@ func run() -> void:
 			presentation.update(0)
 			check(not presentation.exit_path.visible and presentation.exit_light.light_energy == 0, "restore clears exit light")
 			room.free()
-	check(plate_count == 3, "all three authored pressure plates checked")
+	check(plate_count == 2, "both authored pressure plates checked; raft uses buoyancy")
 	quit(1 if failures else 0)

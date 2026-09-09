@@ -28,7 +28,7 @@ func satisfied() -> bool:
 				if absf(thing.global_position.x-global_position.x) < .85 and absf(thing.global_position.z-global_position.z) < 1.15 and absf(thing.global_position.y-room.global_position.y) < .6:
 					total += thing.mass
 		return total >= float(spec.get("mass",1.0))
-	if spec.kind == "brake":
+	if spec.kind in ["brake", "bell"]:
 		return timer > 0
 	return state > 0
 
@@ -50,11 +50,19 @@ func interact(actor: Node3D) -> void:
 				if controller.release_socket(occupied): occupied = null
 			else:
 				occupied = controller.attach_carried(self)
-		"selector": state = (state + 1) % int(spec.get("modes",3))
+		"selector":
+			state = (state + 1) % int(spec.get("modes",3))
+			if spec.has("linked_to"):
+				room.objects[str(spec.linked_to)].state = state
 		"brake":
 			state = 1
 			timer = 12.0
+		"bell":
+			state = 1
+			timer = 12.0
+		"travel": state = 1-state
 		_: state = 1
+	if room.machines: room.machines.control_used(self)
 	room.feedback("bell" if object_id == "bell" else ("fuse_insert" if spec.kind == "socket" else "metal_latch"))
 	actor.visual_driver.play("interact", .35)
 
@@ -66,6 +74,8 @@ func get_prompt() -> String:
 		"brake": action = "剩余 %.1f 秒 · 重新制动 12 秒" % timer if timer > 0 else "重新制动 12 秒"
 		"latch": action = "已开启" if satisfied() else "开启"
 		"plate": action = "重物已到位" if satisfied() else "需要箱子压住踏板"
+		"bell": action = "再次敲响 · 回声 %.1f 秒" % timer if timer > 0 else "敲响"
+		"travel": action = "呼叫停靠" if object_id != "lift_trip" else "切换上下行程"
 	return "{interact} · " + display_name() + " · " + action
 
 func display_name() -> String:
@@ -105,7 +115,10 @@ func _append_unmet(expression: String, reasons: Array[String]) -> void:
 	var parts := expression.split(":")
 	var device = room.objects.get(parts[0])
 	if device == null:
-		if not reasons.has("缺少前置机关"): reasons.append("缺少前置机关")
+		if not room.met(expression):
+			var names := {"cargo_caught":"货箱尚未抵达挡扣", "press_supported":"压头尚未落稳", "water_low":"水位仍高于安全刻度", "raft_high":"浮箱尚未抵达高台", "left_high":"左侧水位尚未到达刻度", "right_high":"右侧水位尚未到达刻度", "water_high":"蓄水尚未到达刻度", "hydraulic_ready":"活塞尚未推出", "weight_high":"货篮尚未对准停靠线", "exchange_left":"左平台尚未停稳", "exchange_right":"右平台尚未停稳", "bridge_supported":"桥面尚未抬起", "cargo_at_top":"货台尚未停稳", "shafts_aligned":"两根指针尚未重合", "clock_aligned":"指针尚未进入标记区", "rack_open":"齿条尚未退出", "span_a_ready":"第一段桥尚未抬起", "span_b_ready":"第二段桥尚未抬起", "span_c_ready":"第三段桥尚未抬起"}
+			var reason: String = names.get(expression,"机关尚未到位")
+			if not reasons.has(reason): reasons.append(reason)
 		return
 	var reason := ""
 	if parts.size() > 1:
@@ -120,6 +133,7 @@ func _append_unmet(expression: String, reasons: Array[String]) -> void:
 	if not reason.is_empty() and not reasons.has(reason): reasons.append(reason)
 
 func update(delta: float) -> void:
+	if spec.has("linked_to"): state = room.objects[str(spec.linked_to)].state
 	timer = maxf(0,timer-delta)
 	lamp.light_color = Color(.3, .95, .85) if satisfied() else Color(.95,.42,.12)
 	var pivot = find_child("Lever", true, false)

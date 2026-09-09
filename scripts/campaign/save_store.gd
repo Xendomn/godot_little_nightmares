@@ -2,6 +2,7 @@ extends RefCounted
 
 const LEVEL_IDS := ["workshop", "laundry", "thread_vault", "clocktower"]
 const CHECKPOINT_IDS := ["room_1", "room_2", "room_3", "room_3_mid", "room_4", "room_5", "room_5_mid", "room_6", "room_6_mid"]
+const CONTENT_REVISION := 2
 var migrated := false
 var migration_failed := false
 var path: String
@@ -49,8 +50,10 @@ func read_campaign_checkpoint() -> Dictionary:
 	migrated = false
 	migration_failed = false
 	var data := read_checkpoint()
-	if data.is_empty() or data.version == 2:
+	if data.is_empty():
 		return data
+	if data.version == 2:
+		return migrate_content(data)
 	# Archive the exact bytes from the valid source, including backup recovery.
 	var source := path + ".bak" if recovered else path
 	var original := FileAccess.get_file_as_bytes(source)
@@ -67,6 +70,48 @@ func read_campaign_checkpoint() -> Dictionary:
 		return {}
 	migrated = true
 	return read_file(path)
+
+func migrate_content(data: Dictionary) -> Dictionary:
+	var flags: Dictionary = data.flags
+	var revision = flags.get("content_revision")
+	if flags.has("content_revision") and not (revision is int or revision is float):
+		migration_failed = true
+		return {}
+	if (revision is int or revision is float) and revision > CONTENT_REVISION:
+		migration_failed = true
+		return {}
+	if not (flags.has("rooms") and flags.has("spawn") and flags.has("carrying")):
+		return data
+	if (revision is int or revision is float) and revision >= CONTENT_REVISION:
+		return data
+	var source := path + ".bak" if recovered else path
+	if not archive_content_source(source):
+		migration_failed = true
+		return {}
+	var checkpoint: String = data.checkpoint_id.trim_suffix("_mid")
+	if not write_checkpoint(data.level_id, checkpoint, data.unlocked, {"content_revision": CONTENT_REVISION}):
+		migration_failed = true
+		return {}
+	migrated = true
+	return read_file(path)
+
+func archive_content_source(source: String) -> bool:
+	var original := FileAccess.get_file_as_bytes(source)
+	if original.is_empty():
+		return false
+	var index := 0
+	while true:
+		var numbered := "" if index == 0 else "." + str(index)
+		var archive := path + ".content-v1" + numbered + ".bak"
+		if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(archive)):
+			return false
+		if FileAccess.file_exists(archive):
+			if FileAccess.get_file_as_bytes(archive) == original:
+				return true
+			index += 1
+			continue
+		return DirAccess.copy_absolute(ProjectSettings.globalize_path(source), ProjectSettings.globalize_path(archive)) == OK
+	return false
 
 func clear() -> bool:
 	var ok := true

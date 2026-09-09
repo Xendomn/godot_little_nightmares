@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_7hcqq"]
 
-[node name="Room4" type="Node3D" unique_id=25092522]
+[node name="Room4" type="Node3D" unique_id=2100940845]
 script = ExtResource("1_7hcqq")
 spec = {
 "devices": [{
 "accept": "gear",
+"display_name": "快轴齿轮座",
 "id": "lift_power",
 "kind": "socket",
 "needs": [],
@@ -18,19 +19,28 @@ spec = {
 "id": "slow_axis",
 "kind": "socket",
 "needs": [],
-"x": 34.0,
+"x": 16.0,
 "y": 0.8,
 "z": -0.9
 }, {
+"display_name": "快轴制动杆",
+"id": "sync_brake",
+"kind": "brake",
+"needs": [],
+"x": 25.0,
+"y": 0.8,
+"z": -0.9
+}, {
+"display_name": "同步离合闩",
 "id": "fast_axis",
 "kind": "latch",
-"needs": ["lift_power", "slow_axis"],
-"x": 38.0,
+"needs": ["lift_power", "slow_axis", "shafts_aligned"],
+"x": 29.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["fast_axis"],
-"hints": ["慢轴的齿轮在上层工作台。", "第一枚齿轮也能给货篮供能。", "装第一枚齿轮，乘篮取回楼上齿轮，装入慢轴，然后联动两轴。"],
+"hints": ["两根指针经过相同的刻线，速度却不同。", "制动杆只停住快轴，慢轴会继续追上来。", "装好两枚齿轮，等待快轴领先后制动；两根指针对齐时接合同步离合。"],
 "items": [{
 "id": "gear_a",
 "kind": "gear",
@@ -40,14 +50,13 @@ spec = {
 }, {
 "id": "gear_b",
 "kind": "gear",
-"x": 27.0,
-"y": 3.28,
+"x": 19.0,
+"y": 0.08,
 "z": 0.5
 }],
-"lift": "lift_power",
-"objective": "把两枚齿轮带到对应的轴上",
-"title": "快轴与慢轴",
-"upper": true
+"machine": "shaft_sync",
+"objective": "让两根轴的记号重合",
+"title": "快轴与慢轴"
 }
 theme = "clocktower"
 index = 3

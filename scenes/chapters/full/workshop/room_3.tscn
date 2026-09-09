@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_0e5g2"]
 
-[node name="Room3" type="Node3D" unique_id=1031596778]
+[node name="Room3" type="Node3D" unique_id=413271834]
 script = ExtResource("1_0e5g2")
 spec = {
 "belt": true,
-"crate": 12.0,
+"crate": 9.5,
 "devices": [{
 "id": "belt",
 "kind": "selector",
@@ -26,16 +26,17 @@ spec = {
 }, {
 "id": "delivery",
 "kind": "latch",
-"needs": ["cargo_plate"],
+"needs": ["cargo_caught", "belt:0"],
 "x": 35.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["delivery"],
-"hints": ["黄铜踏板与货箱一样宽。", "输送带可以反转，另一端的开关会锁存货箱到位状态。", "将货箱推上输送带，选择向右的档位，等货箱压住踏板，再打开货运闩。"],
+"hints": ["隔栅下留着货箱宽的开口，尽头有一只棘爪。", "箱子要先进入皮带，棘爪会承接送到的货物；停下电机，出口才获得动力。", "将箱子推到皮带上，选向右输送；箱子抵达挡扣后切回停止档，再打开出口。"],
 "items": [],
-"mid": "cargo_plate",
-"objective": "把货箱送到隔栅另一侧",
+"machine": "cargo_catch",
+"mid": "cargo_caught",
+"objective": "让货箱越过隔栅，接通出口线路",
 "title": "逆行的传送带"
 }
 index = 2

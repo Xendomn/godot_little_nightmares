@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_rtfn5"]
 
-[node name="Room2" type="Node3D" unique_id=1775141167]
+[node name="Room2" type="Node3D" unique_id=535015065]
 script = ExtResource("1_rtfn5")
 spec = {
 "devices": [{
@@ -14,23 +14,31 @@ spec = {
 "y": 0.8,
 "z": -0.9
 }, {
+"display_name": "中岛承重插销",
 "id": "stop",
 "kind": "latch",
-"needs": ["lower"],
-"x": 28.0,
-"y": 4.0,
+"needs": ["exchange_left"],
+"x": 23.0,
+"y": 2.3,
 "z": -0.9
 }, {
 "accept": "weight",
 "id": "upper",
 "kind": "socket",
 "needs": ["stop"],
-"x": 34.0,
-"y": 0.8,
+"x": 25.0,
+"y": 2.3,
+"z": -0.9
+}, {
+"id": "exchange_exit",
+"kind": "latch",
+"needs": ["exchange_right"],
+"x": 36.0,
+"y": 4.0,
 "z": -0.9
 }],
-"goal": ["upper"],
-"hints": ["一次停靠之后，棘爪会记住货篮的位置。", "上层开闩后可以返回取回下层砝码。", "装下盘、乘篮开闩、下梯取回砝码，再送到右侧托盘。"],
+"goal": ["exchange_exit"],
+"hints": ["两座平台的绳路分别通向两只托盘。", "中岛可以固定左平台，再把同一枚砝码带给右平台。", "装左盘后登上左台，在中岛锁住左台；返回取砝码，沿锁住的平台送到右盘，再乘右台到出口。"],
 "items": [{
 "id": "weight",
 "kind": "weight",
@@ -38,9 +46,8 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
-"ladder_lock": "stop",
-"lift": "lower",
-"objective": "用同一枚砝码完成两次停靠",
+"machine": "weight_exchange",
+"objective": "交换重量，接通两座相反升降的平台",
 "title": "上下托盘",
 "upper": true
 }

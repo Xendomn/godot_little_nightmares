@@ -2,38 +2,49 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_gfurl"]
 
-[node name="Room3" type="Node3D" unique_id=19331185]
+[node name="Room3" type="Node3D" unique_id=1145078131]
 script = ExtResource("1_gfurl")
 spec = {
 "devices": [{
 "id": "transfer",
 "kind": "selector",
-"modes": 4,
+"modes": 3,
 "needs": [],
+"state_names": ["关闭转水", "转入左槽", "转入右槽"],
 "x": 8.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "left_valve",
 "kind": "latch",
-"needs": ["transfer:1"],
+"needs": ["left_high"],
 "x": 24.0,
+"y": 4.0,
+"z": -0.9
+}, {
+"display_name": "连廊转水阀",
+"id": "upper_transfer",
+"kind": "selector",
+"modes": 2,
+"needs": ["left_valve"],
+"state_names": ["保持左槽", "转入右槽"],
+"x": 27.0,
 "y": 4.0,
 "z": -0.9
 }, {
 "id": "right_valve",
 "kind": "latch",
-"needs": ["left_valve", "transfer:3"],
-"x": 34.0,
-"y": 0.8,
+"needs": ["left_valve", "right_high"],
+"x": 36.0,
+"y": 4.0,
 "z": -0.9
 }],
 "goal": ["right_valve"],
-"hints": ["同一份水会在两座水箱之间移动。", "第一档抬起左侧浮台，第三档给右侧出口提供压力。", "转到第一档乘台开上层阀，下梯回来后转到第三档，再开右阀。"],
+"hints": ["两根水尺互相连接，中央是干燥的连廊。", "左边升起时右边下降；上层阀门可以把水送向另一侧。", "将水转入左槽，乘左浮台上连廊开闩；打开连廊转水阀，等右浮台升起，再走到右端开阀。"],
 "items": [],
-"lift": "transfer:1",
+"machine": "twin_water",
 "mid": "left_valve",
-"objective": "平衡两边水位，接通出口",
+"objective": "用同一份水连接两边的高处通路",
 "title": "连通的两座水箱",
 "upper": true,
 "water": true

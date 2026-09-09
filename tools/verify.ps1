@@ -3,7 +3,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Push-Location -LiteralPath $projectRoot
 try {
     New-Item -ItemType Directory -Path 'artifacts' -Force | Out-Null
-    $suites = @('progress', 'gameplay', 'controls', 'stealth', 'save_store', 'chapter_rules', 'platform', 'character_rig', 'expansion', 'routes', 'campaign', 'campaign_ui', 'respawn', 'crouch_states', 'keeper_navigation', 'input_devices', 'controller_ui', 'arrow_movement', 'prop_visual', 'mechanical_props', 'save_v2', 'puzzle_hints', 'puzzle_interactions', 'full_routes', 'puzzle_rooms', 'room_repairs', 'crate_surfaces', 'device_guidance', 'puzzle_presentation', 'guidance_flow', 'journey', 'water_basin', 'item_visibility')
+    $suites = @('progress', 'gameplay', 'controls', 'stealth', 'save_store', 'chapter_rules', 'platform', 'character_rig', 'expansion', 'routes', 'campaign', 'campaign_ui', 'respawn', 'crouch_states', 'keeper_navigation', 'input_devices', 'controller_ui', 'arrow_movement', 'prop_visual', 'mechanical_props', 'save_v2', 'puzzle_hints', 'puzzle_interactions', 'full_routes', 'puzzle_rooms', 'room_repairs', 'crate_surfaces', 'device_guidance', 'puzzle_presentation', 'guidance_flow', 'journey', 'water_basin', 'item_visibility', 'content_migration', 'mechanical_rules', 'puzzle_upgrade', 'water_mechanics', 'encounter_mechanics', 'contact_consistency')
     $results = @()
     foreach ($suite in $suites) {
         $logPath = Join-Path $projectRoot "artifacts/verify-$suite.log"

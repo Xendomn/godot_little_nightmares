@@ -26,11 +26,15 @@ var bridge_bodies: Array = []
 var danger_lights: Array = []
 var ladder: Node3D
 var speaker: AudioStreamPlayer3D
+var machines: Node3D
 var base_color := Color(.19,.16,.11)
 
 func _ready() -> void:
 	base_color = {"workshop":Color(.24,.18,.10),"laundry":Color(.10,.22,.24),"thread_vault":Color(.17,.14,.20),"clocktower":Color(.23,.19,.11)}[theme]
 	build()
+	machines = preload("res://scripts/puzzles/machine_room.gd").new()
+	add_child(machines)
+	machines.setup(self)
 	presentation = preload("res://scripts/puzzles/puzzle_presentation.gd").new()
 	presentation.name = "PuzzlePresentation"
 	add_child(presentation)
@@ -167,11 +171,13 @@ func build() -> void:
 	if spec.get("upper",false):
 		# Separate lift well at x=21; upper walkway begins beside it, not over it.
 		solid("UpperWalk",Vector3(29,3.05,0),Vector3(12,.3,3.6),base_color)
-		lift = solid("Lift",Vector3(21,-.09,0),Vector3(4.2,.18,3.4),base_color,true)
+		if spec.has("lift"):
+			lift = solid("Lift",Vector3(21,-.09,0),Vector3(4.2,.18,3.4),base_color,true)
 		# At the bottom stop, separate the platform skin from boards and their backing.
-		for child in lift.get_children():
-			if child is MeshInstance3D: child.position.y -= .01
-		model(lift,"cargo_basket",Vector3(0,.09,0),Vector3(1.4,.15,1.8))
+		if lift:
+			for child in lift.get_children():
+				if child is MeshInstance3D: child.position.y -= .01
+			model(lift,"cargo_basket",Vector3(0,.09,0),Vector3(1.4,.15,1.8))
 		ladder = LADDER.new()
 		ladder.name = "ReturnLadder"
 		ladder.object_id = "ladder"
@@ -211,6 +217,9 @@ func met(expression: String) -> bool:
 		for term in expression.split("&"):
 			if not met(term): return false
 		return true
+	if machines:
+		var mechanical = machines.condition(expression)
+		if mechanical != null: return bool(mechanical)
 	var parts := expression.split(":")
 	var object = objects.get(parts[0])
 	if object == null: return false
@@ -238,9 +247,7 @@ func _physics_process(delta: float) -> void:
 	if all_met(spec.goal): completed = true
 	gate.position.y = move_toward(gate.position.y,6.3 if completed else 2.0,delta*3)
 	if lift:
-		# Autonomous round trip allows a carried object to return without operating a switch.
-		var powered := met(str(spec.lift))
-		var target := 3.11 if powered and fmod(phase,12) >= 5 and fmod(phase,12) < 10 else -.09
+		var target: float = machines.lift_target(delta)
 		if target < lift.position.y:
 			for body in [chapter.player] + objects.values():
 				if body is CharacterBody3D and absf(body.global_position.x-lift.global_position.x) < 2.45 and absf(body.global_position.z-lift.global_position.z) < 2:
@@ -248,7 +255,7 @@ func _physics_process(delta: float) -> void:
 						target = maxf(target,body.global_position.y-global_position.y+1.5)
 		lift.position.y = move_toward(lift.position.y,target,delta*1.35)
 	if ladder:
-		if local_player().y > 2.8 and local_player().x > 24: ladder_unlocked = true
+		if spec.get("ladder_open",false) or (local_player().y > 2.8 and local_player().x > 24): ladder_unlocked = true
 		var unlocked := ladder_unlocked and (not spec.has("ladder_lock") or met(str(spec.ladder_lock)))
 		if unlocked and not ladder.is_in_group("puzzle_interactable"): ladder.add_to_group("puzzle_interactable")
 		if not unlocked: ladder.remove_from_group("puzzle_interactable")
@@ -257,34 +264,32 @@ func _physics_process(delta: float) -> void:
 		var crate = objects.crate
 		if crate.position.x >= 11 and crate.position.x <= 28 and crate.handler == null:
 			var direction := 1 if objects.belt.state == 1 else (-1 if objects.belt.state == 2 else 0)
-			if not met("cargo_plate"): crate.move_and_collide(Vector3(direction*delta*1.3,0,0))
-	if water:
-		var wet := not met("drain") if index == 0 else (met("fill") or met("transfer:1") or met("pressure:1"))
-		water.set_water_level(move_toward(water.water_level,1.9 if wet else -.05,delta*.6))
-		if index == 0 and not met("drain") and local_player().x > 18 and local_player().x < 31: chapter.fail()
+			if not met("cargo_caught"): crate.move_and_collide(Vector3(direction*delta*1.3,0,0))
 	if theme == "workshop" and index == 0:
 		update_fuse_presence()
 	if bridge_bodies.size() == 3:
-		var raised := [met("winch_a") or met("pin_a"),met("winch_b") or met("pin_b"),met("pin_b")]
+		var raised := [met("winch_a") or met("pin_a"),met("winch_b") or met("pin_b"),met("winch_c") or met("pin_c")]
 		for i in 3:
 			bridge_bodies[i].position.y = move_toward(bridge_bodies[i].position.y,-.15 if raised[i] else -3.0,delta*2)
-	if press_visual:
-		var ram = press_visual.find_child("Ram",true,false)
-		if ram and met("power:1"): ram.position.y = -.9 if met("limiter") else -.8 + sin(phase*3)*.8
-	if spec.get("press",false) and met("power:1") and not met("limiter"):
-		if absf(local_player().x-23) < 1.0: chapter.fail()
-	for i in range(hazards.size()):
-		var stopped := met("brake_a") if i == 0 else met("brake_b")
-		var danger := not stopped and fmod(phase+float(i)*1.4,4.0) < 2.0
-		if spec.get("hazards","") == "steam" and not met("timing:2"): danger = true
-		danger_lights[i].light_color = Color(1,.17,.03) if danger else Color(.2,.9,.72)
-		var pivot = hazards[i].find_child("Pendulum",true,false)
-		if pivot: pivot.rotation.z = 0 if stopped else sin(phase*1.6+i)*.85
-		if danger and absf(local_player().x-(21 if i == 0 else 32)) < .65: chapter.fail()
+	machines.tick(delta)
 	update_guidance(delta)
 
 func local_player() -> Vector3:
 	return to_local(chapter.player.global_position)
+
+func safe_checkpoint_surface(local_position: Vector3) -> bool:
+	if machines.water_machine:
+		var water_state = machines.water_machine
+		for i in water_state.basins.size():
+			var basin = water_state.basins[i]
+			var depth: float = water_state.circuit.left if i == 0 else water_state.circuit.right
+			if absf(local_position.x-basin.position.x)<8*basin.scale.x and local_position.y+.15<depth:
+				return false
+	var foot := to_global(local_position)
+	var query := PhysicsRayQueryParameters3D.create(foot+Vector3.UP*.12,foot-Vector3.UP*.25)
+	query.exclude = [chapter.player.get_rid()]
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	return not hit.is_empty() and hit.collider is StaticBody3D and not hit.collider is AnimatableBody3D
 
 func stage_objective() -> String:
 	return preload("res://scripts/puzzles/room_guidance.gd").objective(self, chapter.player)
@@ -308,7 +313,7 @@ func capture_state() -> Dictionary:
 	var states := {}
 	for id in objects:
 		states[id] = objects[id].capture_state()
-	return {"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"fuse_revealed":fuse_revealed,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.water_level if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
+	return {"machines":machines.capture_state() if machines else {},"objects":states,"completed":completed,"ladder_unlocked":ladder_unlocked,"fuse_revealed":fuse_revealed,"phase":phase,"lift_y":lift.position.y if lift else 0.0,"water_y":water.water_level if water else 0.0,"bridge_y":bridge_bodies.map(func(body): return body.position.y)}
 
 func restore_state(data: Dictionary) -> void:
 	completed = bool(data.get("completed",false))
@@ -340,5 +345,6 @@ func restore_state(data: Dictionary) -> void:
 	var heights: Array = data.get("bridge_y",[])
 	for i in range(bridge_bodies.size()):
 		bridge_bodies[i].position.y = float(heights[i]) if i < heights.size() else -3.0
+	if machines: machines.restore_state(data.get("machines",{}))
 	guidance_text = ""
 	if is_instance_valid(presentation): presentation.update(0)

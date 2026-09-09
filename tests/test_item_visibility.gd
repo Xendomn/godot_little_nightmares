@@ -57,6 +57,8 @@ func run() -> void:
 		fuse.detach_from_socket()
 		check(visual.get_node("PickupLight").visible, "removing object restores pickup beacon")
 	var upper = game.rooms[4]
+	# Reproduce a part behind a pier even though this room's authored fuse moved.
+	upper.objects.fuse_b.position.x = 24
 	game.camera.set_process(false)
 	game.camera.global_position = upper.to_global(Vector3(24,5,11))
 	game.camera.look_at(upper.to_global(Vector3(24,3.45,.5)))

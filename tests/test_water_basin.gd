@@ -25,10 +25,15 @@ func run() -> void:
 			check(is_equal_approx(bounds.position.y, .005), "water bottom stays on basin floor")
 			check(is_equal_approx(bounds.end.y, level + .04), "volume reaches surface while filling and draining")
 			check(is_equal_approx(basin.get_node("Surface").position.y, bounds.end.y), "surface and volume have no gap")
+		# The circuit owns saved water volume; the basin is its rendered view.
+		for depth in [.14, .84, 1.9, .49]:
+			room.machines.water_machine.circuit.left = depth
+			room.machines.water_machine.refresh(0, true)
 			var snapshot: Dictionary = room.capture_state()
-			basin.set_water_level(1.9)
+			room.machines.water_machine.circuit.left = 0
+			basin.set_water_level(-.05)
 			room.restore_state(snapshot)
-			check(is_equal_approx(basin.water_level, level), "checkpoint restores intermediate water level")
+			check(is_equal_approx(basin.water_level, depth - .04), "checkpoint restores intermediate circuit volume and visible water together")
 		basin.set_water_level(-.05)
 		check(not basin.get_node("Volume").visible and not basin.get_node("Surface").visible, "drained water leaves no floating sheet")
 		for wall in basin.find_children("*", "StaticBody3D", true, false):

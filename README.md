@@ -42,7 +42,11 @@ macOS 的 `user://` 位于 `~/Library/Application Support/Godot/app_userdata/午
 
 每章首次游玩目标为 15–20 分钟；这属于设计目标，尚未用真人盲测确认。暂停菜单可主动逐级查看三条提示，HUD 只显示当前目标。搬运时不能跑跳或爬梯，需要利用往返货篮；物件可以从插槽取回重复使用。按住互动键时，左右移动既能推也能拉。
 
+货篮停靠后会等待玩家：先接通动力，用岸边呼叫杆召回货篮，登篮后操作行程杆切换上下行。深井货运关的货篮只运输砝码，玩家走旁边的梯子。水槽需要观察实际水位，摆锤制动会保留当前姿势，应在青灯亮起、摆锤离开通道时制动。关卡调整、研究来源和验证记录见 [环境解谜升级记录](docs/limbo-puzzle-upgrade.md)。
+
 存档已升级为 v2，记录机关、松散物件、插槽和搬运状态。首次读取旧版存档会保留已解锁章节和当前章节，将旧文件存为 `campaign.json.v1.bak`，从该章入口开始，并显示迁移提示。
+
+本次关卡内容版本为 `content_revision: 2`，外层存档仍为 v2。旧的完整房间快照会先逐字节备份到 `campaign.json.content-v1.bak`（重名时追加编号），保留章节解锁状态，从原房间入口继续；旧的房间中点映射到该房间入口。当前版本的水量、相位、物件和插销状态完整恢复。
 
 ## 工程与原创素材
 
@@ -75,7 +79,7 @@ GODOT="/Applications/Godot.app/Contents/MacOS/Godot" bash tools/verify.sh
 
 脚本兼容 macOS 自带 Bash 3.2，可从任意工作目录通过完整脚本路径调用。失败返回非零状态，检查引擎日志和标准输出／错误；只有全部通过才生成 `artifacts/verification-results.json`。重建验证 `python3 tests/test_builder.py` 会重新生成场景，应在临时工程副本中运行。
 
-33 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。道路碰撞、梯子衔接及中文提示修复见 [验证记录](docs/room-repairs-verification.md)。压力板、机关反馈和连续通关验证见 [通关引导修复记录](docs/puzzle-guidance-verification.md)。窗口路线与性能检查：
+39 套无界面验证的日志保存在 `artifacts/`，存档测试使用隔离文件。蹲伏与绕桌修复记录见 `docs/crouch-navigation-verification.md`。机关实物更新见 `docs/mechanical-props-verification.md`。道路碰撞、梯子衔接及中文提示修复见 [验证记录](docs/room-repairs-verification.md)。压力板、机关反馈和连续通关验证见 [通关引导修复记录](docs/puzzle-guidance-verification.md)。窗口路线与性能检查：
 
 ```powershell
 godot --path . --resolution 1920x1080 --script tests/test_routes.gd

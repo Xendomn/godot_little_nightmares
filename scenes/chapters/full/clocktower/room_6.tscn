@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_l4362"]
 
-[node name="Room6" type="Node3D" unique_id=1089490898]
+[node name="Room6" type="Node3D" unique_id=1375304742]
 script = ExtResource("1_l4362")
 spec = {
 "devices": [{
@@ -36,7 +36,7 @@ spec = {
 }],
 "goal": ["sunrise"],
 "hazards": "pendulum",
-"hints": ["钟响后，整座塔都会重新运转。", "安全岛可以躲开摆锤；途中仍有制动杆。", "释放钟锤，利用两个制动杆穿过运转的机械，抵达最右侧晨光出口。"],
+"hints": ["钟响后，整座塔都会重新运转。", "安全岛可以躲开摆锤；途中仍有制动杆。", "释放钟锤，分别等摆锤离开通道、青灯亮起再制动，逐段抵达最右侧晨光出口。"],
 "items": [],
 "mid": "release",
 "objective": "敲响最后一口钟，奔向晨光",

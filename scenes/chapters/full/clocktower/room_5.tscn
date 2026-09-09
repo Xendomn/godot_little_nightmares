@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/puzzles/puzzle_room.gd" id="1_hr4hm"]
 
-[node name="Room5" type="Node3D" unique_id=96979099]
+[node name="Room5" type="Node3D" unique_id=53145252]
 script = ExtResource("1_hr4hm")
 spec = {
 "devices": [{
@@ -18,26 +18,27 @@ spec = {
 "kind": "selector",
 "modes": 4,
 "needs": ["counterweight"],
+"state_names": ["刻度 0", "刻度 I", "刻度 II", "刻度 III"],
 "x": 18.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "clock_brake",
 "kind": "brake",
-"needs": ["phase:3"],
-"x": 27.0,
+"needs": ["counterweight"],
+"x": 26.0,
 "y": 0.8,
 "z": -0.9
 }, {
 "id": "hammer",
 "kind": "latch",
-"needs": ["clock_brake", "phase:3"],
-"x": 38.0,
+"needs": ["clock_brake", "phase:3", "clock_aligned"],
+"x": 28.0,
 "y": 0.8,
 "z": -0.9
 }],
 "goal": ["hammer"],
-"hints": ["刻度 III 对着钟锤的释放臂。", "配重、相位和制动必须同时成立。", "安装配重，拨到第三档，在刻度对齐时制动，并在制动结束前拉下钟锤闩。"],
+"hints": ["选择刻度会移动标记，指针仍在转动。", "钟锤释放臂对应第三刻度；制动要留住真正重合的瞬间。", "安装配重并选第三刻度，等指针进入高亮标记区后制动，在指针停稳时拉下钟锤闩。"],
 "items": [{
 "id": "weight",
 "kind": "weight",
@@ -45,8 +46,9 @@ spec = {
 "y": 0.08,
 "z": 0.5
 }],
+"machine": "clock_alignment",
 "mid": "phase:3",
-"objective": "让钟锤与刻度重新对齐",
+"objective": "让钟面记号停在释放臂前",
 "title": "钟面上的记号"
 }
 theme = "clocktower"
